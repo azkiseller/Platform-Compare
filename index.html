@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>مقایسه کمیسیون بیمه ثالث</title>
+<title>مقایسه کارمزد بیمه ثالث</title>
 <script>
 (function(){try{var s=localStorage.getItem('dashboardTheme');
 document.documentElement.setAttribute('data-theme',s||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));}catch(e){}})();
@@ -86,10 +86,17 @@ border:1px solid rgba(255,255,255,.4);box-shadow:0 16px 34px -16px rgba(22,40,12
 .site>*{position:relative;z-index:1}
 .site h2{margin:0;font-size:20px;font-weight:900}
 .site .host{font-size:12px;opacity:.85;direction:ltr;text-align:right}
-.site .stats{display:flex;gap:22px;flex-wrap:wrap;margin-top:14px}
+.site .glass{margin-top:16px;padding:16px 14px 12px;border-radius:var(--radius);text-align:center;background:var(--glass);border:1px solid var(--glass-line);
+backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.site .stats{display:flex;justify-content:center;align-items:flex-start;flex-wrap:wrap}
+.site .st{flex:1 1 150px;padding:0 12px}
+.site .st+.st{border-inline-start:1px solid var(--glass-line)}
+.col.s1{--glass:rgba(22,86,245,.07);--glass-line:rgba(23,169,255,.35)}
+.col.s2{--glass:rgba(242,190,26,.1);--glass-line:rgba(242,190,26,.32)}
+html[data-theme=dark] .col.s1{--glass:rgba(255,255,255,.07);--glass-line:rgba(125,178,255,.3)}
 .site .st b{display:block;font-size:26px;font-weight:900;line-height:1.3}
 .site .st span{font-size:12px;opacity:.9}
-.site .fresh{margin-top:12px;font-size:12px;opacity:.92}
+.site .fresh{margin-top:12px;padding-top:10px;border-top:1px solid var(--glass-line);font-size:12px;opacity:.92}
 .site .fresh.old{background:rgba(224,69,63,.85);display:inline-block;padding:2px 10px;border-radius:999px;opacity:1}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .cc{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:16px 10px 14px;min-width:0;
@@ -150,7 +157,7 @@ html[data-theme=dark] .dp{background:rgba(14,18,30,.95)}
 </button>
 <div id="app">
 <header class="topbar">
- <div class="brand"><div class="avatar">٪</div><div><h1>مقایسه کمیسیون بیمه ثالث</h1><div class="sync" id="sub">در حال بارگذاری…</div></div></div>
+ <div class="brand"><div class="avatar">٪</div><div><h1>مقایسه کارمزد بیمه ثالث</h1><div class="sync" id="sub">در حال بارگذاری…</div></div></div>
  <button class="ghost" id="r">↻ بروزرسانی</button>
 </header>
 <main>
@@ -181,10 +188,10 @@ $('tt').onclick=()=>{const h=document.documentElement,t=h.dataset.theme==='dark'
 async function load(){
  $('sub').textContent='در حال بارگذاری…';
  try{
-  const r=await fetch(SUPABASE_URL+'/rest/v1/current_commission?select=site,company_key,rate,captured_at&coverage=eq.third&order=rate.desc.nullslast',
+  const r=await fetch(SUPABASE_URL+'/rest/v1/current_commission?select=site,company_key,rate,captured_at&coverage=eq.third&order=captured_at.desc',
    {headers:{apikey:ANON_KEY,Authorization:'Bearer '+ANON_KEY,'Accept-Profile':'compare'}});
   if(!r.ok)throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,140));
-  rows=await r.json();failed=null;$('sub').textContent='روی هر شرکت بزن تا همتایش در سایت دیگر و اختلاف نشان داده شود';
+  const raw=await r.json(),seen=new Set();rows=raw.filter(x=>{const k=x.site+'|'+x.company_key;if(seen.has(k))return false;seen.add(k);return true});failed=null;$('sub').textContent='روی هر شرکت بزن تا همتایش در سایت دیگر و اختلاف نشان داده شود';
  }catch(e){failed=e.message;$('sub').textContent='ناموفق'}
  render();
 }
@@ -195,9 +202,9 @@ function siteCard(s,list){
  let fresh='<div class="fresh">هنوز داده‌ای ثبت نشده</div>';
  if(last){const h=(Date.now()-last)/36e5,old=h>STALE_HOURS;
   fresh='<div class="fresh'+(old?' old':'')+'">آخرین داده: '+esc(new Date(last).toLocaleString('fa-IR'))+(old?' (بیش از '+fa(Math.floor(h))+' ساعت پیش)':'')+'</div>'}
- return'<div class="site"><div class="sh"><div><h2>'+esc(s.n)+'</h2><div class="host">'+esc(s.h)+'</div></div><span class="slogo"><img src="'+esc(s.logo)+'" alt="'+esc(s.n)+'"></span></div><div class="stats">'+
+ return'<div class="site"><div class="sh"><div><h2>'+esc(s.n)+'</h2><div class="host">'+esc(s.h)+'</div></div><span class="slogo"><img src="'+esc(s.logo)+'" alt="'+esc(s.n)+'"></span></div><div class="glass"><div class="stats">'+
   '<div class="st"><b>'+fa(list.length)+'</b><span>شرکت در صفحه مقایسه</span></div>'+
-  '<div class="st"><b>'+(top==null?'—':fa2(top)+'٪')+'</b><span>بیشترین کمیسیون'+(best?' · '+esc(FA[best.company_key]||best.company_key):'')+'</span></div></div>'+fresh+'</div>';
+  '<div class="st"><b>'+(top==null?'—':fa2(top)+'٪')+'</b><span>بیشترین کارمزد'+(best?' · '+esc(FA[best.company_key]||best.company_key):'')+'</span></div></div>'+fresh+'</div></div>';
 }
 function cmp(c,s){
  const o=s===A?B:A,m=c[s.k],t=c[o.k];
@@ -268,8 +275,8 @@ function panel(k){
  const val=r=>r&&r.rate!=null?fa2(r.rate)+'٪':'—';
  let verdict;
  if(!a||!b)verdict='فقط در صفحه مقایسه '+esc((a?A:B).n)+' دیده می‌شود و '+esc((a?B:A).n)+' آن را نشان نمی‌دهد';
- else if(a.rate==null||b.rate==null)verdict='کمیسیون یکی از دو سایت ثبت نشده';
- else if(+a.rate===+b.rate)verdict='هر دو سایت یک کمیسیون نشان می‌دهند';
+ else if(a.rate==null||b.rate==null)verdict='کارمزد یکی از دو سایت ثبت نشده';
+ else if(+a.rate===+b.rate)verdict='هر دو سایت یک کارمزد نشان می‌دهند';
  else{
   const hi=+a.rate>+b.rate?A:B,lo=hi===A?B:A,H=Math.max(+a.rate,+b.rate),L=Math.min(+a.rate,+b.rate),d=H-L;
   verdict=esc(hi.n)+' '+fa2(d)+' واحد درصد بیشتر از '+esc(lo.n)+' می‌دهد'+(L>0?' ('+fa2(Math.round(d/L*1000)/10)+'٪ بیشتر از مقدار کمتر)':'');
