@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>مقایسه کارمزد بیمه ثالث</title>
+<title>مقایسه صفحه کامپیر ثالث شرکت‌ها</title>
 <script>
 (function(){try{var s=localStorage.getItem('dashboardTheme');
 document.documentElement.setAttribute('data-theme',s||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));}catch(e){}})();
@@ -48,9 +48,11 @@ html[data-theme=dark] .theme-toggle .sun{display:block}html[data-theme=dark] .th
 #app{position:relative;z-index:1}
 header.topbar{position:sticky;top:0;z-index:10;background:var(--topbar);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);
 border-bottom:1px solid var(--line);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.brand{display:flex;align-items:center;gap:12px}
+.brand{flex:1;text-align:center}
+header.topbar{position:sticky;justify-content:center;padding:16px 28px}
+header.topbar #r{position:absolute;inset-inline-end:28px;top:50%;transform:translateY(-50%)}
 .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 6px 16px -6px rgba(22,86,245,.5)}
-.brand h1{font-size:15px;font-weight:700;margin:0}.sync{font-size:12px;color:var(--ink-faint)}
+.brand h1{font-size:18px;font-weight:900;margin:0}.sync{font-size:12px;color:var(--ink-faint)}
 button.ghost{background:none;border:none;color:var(--ink-soft);font:inherit;font-size:13px;cursor:pointer;padding:0}button.ghost:hover{color:var(--accent-strong)}
 main{max-width:1180px;margin:0 auto;padding:28px 24px 70px}
 .search{width:100%;background:var(--surface-tint);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:11px 15px;color:var(--ink);font:inherit;font-size:13.5px;margin-bottom:22px;box-shadow:inset 0 1px 4px rgba(15,72,150,.1)}
@@ -145,7 +147,7 @@ html[data-theme=dark] .dp{background:rgba(14,18,30,.95)}
 .dp-v .v.s1 b{color:var(--s1)}.dp-v .v.s2 b{color:var(--s2)}
 .dp-v .vs{font-size:12px;color:var(--ink-faint)}
 .dp-t{font-size:13.5px;font-weight:600;text-align:center;line-height:1.7}
-@media(max-width:700px){.dp{left:68px;right:12px;width:auto;transform:none}}
+@media(max-width:700px){header.topbar{flex-direction:column;gap:6px;padding:12px 16px}header.topbar #r{position:static;transform:none}.site .st+.st{border-inline-start:0;margin-top:10px}.dp{left:68px;right:12px;width:auto;transform:none}}
 @media(prefers-reduced-motion:reduce){.cc{transition:none}.cc.hl{transform:none}}
 </style>
 </head>
@@ -157,7 +159,7 @@ html[data-theme=dark] .dp{background:rgba(14,18,30,.95)}
 </button>
 <div id="app">
 <header class="topbar">
- <div class="brand"><div class="avatar">٪</div><div><h1>مقایسه کارمزد بیمه ثالث</h1><div class="sync" id="sub">در حال بارگذاری…</div></div></div>
+ <div class="brand"><div><h1>مقایسه صفحه کامپیر ثالث شرکت‌ها</h1><div class="sync" id="sub">در حال بارگذاری…</div></div></div>
  <button class="ghost" id="r">↻ بروزرسانی</button>
 </header>
 <main>
