@@ -19,11 +19,12 @@ document.documentElement.setAttribute('data-theme',s||(matchMedia('(prefers-colo
 --good:#1FA971;--good-soft:rgba(31,169,113,.16);--radius-lg:20px;--radius:14px;--radius-sm:9px;--blur:18px;
 --shadow:0 8px 28px rgba(15,72,150,.14),inset 0 1px 0 rgba(255,255,255,.6);--topbar:rgba(255,255,255,.4);--font:'IRANSansX',Tahoma,sans-serif;
 --s1a:rgba(22,86,245,.66);--s1b:rgba(23,169,255,.64);--s1:#1656F5;--s1-soft:rgba(22,86,245,.14);
---s2a:#1d1a14;--s2b:#3a2c0c;--s2:#C98400;--s2-soft:rgba(242,190,26,.22)}
+--s2a:#1d1a14;--s2b:#3a2c0c;--s2:#C98400;--s2-soft:rgba(242,190,26,.22);
+--s3a:rgba(91,45,145,.72);--s3b:rgba(56,208,48,.5);--s3:#5B2D91;--s3-soft:rgba(91,45,145,.12)}
 html[data-theme=dark]{--surface:rgba(255,255,255,.07);--surface-tint:rgba(255,255,255,.04);--ink:#EAF0FB;--ink-soft:rgba(234,240,251,.68);--ink-faint:rgba(234,240,251,.44);
 --line:rgba(255,255,255,.14);--accent-strong:#29C2FF;--danger:#FF6B64;--good:#34C98C;--good-soft:rgba(52,201,140,.18);
 --shadow:0 8px 32px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08);--topbar:rgba(10,15,28,.22);color-scheme:dark;
---s1:#5C9BFF;--s1-soft:rgba(92,155,255,.18);--s2:#F2BE1A;--s2-soft:rgba(242,190,26,.18)}
+--s1:#5C9BFF;--s1-soft:rgba(92,155,255,.18);--s2:#F2BE1A;--s2-soft:rgba(242,190,26,.18);--s3:#B692F0;--s3-soft:rgba(182,146,240,.18)}
 *{box-sizing:border-box}
 body{margin:0;font-family:var(--font);background:#0c1226;color:var(--ink);min-height:100vh}
 .bg-glow{position:fixed;inset:0;z-index:0;pointer-events:none;animation:gs 24s ease-in-out infinite;
@@ -57,7 +58,7 @@ button.ghost{background:none;border:none;color:var(--ink-soft);font:inherit;font
 main{max-width:1180px;margin:0 auto;padding:28px 24px 70px}
 .search{width:100%;background:var(--surface-tint);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:11px 15px;color:var(--ink);font:inherit;font-size:13.5px;margin-bottom:22px;box-shadow:inset 0 1px 4px rgba(15,72,150,.1)}
 .search:focus{outline:none;border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 4px var(--accent-soft)}
-.cols{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;align-items:start}
+.cols{position:relative;display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));gap:22px;align-items:start}
 .col{display:flex;flex-direction:column;gap:16px;min-width:0}
 .cols{gap:22px}
 .col{padding:16px;border-radius:28px;border:1px solid var(--line);background:var(--panel);box-shadow:var(--shadow)}
@@ -72,7 +73,7 @@ html[data-theme=dark] .col.s2{--site:#F2BE1A;--site-soft:rgba(242,190,26,.16);--
 .col{color:var(--ink)}
 .sh{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .slogo{flex:none;display:flex;align-items:center}
-.slogo img{display:block;width:190px;height:auto;max-width:none;flex:none}
+.slogo img{display:block;width:150px;height:auto;max-width:none;flex:none}
 .col.s1 .site{background:linear-gradient(135deg,#fff,#DCEEFF);color:#0F2A66;border:1px solid rgba(23,169,255,.45);box-shadow:0 16px 34px -18px rgba(22,86,245,.45),inset 0 1px 0 #fff}
 .col.s1 .site::after{background:radial-gradient(180px 180px at 8% 0,rgba(23,169,255,.2),transparent 70%)}
 .col.s1 .site .st b{color:#1656F5}
@@ -91,7 +92,7 @@ border:1px solid rgba(255,255,255,.4);box-shadow:0 16px 34px -16px rgba(22,40,12
 .site .glass{margin-top:16px;padding:16px 14px 12px;border-radius:var(--radius);text-align:center;background:var(--glass);border:1px solid var(--glass-line);
 backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
 .site .stats{display:flex;justify-content:center;align-items:flex-start;flex-wrap:wrap}
-.site .st{flex:1 1 150px;padding:0 12px}
+.site .st{flex:1 1 120px;padding:0 12px}
 .site .st+.st{border-inline-start:1px solid var(--glass-line)}
 .col.s1{--glass:rgba(22,86,245,.07);--glass-line:rgba(23,169,255,.35)}
 .col.s2{--glass:rgba(242,190,26,.1);--glass-line:rgba(242,190,26,.32)}
@@ -100,7 +101,7 @@ html[data-theme=dark] .col.s1{--glass:rgba(255,255,255,.07);--glass-line:rgba(12
 .site .st span{font-size:12px;opacity:.9}
 .site .fresh{margin-top:12px;padding-top:10px;border-top:1px solid var(--glass-line);font-size:12px;opacity:.92}
 .site .fresh.old{background:rgba(224,69,63,.85);display:inline-block;padding:2px 10px;border-radius:999px;opacity:1}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:12px}
 .cc{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:16px 10px 14px;min-width:0;
 background:var(--surface);backdrop-filter:blur(var(--blur)) saturate(180%);-webkit-backdrop-filter:blur(var(--blur)) saturate(180%);
 border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
@@ -113,9 +114,21 @@ display:flex;align-items:center;justify-content:center;font-weight:900;font-size
 .pill.zero,.pill.none{background:var(--surface-tint);color:var(--ink-faint);font-weight:700}
 .msg{padding:34px 18px;text-align:center;color:var(--ink-faint);font-size:13px;background:var(--surface);border:1px dashed var(--line);border-radius:var(--radius)}
 .msg.er{color:var(--danger);grid-column:1/-1}
-@media(max-width:860px){.cols{grid-template-columns:1fr}}
+@media(max-width:1100px){.cols{grid-template-columns:1fr}}
 @media(max-width:560px){header.topbar{padding:12px 16px}main{padding:20px 12px 70px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+.col.s3{--site:var(--s3);--site-soft:var(--s3-soft);--ga:var(--s3a);--gb:var(--s3b);--panel:rgba(255,255,255,.8);--site-line:rgba(91,45,145,.3);
+--surface:rgba(255,255,255,.96);--surface-tint:rgba(241,233,252,.85);--ink:#1F1033;--ink-soft:rgba(31,16,51,.7);--ink-faint:rgba(31,16,51,.48);
+--glass:rgba(91,45,145,.06);--glass-line:rgba(56,208,48,.5);--line:rgba(91,45,145,.28);--shadow:0 8px 26px rgba(91,45,145,.14),inset 0 1px 0 rgba(255,255,255,.8);
+--accent:#38D030;--accent-deep:#5B2D91;--good:#23A31B;color:var(--ink)}
+html[data-theme=dark] .col.s3{--panel:rgba(255,255,255,.07);--site:#B692F0;--site-soft:rgba(182,146,240,.18);--surface:rgba(255,255,255,.06);--surface-tint:rgba(182,146,240,.1);
+--ink:#F4EEFC;--ink-soft:rgba(244,238,252,.7);--ink-faint:rgba(244,238,252,.46);--glass-line:rgba(94,230,84,.45);--line:rgba(182,146,240,.28);
+--shadow:0 8px 32px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.06);--accent-deep:#B692F0;--good:#4ADE3F}
+.col.s3 .site{background:linear-gradient(135deg,#fff,#F4EEFC);color:#2A1250;border:1px solid rgba(91,45,145,.4);border-bottom:4px solid #38D030;box-shadow:0 16px 34px -18px rgba(91,45,145,.45),inset 0 1px 0 #fff}
+.col.s3 .site::after{background:radial-gradient(200px 200px at 8% 0,rgba(56,208,48,.22),transparent 70%)}
+.col.s3 .site .st b{color:#5B2D91}
+.col.s3 .site .fresh{border-top-color:rgba(56,208,48,.5)}
+.col.s3 .cc.hl{box-shadow:0 0 0 2.5px var(--site),0 0 0 5px rgba(56,208,48,.35),0 14px 30px -12px var(--site)}
 .ln{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:2}
 .grp{grid-column:1/-1;font-size:12.5px;font-weight:700;color:var(--ink-soft);display:flex;align-items:center;gap:10px}
 .grp::after{content:"";flex:1;height:1px;background:var(--line)}
@@ -140,11 +153,11 @@ html[data-theme=dark] .dp{background:rgba(14,18,30,.95)}
 .dp-h b{display:block;font-size:15px}
 .dp-h small{color:var(--ink-faint);direction:ltr;display:block;font-size:11px;text-align:right}
 .dp .x{background:none;border:0;font-size:24px;line-height:1;color:var(--ink-soft);cursor:pointer;padding:4px 8px}
-.dp-v{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin:14px 0 10px;text-align:center}
+.dp-v{display:grid;grid-template-columns:repeat(var(--n,2),1fr);gap:10px;align-items:center;margin:14px 0 10px;text-align:center}
 .dp-v .v{border-radius:var(--radius);padding:8px 6px;background:var(--surface-tint)}
 .dp-v .v span{display:block;font-size:12px;color:var(--ink-soft)}
 .dp-v .v b{font-size:22px;font-weight:900}
-.dp-v .v.s1 b{color:var(--s1)}.dp-v .v.s2 b{color:var(--s2)}
+.dp-v .v.s1 b{color:var(--s1)}.dp-v .v.s2 b{color:var(--s2)}.dp-v .v.s3 b{color:var(--s3)}
 .dp-v .vs{font-size:12px;color:var(--ink-faint)}
 .dp-t{font-size:13.5px;font-weight:600;text-align:center;line-height:1.7}
 @media(max-width:700px){header.topbar{flex-direction:column;gap:6px;padding:12px 16px}header.topbar #r{position:static;transform:none}.site .st+.st{border-inline-start:0;margin-top:10px}.dp{left:68px;right:12px;width:auto;transform:none}}
@@ -173,8 +186,12 @@ html[data-theme=dark] .dp{background:rgba(14,18,30,.95)}
 const SUPABASE_URL='https://ssqqjkhzgcgojbacjitq.supabase.co';
 const ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcXFqa2h6Z2Nnb2piYWNqaXRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjczOTEsImV4cCI6MjEwNTE0MzM5MX0.0a9maOTpqGBRNs5mIVvNONXpYBauL8yjlY-O8EtsDxU';
 // ----------------------------------------
-// برای افزودن سایت سوم یک مورد به این آرایه اضافه کن (و در CSS یک .col.s3)
-const SITES=[{k:'site1',c:'s1',n:'ازکی ایجنت',h:'azkiagent.com',logo:'brand/azki-agent.png'},{k:'site2',c:'s2',n:'شرکاء',h:'shoraka.net',logo:'brand/shoraka.png'}];
+const SITES=[ // ترتیب در صفحه‌ی راست‌به‌چپ: اولی راست، دومی وسط، سومی چپ
+ {k:'site3',c:'s3',n:'بیمه پلاس',h:'plusbimeh.com',logo:'brand/plusbimeh.png'},
+ {k:'site1',c:'s1',n:'ازکی ایجنت',h:'azkiagent.com',logo:'brand/azki-agent.png'},
+ {k:'site2',c:'s2',n:'شرکاء',h:'shoraka.net',logo:'brand/shoraka.png'}];
+const SITE_COLOR={s1:'#1656F5',s2:'#F2BE1A',s3:'#7A47C2'};
+document.documentElement.style.setProperty('--n',SITES.length);
 const FA={novin:'نوین',razi:'رازی',hekmat:'حکمت صبا',sina:'سینا',moalem:'معلم',mihan:'میهن',kowsar:'کوثر',pardis:'پردیس',dana:'دانا',alborz:'البرز',iran:'ایران',asia:'آسیا',ma:'ما',saman:'سامان',day:'دی',
  parsian:'پارسیان',pasargad:'پاسارگاد',karafarin:'کارآفرین',melat:'ملت',hafez:'حافظ',omid:'امید',taavon:'تعاون',sarmad:'سرمد',arman:'آرمان',hoshmand:'هوشمند',tejaratno:'تجارت‌نو'};
 const FILE={kowsar:'kosar',moalem:'moallem'};
@@ -184,7 +201,6 @@ const fa=n=>n==null?null:Number(n).toLocaleString('fa-IR');
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let rows=[],failed=null,pinned=null,merged={};
-const A=SITES[0],B=SITES[1];
 const fa2=n=>n==null?null:Number(n).toLocaleString('fa-IR',{maximumFractionDigits:2});
 $('tt').onclick=()=>{const h=document.documentElement,t=h.dataset.theme==='dark'?'light':'dark';h.dataset.theme=t;try{localStorage.setItem('dashboardTheme',t)}catch(e){}};
 async function load(){
@@ -193,7 +209,7 @@ async function load(){
   const r=await fetch(SUPABASE_URL+'/rest/v1/current_commission?select=site,company_key,rate,captured_at&coverage=eq.third&order=captured_at.desc',
    {headers:{apikey:ANON_KEY,Authorization:'Bearer '+ANON_KEY,'Accept-Profile':'compare'}});
   if(!r.ok)throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,140));
-  const raw=await r.json(),seen=new Set();rows=raw.filter(x=>{const k=x.site+'|'+x.company_key;if(seen.has(k))return false;seen.add(k);return true});failed=null;$('sub').textContent='روی هر شرکت بزن تا همتایش در سایت دیگر و اختلاف نشان داده شود';
+  const raw=await r.json(),seen=new Set();rows=raw.filter(x=>{const k=x.site+'|'+x.company_key;if(seen.has(k))return false;seen.add(k);return true});failed=null;$('sub').textContent='روی هر شرکت بزن تا همتایش در سایت‌های دیگر و اختلاف نشان داده شود';
  }catch(e){failed=e.message;$('sub').textContent='ناموفق'}
  render();
 }
@@ -204,15 +220,19 @@ function siteCard(s,list){
  let fresh='<div class="fresh">هنوز داده‌ای ثبت نشده</div>';
  if(last){const h=(Date.now()-last)/36e5,old=h>STALE_HOURS;
   fresh='<div class="fresh'+(old?' old':'')+'">آخرین داده: '+esc(new Date(last).toLocaleString('fa-IR'))+(old?' (بیش از '+fa(Math.floor(h))+' ساعت پیش)':'')+'</div>'}
- return'<div class="site"><div class="sh"><div><h2>'+esc(s.n)+'</h2><div class="host">'+esc(s.h)+'</div></div><span class="slogo"><img src="'+esc(s.logo)+'" alt="'+esc(s.n)+'"></span></div><div class="glass"><div class="stats">'+
+ return'<div class="site"><div class="sh"><div><h2>'+esc(s.n)+'</h2><div class="host">'+esc(s.h)+'</div></div><span class="slogo"><img src="'+esc(s.logo)+'" alt="'+esc(s.n)+'" onerror="this.style.display=\'none\'"></span></div><div class="glass"><div class="stats">'+
   '<div class="st"><b>'+fa(list.length)+'</b><span>شرکت در صفحه مقایسه</span></div>'+
   '<div class="st"><b>'+(top==null?'—':fa2(top)+'٪')+'</b><span>بیشترین کارمزد'+(best?' · '+esc(FA[best.company_key]||best.company_key):'')+'</span></div></div>'+fresh+'</div></div>';
 }
 function cmp(c,s){
- const o=s===A?B:A,m=c[s.k],t=c[o.k];
- if(!m||!t)return null;
- if(m.rate==null||t.rate==null)return{t:'na'};
- const d=+m.rate-+t.rate;
+ const m=c[s.k];
+ if(!m)return null;
+ const others=SITES.filter(o=>o!==s&&c[o.k]);
+ if(!others.length)return null;
+ if(m.rate==null)return{t:'na'};
+ const rs=others.map(o=>c[o.k].rate).filter(v=>v!=null).map(Number);
+ if(!rs.length)return{t:'na'};
+ const d=+m.rate-Math.max(...rs);
  return d===0?{t:'eq'}:{t:d>0?'up':'down',d:Math.abs(d)};
 }
 function badge(c,s,both){
@@ -234,34 +254,44 @@ function render(){
  if(failed){$('cols').innerHTML='<div class="msg er">خطا در دریافت داده: '+esc(failed)+'</div>';return}
  const f=$('q').value.trim().toLowerCase();
  merged={};rows.forEach(r=>{(merged[r.company_key]||(merged[r.company_key]={k:r.company_key}))[r.site]=r});
- const both=rows.some(r=>r.site===A.k)&&rows.some(r=>r.site===B.k);
+ const present=SITES.filter(s=>rows.some(r=>r.site===s.k)),multi=present.length>1;
  const keys=Object.keys(merged).filter(k=>k.toLowerCase().includes(f)||(FA[k]||'').includes(f));
- const isShared=k=>merged[k][A.k]&&merged[k][B.k];
- const mx=k=>Math.max(+merged[k][A.k].rate||0,+merged[k][B.k].rate||0);
- // شرکت‌های مشترک در هر دو ستون با یک ترتیب می‌آیند تا همتاها روبه‌روی هم باشند
- const shared=keys.filter(isShared).sort((x,y)=>mx(y)-mx(x)||x.localeCompare(y));
+ const cnt=k=>present.filter(s=>merged[k][s.k]).length;
+ const mx=k=>Math.max(0,...SITES.filter(s=>merged[k][s.k]).map(s=>+merged[k][s.k].rate||0));
+ const byMax=(x,y)=>mx(y)-mx(x)||x.localeCompare(y);
+ // شرکت‌های مشترک در همه‌ی ستون‌ها با یک ترتیب می‌آیند تا همتاها روبه‌روی هم باشند
+ const full=multi?keys.filter(k=>cnt(k)===present.length).sort(byMax):[];
  $('cols').innerHTML=SITES.map(s=>{
   const all=rows.filter(r=>r.site===s.k);
-  const mine=keys.filter(k=>merged[k][s.k]&&!isShared(k)).sort((x,y)=>(+merged[y][s.k].rate||0)-(+merged[x][s.k].rate||0));
+  const part=multi?keys.filter(k=>merged[k][s.k]&&cnt(k)>1&&cnt(k)<present.length).sort(byMax):[];
+  const mine=keys.filter(k=>merged[k][s.k]&&(!multi||cnt(k)===1)).sort((x,y)=>(+merged[y][s.k].rate||0)-(+merged[x][s.k].rate||0));
+  const mineFull=all.length?full:[];
   let body;
   if(!all.length)body='<div class="msg">هنوز داده‌ای از این سایت ثبت نشده</div>';
-  else if(!shared.length&&!mine.length)body='<div class="msg">شرکتی با این جستجو پیدا نشد</div>';
+  else if(!mineFull.length&&!part.length&&!mine.length)body='<div class="msg">شرکتی با این جستجو پیدا نشد</div>';
   else body='<div class="cards">'+
-   (both&&shared.length?'<div class="grp">در هر دو سایت · '+fa(shared.length)+'</div>':'')+shared.map(k=>card(merged[k],s,both)).join('')+
-   (both&&mine.length?'<div class="grp">فقط در '+esc(s.n)+' · '+fa(mine.length)+'</div>':'')+mine.map(k=>card(merged[k],s,both)).join('')+'</div>';
+   (multi&&mineFull.length?'<div class="grp">'+(present.length===SITES.length?'در همه سایت‌ها':'در هر '+fa(present.length)+' سایت')+' · '+fa(mineFull.length)+'</div>':'')+mineFull.map(k=>card(merged[k],s,multi)).join('')+
+   (multi&&part.length?'<div class="grp">در چند سایت · '+fa(part.length)+'</div>':'')+part.map(k=>card(merged[k],s,multi)).join('')+
+   (multi&&mine.length?'<div class="grp">فقط در '+esc(s.n)+' · '+fa(mine.length)+'</div>':'')+mine.map(k=>card(merged[k],s,multi)).join('')+'</div>';
   return'<section class="col '+s.c+'">'+siteCard(s,all)+body+'</section>';
  }).join('')+'<svg class="ln" id="ln" aria-hidden="true"></svg>';
 }
 function cardsOf(k){return[...document.querySelectorAll('.cc')].filter(e=>e.dataset.k===k)}
 function line(k){
  const svg=$('ln');if(!svg)return;svg.innerHTML='';
- if(!k||innerWidth<=860)return;
+ if(!k||innerWidth<=1100)return;
  const els=cardsOf(k);if(els.length<2)return;
- const rc=$('cols').getBoundingClientRect(),r=els.map(e=>e.getBoundingClientRect()).sort((p,q)=>p.left-q.left);
- const x1=r[0].right-rc.left,y1=r[0].top+r[0].height/2-rc.top,x2=r[1].left-rc.left,y2=r[1].top+r[1].height/2-rc.top,m=(x1+x2)/2;
- svg.innerHTML='<defs><linearGradient id="lg" gradientUnits="userSpaceOnUse" x1="'+x1+'" y1="0" x2="'+x2+'" y2="0"><stop offset="0" stop-color="#F2BE1A"/><stop offset="1" stop-color="#1656F5"/></linearGradient></defs>'+
-  '<path d="M'+x1+' '+y1+'C'+m+' '+y1+' '+m+' '+y2+' '+x2+' '+y2+'" fill="none" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round"/>'+
-  '<circle cx="'+x1+'" cy="'+y1+'" r="5" fill="#F2BE1A"/><circle cx="'+x2+'" cy="'+y2+'" r="5" fill="#1656F5"/>';
+ const rc=$('cols').getBoundingClientRect();
+ const r=els.map(e=>({b:e.getBoundingClientRect(),c:SITE_COLOR[[...e.closest('.col').classList].find(x=>/^s\d$/.test(x))]||'#888'})).sort((p,q)=>p.b.left-q.b.left);
+ let d='',defs='',dots='';
+ for(let i=0;i<r.length-1;i++){
+  const a=r[i],b=r[i+1];
+  const x1=a.b.right-rc.left,y1=a.b.top+a.b.height/2-rc.top,x2=b.b.left-rc.left,y2=b.b.top+b.b.height/2-rc.top,m=(x1+x2)/2;
+  defs+='<linearGradient id="lg'+i+'" gradientUnits="userSpaceOnUse" x1="'+x1+'" y1="0" x2="'+x2+'" y2="0"><stop offset="0" stop-color="'+a.c+'"/><stop offset="1" stop-color="'+b.c+'"/></linearGradient>';
+  d+='<path d="M'+x1+' '+y1+'C'+m+' '+y1+' '+m+' '+y2+' '+x2+' '+y2+'" fill="none" stroke="url(#lg'+i+')" stroke-width="3.5" stroke-linecap="round"/>';
+  dots+='<circle cx="'+x1+'" cy="'+y1+'" r="5" fill="'+a.c+'"/><circle cx="'+x2+'" cy="'+y2+'" r="5" fill="'+b.c+'"/>';
+ }
+ svg.innerHTML='<defs>'+defs+'</defs>'+d+dots;
 }
 function focus(k){
  document.querySelectorAll('.cc.hl').forEach(e=>e.classList.remove('hl'));
@@ -273,18 +303,22 @@ function press(){document.querySelectorAll('.cc').forEach(e=>e.setAttribute('ari
 function panel(k){
  const dp=$('dp');
  if(!k||!merged[k]){dp.hidden=true;dp.innerHTML='';return}
- const c=merged[k],a=c[A.k],b=c[B.k],name=esc(FA[k]||k);
+ const c=merged[k],name=esc(FA[k]||k),have=SITES.filter(s=>c[s.k]);
  const val=r=>r&&r.rate!=null?fa2(r.rate)+'٪':'—';
  let verdict;
- if(!a||!b)verdict='فقط در صفحه مقایسه '+esc((a?A:B).n)+' دیده می‌شود و '+esc((a?B:A).n)+' آن را نشان نمی‌دهد';
- else if(a.rate==null||b.rate==null)verdict='کارمزد یکی از دو سایت ثبت نشده';
- else if(+a.rate===+b.rate)verdict='هر دو سایت یک کارمزد نشان می‌دهند';
+ const w=have.filter(s=>c[s.k].rate!=null);
+ if(have.length===1)verdict='فقط در صفحه مقایسه '+esc(have[0].n)+' دیده می‌شود و سایت‌های دیگر آن را نشان نمی‌دهند';
+ else if(w.length<2)verdict='کارمزد برای مقایسه کافی ثبت نشده';
  else{
-  const hi=+a.rate>+b.rate?A:B,lo=hi===A?B:A,H=Math.max(+a.rate,+b.rate),L=Math.min(+a.rate,+b.rate),d=H-L;
-  verdict=esc(hi.n)+' '+fa2(d)+' واحد درصد بیشتر از '+esc(lo.n)+' می‌دهد'+(L>0?' ('+fa2(Math.round(d/L*1000)/10)+'٪ بیشتر از مقدار کمتر)':'');
+  const H=Math.max(...w.map(s=>+c[s.k].rate)),L=Math.min(...w.map(s=>+c[s.k].rate));
+  if(H===L)verdict='همه سایت‌ها یک کارمزد نشان می‌دهند';
+  else{
+   const hi=w.filter(s=>+c[s.k].rate===H),lo=w.filter(s=>+c[s.k].rate===L),d=H-L;
+   verdict=hi.map(s=>esc(s.n)).join(' و ')+' '+fa2(d)+' واحد درصد بیشتر از '+lo.map(s=>esc(s.n)).join(' و ')+(hi.length>1?' می‌دهند':' می‌دهد')+(L>0?' ('+fa2(Math.round(d/L*1000)/10)+'٪ بیشتر از مقدار کمتر)':'');
+  }
  }
  dp.innerHTML='<div class="dp-h">'+logoHtml(k)+'<div class="tt"><b>'+name+'</b><small>'+esc(k)+'</small></div><button type="button" class="x" id="dpx" aria-label="بستن">×</button></div>'+
-  '<div class="dp-v"><div class="v s1"><span>'+esc(A.n)+'</span><b>'+val(a)+'</b></div><div class="vs">در برابر</div><div class="v s2"><span>'+esc(B.n)+'</span><b>'+val(b)+'</b></div></div>'+
+  '<div class="dp-v">'+SITES.map(s=>'<div class="v '+s.c+'"><span>'+esc(s.n)+'</span><b>'+val(c[s.k])+'</b></div>').join('')+'</div>'+
   '<div class="dp-t">'+verdict+'</div>';
  dp.hidden=false;
 }
