@@ -1,0 +1,59 @@
+{
+ "site": "site1",
+ "coverage": "third",
+ "captured_at": "2026-10-26T16:35:25.452Z",
+ "rows": [
+  {
+   "company_key": "arman",
+   "rate": 14
+  },
+  {
+   "company_key": "sina",
+   "rate": 14
+  },
+  {
+   "company_key": "taavon",
+   "rate": 14
+  },
+  {
+   "company_key": "pardis",
+   "rate": 13
+  },
+  {
+   "company_key": "day",
+   "rate": 12
+  },
+  {
+   "company_key": "moalem",
+   "rate": 12
+  },
+  {
+   "company_key": "alborz",
+   "rate": 10
+  },
+  {
+   "company_key": "hekmat",
+   "rate": 10
+  },
+  {
+   "company_key": "tejaratno",
+   "rate": 10
+  },
+  {
+   "company_key": "novin",
+   "rate": 8
+  },
+  {
+   "company_key": "asia",
+   "rate": 6
+  },
+  {
+   "company_key": "ma",
+   "rate": 6
+  },
+  {
+   "company_key": "saman",
+   "rate": 6
+  }
+ ]
+}

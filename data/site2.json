@@ -1,0 +1,55 @@
+{
+ "site": "site2",
+ "coverage": "third",
+ "captured_at": "2026-10-26T14:31:30.778Z",
+ "rows": [
+  {
+   "company_key": "day",
+   "rate": 14
+  },
+  {
+   "company_key": "hekmat",
+   "rate": 14
+  },
+  {
+   "company_key": "mihan",
+   "rate": 14
+  },
+  {
+   "company_key": "moalem",
+   "rate": 14
+  },
+  {
+   "company_key": "novin",
+   "rate": 14
+  },
+  {
+   "company_key": "razi",
+   "rate": 14
+  },
+  {
+   "company_key": "alborz",
+   "rate": 7
+  },
+  {
+   "company_key": "dana",
+   "rate": 7
+  },
+  {
+   "company_key": "ma",
+   "rate": 7
+  },
+  {
+   "company_key": "asia",
+   "rate": 4
+  },
+  {
+   "company_key": "saman",
+   "rate": 4
+  },
+  {
+   "company_key": "kowsar",
+   "rate": 0
+  }
+ ]
+}

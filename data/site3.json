@@ -1,0 +1,79 @@
+{
+ "site": "site3",
+ "coverage": "third",
+ "captured_at": "2026-10-26T16:35:20.859Z",
+ "rows": [
+  {
+   "company_key": "alborz",
+   "rate": 14
+  },
+  {
+   "company_key": "day",
+   "rate": 14
+  },
+  {
+   "company_key": "hoshmand",
+   "rate": 14
+  },
+  {
+   "company_key": "moalem",
+   "rate": 14
+  },
+  {
+   "company_key": "razi",
+   "rate": 14
+  },
+  {
+   "company_key": "sarmad",
+   "rate": 14
+  },
+  {
+   "company_key": "sina",
+   "rate": 14
+  },
+  {
+   "company_key": "taavon",
+   "rate": 14
+  },
+  {
+   "company_key": "novin",
+   "rate": 12
+  },
+  {
+   "company_key": "pardis",
+   "rate": 12
+  },
+  {
+   "company_key": "tejaratno",
+   "rate": 12
+  },
+  {
+   "company_key": "arman",
+   "rate": 10
+  },
+  {
+   "company_key": "iran",
+   "rate": 6
+  },
+  {
+   "company_key": "asia",
+   "rate": 4
+  },
+  {
+   "company_key": "saman",
+   "rate": 3
+  },
+  {
+   "company_key": "dana",
+   "rate": 0
+  },
+  {
+   "company_key": "hekmat",
+   "rate": 0
+  },
+  {
+   "company_key": "kowsar",
+   "rate": 0
+  }
+ ]
+}

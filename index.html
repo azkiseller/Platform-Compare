@@ -204,10 +204,8 @@ html[data-theme=dark] .dp{background:rgba(14,18,30,.95)}
 <div class="dp" id="dp" hidden role="dialog" aria-label="جزئیات مقایسه"></div>
 </div>
 <script>
-// ---- تنظیمات: فقط کلید anon را بگذار ----
-const SUPABASE_URL='https://ssqqjkhzgcgojbacjitq.supabase.co';
-const ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcXFqa2h6Z2Nnb2piYWNqaXRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjczOTEsImV4cCI6MjEwNTE0MzM5MX0.0a9maOTpqGBRNs5mIVvNONXpYBauL8yjlY-O8EtsDxU';
-// ----------------------------------------
+// داده‌ها در پوشه‌ی data همین مخزن ثبت می‌شوند: data/<site>.json
+const DATA_DIR='data/';
 const SITES=[ // ترتیب در صفحه‌ی راست‌به‌چپ: اولی راست، دومی وسط، سومی چپ
  {k:'site3',c:'s3',n:'بیمه پلاس',h:'plusbimeh.com',logo:'brand/plusbimeh.png'},
  {k:'site1',c:'s1',n:'ازکی ایجنت',h:'azkiagent.com',logo:'brand/azki-agent.png'},
@@ -228,10 +226,15 @@ $('tt').onclick=()=>{const h=document.documentElement,t=h.dataset.theme==='dark'
 async function load(){
  $('sub').textContent='در حال بارگذاری…';
  try{
-  const r=await fetch(SUPABASE_URL+'/rest/v1/current_commission?select=site,company_key,rate,captured_at&coverage=eq.third&order=captured_at.desc',
-   {headers:{apikey:ANON_KEY,Authorization:'Bearer '+ANON_KEY,'Accept-Profile':'compare'}});
-  if(!r.ok)throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,140));
-  const raw=await r.json(),seen=new Set();rows=raw.filter(x=>{const k=x.site+'|'+x.company_key;if(seen.has(k))return false;seen.add(k);return true});failed=null;$('sub').textContent='روی هر شرکت بزن تا همتایش در سایت‌های دیگر و اختلاف نشان داده شود';
+  const res=await Promise.all(SITES.map(async s=>{
+   const r=await fetch(DATA_DIR+s.k+'.json?t='+Date.now(),{cache:'no-store'});
+   if(r.status===404)return[];
+   if(!r.ok)throw new Error(s.k+': HTTP '+r.status);
+   const d=await r.json(),seen=new Set();
+   return(d.rows||[]).filter(x=>{if(seen.has(x.company_key))return false;seen.add(x.company_key);return true})
+    .map(x=>({site:s.k,company_key:x.company_key,rate:x.rate,captured_at:x.captured_at||d.captured_at}));
+  }));
+  rows=res.flat();failed=null;$('sub').textContent='روی هر شرکت بزن تا همتایش در سایت‌های دیگر و اختلاف نشان داده شود';
  }catch(e){failed=e.message;$('sub').textContent='ناموفق'}
  render();
 }
