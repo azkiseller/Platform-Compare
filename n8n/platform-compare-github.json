@@ -1,0 +1,448 @@
+{
+ "name": "Platform Compare → GitHub",
+ "nodes": [
+  {
+   "parameters": {
+    "rule": {
+     "interval": [
+      {
+       "field": "hours",
+       "hoursInterval": 6
+      }
+     ]
+    }
+   },
+   "id": "beab5c9e-4801-47fa-82cb-77e34209f4dd",
+   "name": "Schedule Trigger (هر ۶ ساعت)",
+   "type": "n8n-nodes-base.scheduleTrigger",
+   "typeVersion": 1.2,
+   "position": [
+    0,
+    300
+   ]
+  },
+  {
+   "parameters": {},
+   "id": "50c69c63-67df-46dc-88a7-4840a1db6440",
+   "name": "اسکرپ ازکی ایجنت (site1) — نودهای فعلی را اینجا بگذار",
+   "type": "n8n-nodes-base.noOp",
+   "typeVersion": 1,
+   "position": [
+    260,
+    0
+   ],
+   "notes": "این نود را با زنجیره‌ی اسکرپ فعلی همین سایت جایگزین کن. خروجی آخرش (همان چیزی که قبلاً به Supabase می‌رفت) را به «ساخت فایل site1» وصل کن.",
+   "notesInFlow": true
+  },
+  {
+   "parameters": {
+    "jsCode": "// ورودی: همان آیتم‌هایی که قبلاً به Supabase (compare.commission) فرستاده می‌شد\n// هر آیتم {company_key, rate} یا یک آیتم با آرایه‌ی rows / body / data\nconst SITE = 'site1';\nconst list = [];\nfor (const it of $input.all()) {\n  const j = it.json;\n  const arr = Array.isArray(j) ? j : Array.isArray(j.rows) ? j.rows : Array.isArray(j.body) ? j.body : Array.isArray(j.data) ? j.data : [j];\n  list.push(...arr);\n}\nconst seen = new Set(), rows = [];\nfor (const r of list) {\n  if (!r || !r.company_key) continue;\n  if (r.coverage && r.coverage !== 'third') continue;\n  if (seen.has(r.company_key)) continue;\n  seen.add(r.company_key);\n  rows.push({ company_key: String(r.company_key), rate: r.rate == null || r.rate === '' ? null : Number(r.rate) });\n}\n// اگر اسکرپ چیزی برنگرداند، فایل قبلی دست نمی‌خورد\nif (!rows.length) return [];\nrows.sort((a, b) => (b.rate ?? -1) - (a.rate ?? -1) || a.company_key.localeCompare(b.company_key));\nconst doc = { site: SITE, coverage: 'third', captured_at: new Date().toISOString(), rows };\nreturn [{ json: {\n  path: 'data/' + SITE + '.json',\n  count: rows.length,\n  content: Buffer.from(JSON.stringify(doc, null, 1) + '\\n').toString('base64')\n} }];"
+   },
+   "id": "6ab487b4-b50b-403f-bc9c-26661bfa0519",
+   "name": "ساخت فایل site1",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    540,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "url": "https://api.github.com/repos/azkiseller/Platform-Compare/contents/data/site1.json?ref=main",
+    "authentication": "predefinedCredentialType",
+    "nodeCredentialType": "githubApi",
+    "sendHeaders": true,
+    "headerParameters": {
+     "parameters": [
+      {
+       "name": "Accept",
+       "value": "application/vnd.github+json"
+      },
+      {
+       "name": "X-GitHub-Api-Version",
+       "value": "2022-11-28"
+      }
+     ]
+    },
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
+   },
+   "id": "92667358-7b0b-45a7-b3ed-b9fcf6a175c2",
+   "name": "گرفتن sha فعلی site1",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    800,
+    0
+   ],
+   "notes": "اگر فایل وجود نداشته باشد 404 برمی‌گردد و فایل ساخته می‌شود",
+   "notesInFlow": true
+  },
+  {
+   "parameters": {
+    "method": "PUT",
+    "url": "https://api.github.com/repos/azkiseller/Platform-Compare/contents/data/site1.json",
+    "authentication": "predefinedCredentialType",
+    "nodeCredentialType": "githubApi",
+    "sendHeaders": true,
+    "headerParameters": {
+     "parameters": [
+      {
+       "name": "Accept",
+       "value": "application/vnd.github+json"
+      },
+      {
+       "name": "X-GitHub-Api-Version",
+       "value": "2022-11-28"
+      }
+     ]
+    },
+    "sendBody": true,
+    "specifyBody": "json",
+    "jsonBody": "={{ JSON.stringify({ message: 'data: update site1 (' + $('ساخت فایل site1').first().json.count + ' companies)', content: $('ساخت فایل site1').first().json.content, sha: $json.sha, branch: 'main' }) }}",
+    "options": {}
+   },
+   "id": "20a24f8b-2393-438c-8e48-1c7a05512527",
+   "name": "ثبت site1 در گیت‌هاب",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    1060,
+    0
+   ],
+   "retryOnFail": true,
+   "maxTries": 3,
+   "waitBetweenTries": 5000
+  },
+  {
+   "parameters": {},
+   "id": "9ef887a4-9d5f-4006-99f9-536607607672",
+   "name": "اسکرپ شرکاء (site2) — نودهای فعلی را اینجا بگذار",
+   "type": "n8n-nodes-base.noOp",
+   "typeVersion": 1,
+   "position": [
+    260,
+    300
+   ],
+   "notes": "این نود را با زنجیره‌ی اسکرپ فعلی همین سایت جایگزین کن. خروجی آخرش (همان چیزی که قبلاً به Supabase می‌رفت) را به «ساخت فایل site2» وصل کن.",
+   "notesInFlow": true
+  },
+  {
+   "parameters": {
+    "jsCode": "// ورودی: همان آیتم‌هایی که قبلاً به Supabase (compare.commission) فرستاده می‌شد\n// هر آیتم {company_key, rate} یا یک آیتم با آرایه‌ی rows / body / data\nconst SITE = 'site2';\nconst list = [];\nfor (const it of $input.all()) {\n  const j = it.json;\n  const arr = Array.isArray(j) ? j : Array.isArray(j.rows) ? j.rows : Array.isArray(j.body) ? j.body : Array.isArray(j.data) ? j.data : [j];\n  list.push(...arr);\n}\nconst seen = new Set(), rows = [];\nfor (const r of list) {\n  if (!r || !r.company_key) continue;\n  if (r.coverage && r.coverage !== 'third') continue;\n  if (seen.has(r.company_key)) continue;\n  seen.add(r.company_key);\n  rows.push({ company_key: String(r.company_key), rate: r.rate == null || r.rate === '' ? null : Number(r.rate) });\n}\n// اگر اسکرپ چیزی برنگرداند، فایل قبلی دست نمی‌خورد\nif (!rows.length) return [];\nrows.sort((a, b) => (b.rate ?? -1) - (a.rate ?? -1) || a.company_key.localeCompare(b.company_key));\nconst doc = { site: SITE, coverage: 'third', captured_at: new Date().toISOString(), rows };\nreturn [{ json: {\n  path: 'data/' + SITE + '.json',\n  count: rows.length,\n  content: Buffer.from(JSON.stringify(doc, null, 1) + '\\n').toString('base64')\n} }];"
+   },
+   "id": "f0937d12-4d68-42dc-b3bf-48d53880f80a",
+   "name": "ساخت فایل site2",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    540,
+    300
+   ]
+  },
+  {
+   "parameters": {
+    "url": "https://api.github.com/repos/azkiseller/Platform-Compare/contents/data/site2.json?ref=main",
+    "authentication": "predefinedCredentialType",
+    "nodeCredentialType": "githubApi",
+    "sendHeaders": true,
+    "headerParameters": {
+     "parameters": [
+      {
+       "name": "Accept",
+       "value": "application/vnd.github+json"
+      },
+      {
+       "name": "X-GitHub-Api-Version",
+       "value": "2022-11-28"
+      }
+     ]
+    },
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
+   },
+   "id": "12522d83-96aa-4018-b003-4366d79998d6",
+   "name": "گرفتن sha فعلی site2",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    800,
+    300
+   ],
+   "notes": "اگر فایل وجود نداشته باشد 404 برمی‌گردد و فایل ساخته می‌شود",
+   "notesInFlow": true
+  },
+  {
+   "parameters": {
+    "method": "PUT",
+    "url": "https://api.github.com/repos/azkiseller/Platform-Compare/contents/data/site2.json",
+    "authentication": "predefinedCredentialType",
+    "nodeCredentialType": "githubApi",
+    "sendHeaders": true,
+    "headerParameters": {
+     "parameters": [
+      {
+       "name": "Accept",
+       "value": "application/vnd.github+json"
+      },
+      {
+       "name": "X-GitHub-Api-Version",
+       "value": "2022-11-28"
+      }
+     ]
+    },
+    "sendBody": true,
+    "specifyBody": "json",
+    "jsonBody": "={{ JSON.stringify({ message: 'data: update site2 (' + $('ساخت فایل site2').first().json.count + ' companies)', content: $('ساخت فایل site2').first().json.content, sha: $json.sha, branch: 'main' }) }}",
+    "options": {}
+   },
+   "id": "91e89ce4-a8ba-4ba5-8b79-eb42fac47d58",
+   "name": "ثبت site2 در گیت‌هاب",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    1060,
+    300
+   ],
+   "retryOnFail": true,
+   "maxTries": 3,
+   "waitBetweenTries": 5000
+  },
+  {
+   "parameters": {},
+   "id": "85f65f31-5c94-4cc4-a6e9-7780b52582b3",
+   "name": "اسکرپ بیمه پلاس (site3) — نودهای فعلی را اینجا بگذار",
+   "type": "n8n-nodes-base.noOp",
+   "typeVersion": 1,
+   "position": [
+    260,
+    600
+   ],
+   "notes": "این نود را با زنجیره‌ی اسکرپ فعلی همین سایت جایگزین کن. خروجی آخرش (همان چیزی که قبلاً به Supabase می‌رفت) را به «ساخت فایل site3» وصل کن.",
+   "notesInFlow": true
+  },
+  {
+   "parameters": {
+    "jsCode": "// ورودی: همان آیتم‌هایی که قبلاً به Supabase (compare.commission) فرستاده می‌شد\n// هر آیتم {company_key, rate} یا یک آیتم با آرایه‌ی rows / body / data\nconst SITE = 'site3';\nconst list = [];\nfor (const it of $input.all()) {\n  const j = it.json;\n  const arr = Array.isArray(j) ? j : Array.isArray(j.rows) ? j.rows : Array.isArray(j.body) ? j.body : Array.isArray(j.data) ? j.data : [j];\n  list.push(...arr);\n}\nconst seen = new Set(), rows = [];\nfor (const r of list) {\n  if (!r || !r.company_key) continue;\n  if (r.coverage && r.coverage !== 'third') continue;\n  if (seen.has(r.company_key)) continue;\n  seen.add(r.company_key);\n  rows.push({ company_key: String(r.company_key), rate: r.rate == null || r.rate === '' ? null : Number(r.rate) });\n}\n// اگر اسکرپ چیزی برنگرداند، فایل قبلی دست نمی‌خورد\nif (!rows.length) return [];\nrows.sort((a, b) => (b.rate ?? -1) - (a.rate ?? -1) || a.company_key.localeCompare(b.company_key));\nconst doc = { site: SITE, coverage: 'third', captured_at: new Date().toISOString(), rows };\nreturn [{ json: {\n  path: 'data/' + SITE + '.json',\n  count: rows.length,\n  content: Buffer.from(JSON.stringify(doc, null, 1) + '\\n').toString('base64')\n} }];"
+   },
+   "id": "867a55bf-3301-41d9-89ab-9047eae5a0b6",
+   "name": "ساخت فایل site3",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    540,
+    600
+   ]
+  },
+  {
+   "parameters": {
+    "url": "https://api.github.com/repos/azkiseller/Platform-Compare/contents/data/site3.json?ref=main",
+    "authentication": "predefinedCredentialType",
+    "nodeCredentialType": "githubApi",
+    "sendHeaders": true,
+    "headerParameters": {
+     "parameters": [
+      {
+       "name": "Accept",
+       "value": "application/vnd.github+json"
+      },
+      {
+       "name": "X-GitHub-Api-Version",
+       "value": "2022-11-28"
+      }
+     ]
+    },
+    "options": {
+     "response": {
+      "response": {
+       "neverError": true
+      }
+     }
+    }
+   },
+   "id": "723c2ff3-b6b4-4456-bbb9-1c1c1793f93a",
+   "name": "گرفتن sha فعلی site3",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    800,
+    600
+   ],
+   "notes": "اگر فایل وجود نداشته باشد 404 برمی‌گردد و فایل ساخته می‌شود",
+   "notesInFlow": true
+  },
+  {
+   "parameters": {
+    "method": "PUT",
+    "url": "https://api.github.com/repos/azkiseller/Platform-Compare/contents/data/site3.json",
+    "authentication": "predefinedCredentialType",
+    "nodeCredentialType": "githubApi",
+    "sendHeaders": true,
+    "headerParameters": {
+     "parameters": [
+      {
+       "name": "Accept",
+       "value": "application/vnd.github+json"
+      },
+      {
+       "name": "X-GitHub-Api-Version",
+       "value": "2022-11-28"
+      }
+     ]
+    },
+    "sendBody": true,
+    "specifyBody": "json",
+    "jsonBody": "={{ JSON.stringify({ message: 'data: update site3 (' + $('ساخت فایل site3').first().json.count + ' companies)', content: $('ساخت فایل site3').first().json.content, sha: $json.sha, branch: 'main' }) }}",
+    "options": {}
+   },
+   "id": "d0b6cca9-c534-4d94-92f7-6e945439f07d",
+   "name": "ثبت site3 در گیت‌هاب",
+   "type": "n8n-nodes-base.httpRequest",
+   "typeVersion": 4.2,
+   "position": [
+    1060,
+    600
+   ],
+   "retryOnFail": true,
+   "maxTries": 3,
+   "waitBetweenTries": 5000
+  }
+ ],
+ "connections": {
+  "Schedule Trigger (هر ۶ ساعت)": {
+   "main": [
+    [
+     {
+      "node": "اسکرپ ازکی ایجنت (site1) — نودهای فعلی را اینجا بگذار",
+      "type": "main",
+      "index": 0
+     },
+     {
+      "node": "اسکرپ شرکاء (site2) — نودهای فعلی را اینجا بگذار",
+      "type": "main",
+      "index": 0
+     },
+     {
+      "node": "اسکرپ بیمه پلاس (site3) — نودهای فعلی را اینجا بگذار",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "اسکرپ ازکی ایجنت (site1) — نودهای فعلی را اینجا بگذار": {
+   "main": [
+    [
+     {
+      "node": "ساخت فایل site1",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "ساخت فایل site1": {
+   "main": [
+    [
+     {
+      "node": "گرفتن sha فعلی site1",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "گرفتن sha فعلی site1": {
+   "main": [
+    [
+     {
+      "node": "ثبت site1 در گیت‌هاب",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "اسکرپ شرکاء (site2) — نودهای فعلی را اینجا بگذار": {
+   "main": [
+    [
+     {
+      "node": "ساخت فایل site2",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "ساخت فایل site2": {
+   "main": [
+    [
+     {
+      "node": "گرفتن sha فعلی site2",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "گرفتن sha فعلی site2": {
+   "main": [
+    [
+     {
+      "node": "ثبت site2 در گیت‌هاب",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "اسکرپ بیمه پلاس (site3) — نودهای فعلی را اینجا بگذار": {
+   "main": [
+    [
+     {
+      "node": "ساخت فایل site3",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "ساخت فایل site3": {
+   "main": [
+    [
+     {
+      "node": "گرفتن sha فعلی site3",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "گرفتن sha فعلی site3": {
+   "main": [
+    [
+     {
+      "node": "ثبت site3 در گیت‌هاب",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  }
+ },
+ "settings": {
+  "executionOrder": "v1"
+ },
+ "pinData": {}
+}
