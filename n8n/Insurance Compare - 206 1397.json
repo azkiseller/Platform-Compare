@@ -6,7 +6,9 @@
         "rule": {
           "interval": [
             {
-              "field": "minutes"
+              "field": "hours",
+              "hoursInterval": 6,
+              "triggerAtMinute": 5
             }
           ]
         }
@@ -18,7 +20,9 @@
       "position": [
         -80,
         1136
-      ]
+      ],
+      "notes": "هر ۶ ساعت، دقیقه‌ی 5 (دو workflow با فاصله اجرا می‌شوند)",
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -82,7 +86,7 @@
         432,
         1328
       ],
-      "onError": "stopWorkflow"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -188,7 +192,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const COVERAGE = 70000000;\nlet body = $input.first().json;\n// پاسخ ممکن است داخل فیلد data به صورت رشته آمده باشد\nif (typeof body.data === 'string') {\n  try { body = JSON.parse(body.data); }\n  catch (e) { throw new Error('Offers response is not valid JSON: ' + body.data.slice(0, 200)); }\n}\nif (body.status && body.status !== 'ok') {\n  throw new Error('Shoraka offers status: ' + body.status + ' ' + (body.message || ''));\n}\nconst offers = body.data?.offers ?? [];\nif (!offers.length) throw new Error('Shoraka offers list is empty');\nconst captured_at = new Date().toISOString();\nconst r2 = n => Math.round(Number(n || 0) * 100) / 100;\nreturn offers.map(o => {\n  const tariff = (o.tariffs || []).find(t => Number(t.financial_coverage) === COVERAGE) || o.tariffs?.[0];\n  // عددی که خود سایت به عنوان کارمزد نشان می‌دهد\n  const rate = r2(tariff?.total_discount_percent);\n  return { json: {\n    site: 'site2',\n    vehicle: '206_1397',\n    company_key: o.company_url_name,\n    company_name: o.company_name,\n    coverage: 'third',\n    rate,\n    rate_fixed: r2(o.commissions?.fixed),\n    rate_shoraka: r2(o.commissions?.shoraka),\n    premium: tariff?.tariff ?? null,\n    status: tariff ? 'ok' : 'off',\n    captured_at\n  } };\n});"
+        "jsCode": "const COVERAGE = 70000000;\nlet body = $input.first().json;\n// پاسخ ممکن است داخل فیلد data به صورت رشته آمده باشد\nif (typeof body.data === 'string') {\n  try { body = JSON.parse(body.data); }\n  catch (e) { throw new Error('Offers response is not valid JSON: ' + body.data.slice(0, 200)); }\n}\nif (body.status && body.status !== 'ok') {\n  throw new Error('Shoraka offers status: ' + body.status + ' ' + (body.message || ''));\n}\nconst offers = body.data?.offers ?? [];\nif (!offers.length) throw new Error('Shoraka offers list is empty');\nconst captured_at = new Date().toISOString();\nconst r2 = n => (n == null || n === '' || !Number.isFinite(Number(n))) ? null : Math.round(Number(n) * 100) / 100;\nreturn offers.map(o => {\n  const tariff = (o.tariffs || []).find(t => Number(t.financial_coverage) === COVERAGE) || o.tariffs?.[0];\n  // عددی که خود سایت به عنوان کارمزد نشان می‌دهد\n  const rate = r2(tariff?.total_discount_percent);\n  return { json: {\n    site: 'site2',\n    vehicle: '206_1397',\n    company_key: o.company_url_name,\n    company_name: o.company_name,\n    coverage: 'third',\n    rate,\n    rate_fixed: r2(o.commissions?.fixed),\n    rate_shoraka: r2(o.commissions?.shoraka),\n    premium: tariff?.tariff ?? null,\n    status: tariff ? 'ok' : 'off',\n    captured_at\n  } };\n});"
       },
       "id": "c6724536-7f4f-44b8-8e21-2066ed1d1a91",
       "name": "Normalize Site2",
@@ -198,11 +202,11 @@
         880,
         1328
       ],
-      "onError": "stopWorkflow"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all().map(i => i.json);\nreturn [{ json: {\n  companies: items.map(i => ({ site: i.site, company_key: i.company_key, name: i.company_name, status: i.status })),\n  commissions: items.filter(i => i.status === 'ok').map(i => ({ site: i.site, company_key: i.company_key, coverage: i.coverage, vehicle: i.vehicle, rate: i.rate, captured_at: i.captured_at }))\n} }];"
+        "jsCode": "const items = $input.all().map(i => i.json);\nconst seen = new Set();\nconst companies = [], commissions = [];\nfor (const i of items) {\n  if (!i.company_key) continue;\n  const k = i.site + '|' + i.company_key;\n  if (seen.has(k)) continue;\n  seen.add(k);\n  companies.push({ site: i.site, company_key: i.company_key, name: i.company_name, status: i.status, updated_at: i.captured_at });\n  if (i.status === 'ok') commissions.push({ site: i.site, company_key: i.company_key, coverage: i.coverage, vehicle: i.vehicle, rate: i.rate, captured_at: i.captured_at });\n}\nreturn [{ json: { companies, commissions } }];"
       },
       "id": "13758362-6f9d-450e-ae03-9dca2c679cfd",
       "name": "Build Payload Site2",
@@ -212,7 +216,7 @@
         1104,
         1328
       ],
-      "onError": "stopWorkflow"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -256,7 +260,7 @@
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueRegularOutput"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -294,7 +298,7 @@
         1552,
         1328
       ],
-      "retryOnFail": true,
+      "retryOnFail": false,
       "waitBetweenTries": 5000,
       "credentials": {
         "httpCustomAuth": {
@@ -302,7 +306,7 @@
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueRegularOutput"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -383,7 +387,7 @@
         432,
         1136
       ],
-      "onError": "stopWorkflow"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -555,7 +559,7 @@
         880,
         1136
       ],
-      "onError": "stopWorkflow"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -601,7 +605,7 @@
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueRegularOutput"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -645,11 +649,11 @@
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueRegularOutput"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "jsCode": "const n = $('Normalize').item.json;\nreturn [{ json: {\n  site: n.site,\n  coverage: n.coverage,\n  captured_at: n.captured_at,\n  count: n.commission.length,\n  max_rate: Math.max(...n.commission.map(r => r.rate ?? -1)),\n  rows: n.commission,\n  unmapped: n.unmapped\n} }];"
+        "jsCode": "const n = $('Normalize').item.json;\nreturn [{ json: {\n  site: n.site,\n  coverage: n.coverage,\n  captured_at: n.captured_at,\n  count: n.commission.length,\n  max_rate: (r => r.length ? Math.max(...r) : null)(n.commission.map(r => r.rate).filter(v => v != null)),\n  rows: n.commission,\n  unmapped: n.unmapped\n} }];"
       },
       "id": "72380310-5053-4e56-a870-6011e32bab36",
       "name": "Pack",
@@ -861,7 +865,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const COVERAGE_ID = 188;   // پوشش مالی ۷۰ میلیون تومان (همان سناریوی شوراکا)\nconst DURATION_ID = 2;     // یک ساله\n\n// شناسه‌ی شرکت در سایت سوم ← همان company_key که در شوراکا/ازکی استفاده می‌شود\nconst KEYS = {\n  1019: 'day', 1020: 'moalem', 1021: 'saman', 1023: 'parsian', 1024: 'asia', 1025: 'razi', 1026: 'iran',\n  1027: 'sarmad', 1028: 'taavon', 1029: 'dana', 1030: 'mihan', 1031: 'arman', 1032: 'sina', 1033: 'novin',\n  1034: 'alborz', 1038: 'kowsar', 1039: 'tejaratno', 1060: 'hekmat', 1066: 'pardis', 1067: 'hoshmand'\n};\n\nlet body = $input.first().json;\nif (Array.isArray(body)) body = body[0];\nconst inquiries = body?.Inquiries ?? [];\nconst companies = body?.Companies ?? [];\nif (!inquiries.length) throw new Error('Site3: Inquiries list is empty');\n\nconst cov = (body.Coverages || []).find(c => c.Id === COVERAGE_ID);\nif (!cov) throw new Error('Site3: coverage ' + COVERAGE_ID + ' not found in response');\n\nconst names = {};\ncompanies.forEach(c => { names[c.Id] = String(c.Title || '').trim(); });\n\nconst captured_at = new Date().toISOString();\nconst r2 = n => Math.round(Number(n || 0) * 100) / 100;\n// «۱۴%» یا «14%» → ۱۴ ؛ خالی → null (یعنی سایت کارمزد نشان نداده، نه صفر)\nconst pct = h => {\n  if (h == null || h === '') return null;\n  const fa = '۰۱۲۳۴۵۶۷۸۹';\n  const s = String(h).replace(/[۰-۹]/g, d => fa.indexOf(d)).replace('٫', '.');\n  const m = s.match(/[\\d.]+/);\n  return m ? Number(m[0]) : null;\n};\n\nconst rows = inquiries.filter(x => x.Details?.CoverageId === COVERAGE_ID && x.DurationId === DURATION_ID);\nif (!rows.length) throw new Error('Site3: no rows for coverage/duration');\n\n// برای هر شرکت فقط یک ردیف\nconst seen = new Set();\nconst out = [];\nfor (const x of rows) {\n  const id = x.CompanyId;\n  if (seen.has(id)) continue;\n  seen.add(id);\n  const cp = x.CashPrice || {};\n  out.push({ json: {\n    site: 'site3',\n    vehicle: '206_1397',\n    company_key: KEYS[id] || ('c' + id),\n    company_name: names[id] || String(id),\n    coverage: 'third',\n    rate: pct(cp.Hint) == null ? null : r2(pct(cp.Hint)),\n    premium: cp.FinalAmount ?? null,\n    status: x.IsLocked ? 'off' : 'ok',\n    captured_at\n  } });\n}\nreturn out;\n"
+        "jsCode": "const COVERAGE_ID = 188;   // پوشش مالی ۷۰ میلیون تومان (همان سناریوی شوراکا)\nconst DURATION_ID = 2;     // یک ساله\n\n// شناسه‌ی شرکت در سایت سوم ← همان company_key که در شوراکا/ازکی استفاده می‌شود\nconst KEYS = {\n  1019: 'day', 1020: 'moalem', 1021: 'saman', 1023: 'parsian', 1024: 'asia', 1025: 'razi', 1026: 'iran',\n  1027: 'sarmad', 1028: 'taavon', 1029: 'dana', 1030: 'mihan', 1031: 'arman', 1032: 'sina', 1033: 'novin',\n  1034: 'alborz', 1038: 'kowsar', 1039: 'tejaratno', 1060: 'hekmat', 1066: 'pardis', 1067: 'hoshmand'\n};\n\nlet body = $input.first().json;\nif (Array.isArray(body)) body = body[0];\nconst inquiries = body?.Inquiries ?? [];\nconst companies = body?.Companies ?? [];\nif (!inquiries.length) throw new Error('Site3: Inquiries list is empty');\n\nconst cov = (body.Coverages || []).find(c => c.Id === COVERAGE_ID);\nif (!cov) throw new Error('Site3: coverage ' + COVERAGE_ID + ' not found in response');\n\nconst names = {};\ncompanies.forEach(c => { names[c.Id] = String(c.Title || '').trim(); });\n\nconst captured_at = new Date().toISOString();\nconst r2 = n => Math.round(Number(n || 0) * 100) / 100;\n// «۱۴%» یا «14%» → ۱۴ ؛ خالی → null (یعنی سایت کارمزد نشان نداده، نه صفر)\nconst pct = h => {\n  if (h == null || h === '') return null;\n  const fa = '۰۱۲۳۴۵۶۷۸۹';\n  const s = String(h).replace(/[۰-۹]/g, d => fa.indexOf(d)).replace('٫', '.');\n  const m = s.match(/[\\d.]+/);\n  return m ? Number(m[0]) : null;\n};\n\nconst rows = inquiries.filter(x => x.Details?.CoverageId === COVERAGE_ID && x.DurationId === DURATION_ID);\nif (!rows.length) throw new Error('Site3: no rows for coverage/duration');\n\n// برای هر شرکت فقط یک ردیف\nconst seen = new Set();\nconst out = [];\nfor (const x of rows) {\n  const id = x.CompanyId;\n  if (seen.has(id)) continue;\n  seen.add(id);\n  const cp = x.CashPrice || {};\n  out.push({ json: {\n    site: 'site3',\n    vehicle: '206_1397',\n    company_key: KEYS[id] || null,\n    unmapped: KEYS[id] ? undefined : id,\n    company_name: names[id] || String(id),\n    coverage: 'third',\n    rate: pct(cp.Hint) == null ? null : r2(pct(cp.Hint)),\n    premium: cp.FinalAmount ?? null,\n    status: x.IsLocked ? 'off' : 'ok',\n    captured_at\n  } });\n}\nreturn out;\n"
       },
       "id": "a572e740-e27f-47e6-9654-20cb6650b618",
       "name": "Normalize Site3",
@@ -873,11 +877,11 @@
       ],
       "notesInFlow": true,
       "notes": "کارمزد = CashPrice.Hint (مثلاً «۱۴%»)؛ فقط پوشش ۱۸۸ (۷۰ میلیون) و یک‌ساله",
-      "onError": "stopWorkflow"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all().map(i => i.json);\nconst seen = new Set();\nconst companies = [];\nfor (const i of items) {\n  const k = i.site + '|' + i.company_key;\n  if (seen.has(k)) continue;\n  seen.add(k);\n  companies.push({ site: i.site, company_key: i.company_key, name: i.company_name, status: i.status, updated_at: i.captured_at });\n}\nconst commissions = items\n  .filter(i => i.status === 'ok')\n  .map(i => ({ site: i.site, company_key: i.company_key, coverage: i.coverage, vehicle: i.vehicle, rate: i.rate == null ? null : Number(i.rate), captured_at: i.captured_at }));\nreturn [{ json: { companies, commissions } }];\n"
+        "jsCode": "// شرکت‌هایی که در نگاشت KEYS نیستند ذخیره نمی‌شوند (در Site3 Output با unmapped دیده می‌شوند)\nconst items = $input.all().map(i => i.json).filter(i => i.company_key);\nconst seen = new Set();\nconst companies = [];\nfor (const i of items) {\n  const k = i.site + '|' + i.company_key;\n  if (seen.has(k)) continue;\n  seen.add(k);\n  companies.push({ site: i.site, company_key: i.company_key, name: i.company_name, status: i.status, updated_at: i.captured_at });\n}\nconst commissions = items\n  .filter(i => i.status === 'ok')\n  .map(i => ({ site: i.site, company_key: i.company_key, coverage: i.coverage, vehicle: i.vehicle, rate: i.rate == null ? null : Number(i.rate), captured_at: i.captured_at }));\nreturn [{ json: { companies, commissions } }];\n"
       },
       "id": "57fbbdb8-9b82-4d6d-9669-1c903d4c144c",
       "name": "Build Payload Site3",
@@ -889,7 +893,7 @@
       ],
       "notesInFlow": true,
       "notes": "ساخت دو آرایه: شرکت‌ها (با company_name و بدون تکرار) و کمیسیون‌ها",
-      "onError": "stopWorkflow"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -942,7 +946,7 @@
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueRegularOutput"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -995,7 +999,7 @@
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueRegularOutput"
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -1012,6 +1016,66 @@
       "notesInFlow": true,
       "notes": "خروجی شاخه‌ی پلاس‌بیمه",
       "onError": "stopWorkflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "// شاخه‌ی site1 شکست خورده؛ پیام خطا را نگه می‌داریم تا «Check Errors» در پایان اجرا گزارشش کند\nreturn $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site1', error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});"
+      },
+      "id": "527c88be-ecaf-4911-8a01-1a90720ef7c4",
+      "name": "Failed Site1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1776,
+        1000
+      ],
+      "notesInFlow": true,
+      "notes": "خطای این سایت؛ بقیه‌ی سایت‌ها ادامه می‌دهند"
+    },
+    {
+      "parameters": {
+        "jsCode": "// شاخه‌ی site2 شکست خورده؛ پیام خطا را نگه می‌داریم تا «Check Errors» در پایان اجرا گزارشش کند\nreturn $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site2', error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});"
+      },
+      "id": "df146bd7-bfd9-4f76-88aa-ecceaf3b51b0",
+      "name": "Failed Site2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        1488
+      ],
+      "notesInFlow": true,
+      "notes": "خطای این سایت؛ بقیه‌ی سایت‌ها ادامه می‌دهند"
+    },
+    {
+      "parameters": {
+        "jsCode": "// شاخه‌ی site3 شکست خورده؛ پیام خطا را نگه می‌داریم تا «Check Errors» در پایان اجرا گزارشش کند\nreturn $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site3', error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});"
+      },
+      "id": "a997b25f-2943-4f00-a14e-11edfe154a72",
+      "name": "Failed Site3",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2224,
+        688
+      ],
+      "notesInFlow": true,
+      "notes": "خطای این سایت؛ بقیه‌ی سایت‌ها ادامه می‌دهند"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n (executionOrder v1) شاخه‌ها را از بالا به پایین اجرا می‌کند؛ شاخه‌ی شوراکا پایین‌ترین است\n// پس وقتی به اینجا می‌رسیم پلاس‌بیمه و ازکی تمام شده‌اند.\nconst fails = [];\nfor (const n of ['Failed Site3', 'Failed Site1', 'Failed Site2']) {\n  try { if ($(n).isExecuted) fails.push(...$(n).all().map(i => i.json)); } catch (e) {}\n}\nif (fails.length) {\n  throw new Error('سایت‌های ناموفق در این اجرا: ' + fails.map(f => f.site + ': ' + f.error).join(' | '));\n}\nreturn [{ json: { ok: true, checked_at: new Date().toISOString() } }];"
+      },
+      "id": "b8820760-fab2-4067-9496-3a8caa65601b",
+      "name": "Check Errors",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2224,
+        1488
+      ],
+      "notesInFlow": true,
+      "notes": "شاخه‌ی شوراکا باید پایین‌ترین شاخه روی بوم بماند"
     }
   ],
   "pinData": {},
@@ -1056,6 +1120,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Failed Site2",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -1078,6 +1149,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Failed Site2",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -1086,6 +1164,13 @@
         [
           {
             "node": "Upsert Companies",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed Site2",
             "type": "main",
             "index": 0
           }
@@ -1100,6 +1185,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Failed Site2",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -1108,6 +1200,13 @@
         [
           {
             "node": "Site2 Output",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed Site2",
             "type": "main",
             "index": 0
           }
@@ -1133,6 +1232,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Failed Site1",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -1155,6 +1261,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Failed Site1",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -1166,6 +1279,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Failed Site1",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -1174,6 +1294,13 @@
         [
           {
             "node": "Pack",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed Site1",
             "type": "main",
             "index": 0
           }
@@ -1232,6 +1359,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Failed Site3",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -1240,6 +1374,13 @@
         [
           {
             "node": "Upsert Companies Site3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed Site3",
             "type": "main",
             "index": 0
           }
@@ -1254,6 +1395,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Failed Site3",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -1262,6 +1410,35 @@
         [
           {
             "node": "Insert Commission Site3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Failed Site3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Site2 Output": {
+      "main": [
+        [
+          {
+            "node": "Check Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Failed Site2": {
+      "main": [
+        [
+          {
+            "node": "Check Errors",
             "type": "main",
             "index": 0
           }
