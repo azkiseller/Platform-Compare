@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>مقایسه صفحه کامپیر ثالث شرکت‌ها</title>
+<title>مقایسه صفحه کامپیر شرکت‌ها</title>
 <script>
-(function(){try{var s=localStorage.getItem('dashboardTheme');
+(function(){try{if(localStorage.getItem('dashboardSide')==='closed')document.documentElement.classList.add('side-closed')}catch(e){}
+try{var s=localStorage.getItem('dashboardTheme');
 document.documentElement.setAttribute('data-theme',s||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));}catch(e){}})();
 </script>
 <style>
@@ -184,32 +185,42 @@ html[data-theme=dark] .dp{background:rgba(14,18,30,.95)}
 .dp-t{font-size:13.5px;font-weight:600;text-align:center;line-height:1.7}
 @media(max-width:700px){header.topbar{flex-direction:column;gap:6px;padding:12px 16px}header.topbar #r{position:static;transform:none}.site .st+.st{border-inline-start:0;margin-top:10px}.dp{left:68px;right:12px;width:auto;transform:none}}
 @media(prefers-reduced-motion:reduce){.cc{transition:none}.cc.hl{transform:none}}
-/* سایدبار تب‌ها: خودرو / موتور */
-.side{position:relative;z-index:5;display:flex;gap:10px;max-width:1180px;margin:0 auto;padding:16px 16px 0}
-.side-h{display:none}
-.tab{flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);border:1px solid var(--line);
+/* سایدبار: خودرو / موتور — کارت شناور با گوشه‌های گرد، قابل جمع شدن */
+html:not([data-theme=dark]) body{background:#EAF4FE}
+.side{position:relative;z-index:5;display:flex;align-items:center;gap:10px;max-width:1180px;margin:0 auto;padding:16px 16px 0}
+.side-top,.side-h{display:none}
+.tab{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px 14px;border-radius:14px;border:1px solid var(--line);
 background:var(--surface);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);box-shadow:var(--shadow);
-color:var(--ink);font:inherit;text-align:start;cursor:pointer;transition:background .15s,color .15s,box-shadow .15s}
-.tab svg{width:28px;height:28px;flex:none}
-.tab b{display:block;font-size:14.5px;font-weight:900}
-.tab small{display:block;font-size:11.5px;color:var(--ink-faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tab:hover{border-color:var(--accent)}
-.tab[aria-selected=true]{background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff;border-color:transparent;box-shadow:0 10px 24px -10px rgba(22,86,245,.7)}
-.tab[aria-selected=true] small{color:rgba(255,255,255,.85)}
-.tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+color:var(--ink-soft);font:inherit;cursor:pointer;transition:background .15s,color .15s,box-shadow .15s}
+.tab svg{width:22px;height:22px;flex:none}
+.tab b{font-size:14.5px;font-weight:700;white-space:nowrap}
+.tab:hover{color:var(--ink);border-color:var(--accent)}
+.tab[aria-selected=true]{background:linear-gradient(135deg,#3B9BFF,var(--accent-deep));color:#fff;border-color:transparent;box-shadow:0 10px 24px -10px rgba(22,86,245,.7)}
+.tab:focus-visible,.side-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media(min-width:1101px){
- :root{--rail:116px}
- #app{padding-inline-start:var(--rail)}
- .bg-glow{inset-inline-start:var(--rail)}
- .side{position:fixed;top:0;bottom:0;inset-inline-start:0;z-index:30;width:var(--rail);max-width:none;margin:0;padding:18px 12px;flex-direction:column;gap:12px;
- background:#F3F8FF;border-inline-end:1px solid var(--line);box-shadow:0 0 30px -12px rgba(15,72,150,.3)}
- html[data-theme=dark] .side{background:#070b16}
- .side-h{display:block;font-size:11.5px;font-weight:700;color:var(--ink-faint);text-align:center;padding:4px 0 6px;border-bottom:1px solid var(--line);margin-bottom:4px}
- .tab{flex:none;flex-direction:column;justify-content:center;text-align:center;gap:6px;padding:14px 6px}
- .tab svg{width:36px;height:36px}
- .tab small{white-space:normal;line-height:1.5}
+ :root{--side-w:236px;--rail:calc(var(--side-w) + 24px)}
+ html.side-closed{--side-w:76px}
+ #app{padding-inline-start:var(--rail);transition:padding .2s}
+ header.topbar{top:12px;margin:12px 12px 0;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+ .side{position:fixed;top:12px;bottom:12px;inset-inline-start:12px;z-index:30;width:var(--side-w);max-width:none;margin:0;padding:14px 12px;
+ flex-direction:column;align-items:stretch;gap:6px;border-radius:22px;border:1px solid var(--line);overflow:hidden;
+ background:rgba(255,255,255,.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);
+ box-shadow:0 18px 40px -18px rgba(15,72,150,.35);transition:width .2s}
+ html[data-theme=dark] .side{background:rgba(14,18,34,.86);box-shadow:0 18px 40px -18px rgba(0,0,0,.7)}
+ .side-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:2px 2px 12px;margin-bottom:6px;border-bottom:1px solid var(--line)}
+ .side-logo{height:28px;width:auto;display:block}
+ .side-btn{flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--surface-tint);color:var(--ink-soft);
+ display:flex;align-items:center;justify-content:center;cursor:pointer}
+ .side-btn:hover{color:var(--ink)}.side-btn svg{width:20px;height:20px}
+ .side-h{display:block;font-size:12px;color:var(--ink-faint);padding:4px 10px 6px;white-space:nowrap}
+ .tab{flex:none;justify-content:flex-start;padding:11px 14px;border:0;background:none;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+ .tab:hover{background:var(--surface-tint)}
+ .tab[aria-selected=true]{background:linear-gradient(135deg,#3B9BFF,var(--accent-deep))}
+ html.side-closed .side-logo,html.side-closed .side-h,html.side-closed .tab b{display:none}
+ html.side-closed .side-top{justify-content:center}
+ html.side-closed .tab{justify-content:center;padding:11px 0}
 }
-@media(prefers-reduced-motion:reduce){.tab{transition:none}}
+@media(prefers-reduced-motion:reduce){.tab,.side,#app{transition:none}}
 </style>
 </head>
 <body>
@@ -220,19 +231,21 @@ color:var(--ink);font:inherit;text-align:start;cursor:pointer;transition:backgro
 </button>
 <div id="app">
 <header class="topbar">
- <div class="brand"><div><h1 id="h">مقایسه صفحه کامپیر ثالث شرکت‌ها</h1><div class="sync" id="sub">در حال بارگذاری…</div></div></div>
+ <div class="brand"><div><h1 id="h">مقایسه صفحه کامپیر شرکت‌ها</h1><div class="sync" id="sub">در حال بارگذاری…</div></div></div>
  <button class="ghost" id="r">↻ بروزرسانی</button>
 </header>
-<nav class="side" id="side" role="tablist" aria-label="نوع وسیله" aria-orientation="vertical">
+<nav class="side" id="side" aria-label="نوع وسیله">
+ <div class="side-top">
+  <img class="side-logo" src="brand/azki-agent.png" alt="ازکی ایجنت">
+  <button type="button" class="side-btn" id="sideToggle" aria-expanded="true" aria-controls="side" aria-label="بستن منو" title="بستن منو">
+   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+ </div>
  <div class="side-h">بیمه ثالث</div>
- <button type="button" class="tab" role="tab" id="tab-206_1397" data-v="206_1397" aria-controls="cols" aria-selected="false">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13.5l1.8-4.6A2 2 0 0 1 6.7 7.6h10.6a2 2 0 0 1 1.9 1.3l1.8 4.6"/><path d="M3 13.5h18v3.5a1 1 0 0 1-1 1h-1.2M3 13.5V17a1 1 0 0 0 1 1h1.2M9.2 18h5.6"/><circle cx="7.2" cy="17.6" r="1.9"/><circle cx="16.8" cy="17.6" r="1.9"/></svg>
-  <span><b>خودرو</b><small>۲۰۶ تیپ ۲ · مدل ۱۳۹۷</small></span>
- </button>
- <button type="button" class="tab" role="tab" id="tab-moto_1403" data-v="moto_1403" aria-controls="cols" aria-selected="false">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="16" r="3.2"/><circle cx="19" cy="16" r="3.2"/><path d="M5 16h4.5l3-5h3.5l3 5"/><path d="M12.5 11l-1.8-3.2H7.5M14.5 7.2h2.3l2.2 3.8"/></svg>
-  <span><b>موتور</b><small>تک‌سیلندر · مدل ۱۴۰۳</small></span>
- </button>
+ <div role="tablist" aria-label="نوع وسیله" aria-orientation="vertical" id="tablist" style="display:contents">
+ <button type="button" class="tab" role="tab" id="tab-206_1397" data-v="206_1397" aria-controls="cols" aria-selected="false" title="خودرو"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13.5l1.8-4.6A2 2 0 0 1 6.7 7.6h10.6a2 2 0 0 1 1.9 1.3l1.8 4.6"/><path d="M3 13.5h18v3.5a1 1 0 0 1-1 1h-1.2M3 13.5V17a1 1 0 0 0 1 1h1.2M9.2 18h5.6"/><circle cx="7.2" cy="17.6" r="1.9"/><circle cx="16.8" cy="17.6" r="1.9"/></svg><b>خودرو</b></button>
+ <button type="button" class="tab" role="tab" id="tab-moto_1403" data-v="moto_1403" aria-controls="cols" aria-selected="false" title="موتور"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="16" r="3.2"/><circle cx="19" cy="16" r="3.2"/><path d="M5 16h4.5l3-5h3.5l3 5"/><path d="M12.5 11l-1.8-3.2H7.5M14.5 7.2h2.3l2.2 3.8"/></svg><b>موتور</b></button>
+ </div>
 </nav>
 <main>
  <input class="search" id="q" placeholder="جستجوی شرکت (نام فارسی یا انگلیسی)">
@@ -274,8 +287,7 @@ function tabs(){
  const v=VEH.find(x=>x.k===veh);
  document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.v===veh;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1});
  $('cols').setAttribute('aria-labelledby','tab-'+veh);
- $('h').textContent='مقایسه صفحه کامپیر ثالث شرکت‌ها · '+v.n;
- document.title='مقایسه کامپیر ثالث · '+v.n+' ('+v.d+')';
+ document.title='مقایسه صفحه کامپیر شرکت‌ها · '+v.n;
 }
 function setVeh(v){
  if(!isVeh(v)||v===veh)return;
@@ -423,7 +435,12 @@ $('dp').addEventListener('click',e=>{if(e.target.closest('#dpx'))unpin()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&pinned)unpin()});
 addEventListener('resize',align);addEventListener('load',align);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(align);
 $('side').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)setVeh(b.dataset.v)});
-$('side').addEventListener('keydown',e=>{
+function sideState(){const c=document.documentElement.classList.contains('side-closed'),t=$('sideToggle'),l=c?'باز کردن منو':'بستن منو';
+ t.setAttribute('aria-expanded',String(!c));t.setAttribute('aria-label',l);t.title=l}
+$('sideToggle').onclick=()=>{const c=document.documentElement.classList.toggle('side-closed');
+ try{localStorage.setItem('dashboardSide',c?'closed':'open')}catch(e){}sideState();setTimeout(align,220)};
+sideState();
+$('tablist').addEventListener('keydown',e=>{
  const d={ArrowDown:1,ArrowUp:-1,ArrowLeft:1,ArrowRight:-1}[e.key];if(!d)return;e.preventDefault();
  const i=VEH.findIndex(x=>x.k===veh),n=VEH[(i+d+VEH.length)%VEH.length].k;setVeh(n);$('tab-'+n).focus()});
 addEventListener('hashchange',()=>setVeh(decodeURIComponent(location.hash.slice(1))));
