@@ -29,6 +29,18 @@
         "assignments": {
           "assignments": [
             {
+              "id": "a1",
+              "name": "mobile",
+              "value": "PLUSBIMEH_MOBILE",
+              "type": "string"
+            },
+            {
+              "id": "a2",
+              "name": "password",
+              "value": "PLUSBIMEH_PASSWORD",
+              "type": "string"
+            },
+            {
               "id": "a3",
               "name": "deviceToken",
               "value": "da4aa2f8-70d9-4d56-b577-3162dfae2c0f",
@@ -53,7 +65,7 @@
         680
       ],
       "notesInFlow": true,
-      "notes": "فقط توکن‌های دستگاه/استعلام؛ موبایل و رمز در Credentials است",
+      "notes": "موبایل و رمز پلاس‌بیمه + توکن‌های دستگاه/استعلام",
       "onError": "stopWorkflow"
     },
     {
@@ -95,10 +107,8 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{}",
-        "options": {},
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpCustomAuth"
+        "jsonBody": "={{ JSON.stringify({ MobileNumber: $('Config Site3').item.json.mobile }) }}",
+        "options": {}
       },
       "id": "4c35cd5d-e77b-413e-8819-152198e2aef3",
       "name": "Login Step1 Site3",
@@ -109,14 +119,8 @@
         680
       ],
       "notesInFlow": true,
-      "notes": "Credential: Custom Auth «Plusbimeh Mobile» → body: MobileNumber",
-      "onError": "continueRegularOutput",
-      "credentials": {
-        "httpCustomAuth": {
-          "id": "set-me-plusbimeh-mobile",
-          "name": "Plusbimeh Mobile"
-        }
-      }
+      "notes": "موبایل را می‌دهد و SecurityData (۴ دقیقه اعتبار) را برمی‌گرداند",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -157,10 +161,8 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ SecurityData: $json.SecurityData, type: 'marketerRegister', queryParam: '' }) }}",
-        "options": {},
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpCustomAuth"
+        "jsonBody": "={{ JSON.stringify({ SecurityData: $json.SecurityData, Password: $('Config Site3').item.json.password, type: 'marketerRegister', queryParam: '' }) }}",
+        "options": {}
       },
       "id": "2697448e-2743-402a-ae79-36741d13493a",
       "name": "Login Step2 Site3",
@@ -171,14 +173,8 @@
         680
       ],
       "notesInFlow": true,
-      "notes": "Credential: Custom Auth «Plusbimeh Password» → body: Password",
-      "onError": "continueRegularOutput",
-      "credentials": {
-        "httpCustomAuth": {
-          "id": "set-me-plusbimeh-password",
-          "name": "Plusbimeh Password"
-        }
-      }
+      "notes": "بلافاصله بعد از مرحله‌ی ۱؛ JWT برمی‌گرداند",
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -211,16 +207,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{}",
+        "jsonBody": "{\"username\": \"AZKI_USERNAME\", \"password\": \"AZKI_PASSWORD\"}",
         "options": {
           "response": {
             "response": {
               "fullResponse": true
             }
           }
-        },
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpCustomAuth"
+        }
       },
       "id": "c2e098b3-2128-4a81-a262-7657f368f5ad",
       "name": "Login",
@@ -230,14 +224,9 @@
         208,
         1240
       ],
-      "notes": "Credential: Custom Auth «Azkiagent Login» → body: username, password",
+      "notes": "نام کاربری و رمز ازکی ایجنت داخل بدنه‌ی همین نود است",
       "onError": "continueRegularOutput",
-      "credentials": {
-        "httpCustomAuth": {
-          "id": "set-me-azkiagent-login",
-          "name": "Azkiagent Login"
-        }
-      }
+      "notesInFlow": true
     },
     {
       "parameters": {
@@ -280,7 +269,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{}",
+        "jsonBody": "{\"username\": \"SHORAKA_USERNAME\", \"password\": \"SHORAKA_PASSWORD\"}",
         "options": {
           "response": {
             "response": {
@@ -288,9 +277,7 @@
               "neverError": true
             }
           }
-        },
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpCustomAuth"
+        }
       },
       "id": "148c3d35-78f1-419a-90fb-8df2c06a0308",
       "name": "Login Site2",
@@ -300,14 +287,9 @@
         208,
         1800
       ],
-      "notes": "Credential: Custom Auth «Shoraka Login» → body: username, password",
+      "notes": "نام کاربری و رمز شوراکا داخل بدنه‌ی همین نود است",
       "onError": "continueRegularOutput",
-      "credentials": {
-        "httpCustomAuth": {
-          "id": "set-me-shoraka-login",
-          "name": "Shoraka Login"
-        }
-      }
+      "notesInFlow": true
     },
     {
       "parameters": {

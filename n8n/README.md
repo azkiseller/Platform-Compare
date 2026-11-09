@@ -12,24 +12,25 @@
 ## ۱. قبل از import
 workflowهای قبلی (هم نسخه‌ی قدیمی که به Supabase قبلی می‌نویسد، هم دو فایل جدای خودرو/موتور اگر import کرده‌اید) را **غیرفعال یا حذف** کنید.
 
-## ۲. Credentialها (Credentials ← Add ← «Custom Auth»)
-نام‌ها را **دقیقاً** همین بگذارید تا هنگام import خودکار به نودها وصل شوند.
+## ۲. لاگین‌ها و کلید Supabase
+**لاگین سایت‌ها** مثل نسخه‌ی v4 داخل خود workflow است (credential جدا لازم نیست):
 
-| نام credential | JSON |
+| سایت | کجا |
 |---|---|
-| `Custom Auth account` | `{"headers":{"apikey":"sb_secret_..."}}` ← Secret key پروژه‌ی جدید (Project Settings ← API Keys) |
-| `Shoraka Login` | `{"body":{"username":"…","password":"…"}}` |
-| `Azkiagent Login` | `{"body":{"username":"…","password":"…"}}` |
-| `Plusbimeh Mobile` | `{"body":{"MobileNumber":"…"}}` |
-| `Plusbimeh Password` | `{"body":{"Password":"…"}}` |
+| شوراکا | نود `Login Site2` ← بدنه: `{"username":"…","password":"…"}` |
+| ازکی ایجنت | نود `Login` ← بدنه: `{"username":"…","password":"…"}` |
+| پلاس‌بیمه | نود `Config Site3` ← فیلدهای `mobile` و `password` |
 
-- `Custom Auth account` اگر از قبل هست، فقط محتوایش را با کلید پروژه‌ی جدید عوض کنید. اگر کلید قدیمی `service_role` (JWT) استفاده می‌کنید:
-  `{"headers":{"apikey":"<key>","Authorization":"Bearer <key>"}}`
-- رمزهای شوراکا و پلاس‌بیمه را متفاوت بگذارید و رمزهایی را که در فایل قدیمی بودند عوض کنید.
+فایل داخل این مخزن به‌جای مقدار واقعی `SHORAKA_USERNAME`، `AZKI_PASSWORD`، `PLUSBIMEH_MOBILE` و … دارد؛ رمز واقعی را **هرگز** در مخزن commit نکنید.
+
+**نوشتن در Supabase** با credential از نوع Custom Auth به نام `Custom Auth account`:
+`{"headers":{"apikey":"sb_secret_..."}}` ← Secret key پروژه‌ی جدید (Project Settings ← API Keys).
+اگر کلید قدیمی `service_role` (JWT) پروژه‌ی جدید را استفاده می‌کنید: `{"headers":{"apikey":"<key>","Authorization":"Bearer <key>"}}`.
+کلید `service_role` پروژه‌ی **قبلی** (که در فایل v4 بود) برای پروژه‌ی جدید کار نمی‌کند.
 
 ## ۳. Import و فعال‌سازی
 1. Workflows ← Import from File ← همین فایل.
-2. روی نودهای Login باز کنید و مطمئن شوید credential درست انتخاب شده (اگر نام‌ها فرق داشته باشد، دستی انتخاب کنید).
+2. اگر فایل مخزن را import کرده‌اید، مقدارهای لاگین را در `Login Site2`، `Login` و `Config Site3` پر کنید. روی یکی از نودهای Supabase مطمئن شوید credential «Custom Auth account» انتخاب شده.
 3. یک بار «Execute Workflow» بزنید و نود آخر هر شاخه را نگاه کنید:
    - `Pack Car/Moto` (ازکی)، `Site2 Output Car/Moto` (شوراکا)، `Site3 Output Car/Moto` (پلاس‌بیمه)
    - `Check Errors` اگر سایتی شکست خورده باشد اجرا را ناموفق می‌کند و نام سایت و پیام خطا را می‌نویسد.
