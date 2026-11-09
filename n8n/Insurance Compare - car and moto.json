@@ -6,9 +6,8 @@
         "rule": {
           "interval": [
             {
-              "field": "hours",
-              "hoursInterval": 6,
-              "triggerAtMinute": 5
+              "field": "minutes",
+              "minutesInterval": 5
             }
           ]
         }
@@ -21,7 +20,7 @@
         -304,
         1240
       ],
-      "notes": "هر ۶ ساعت؛ هر سایت یک بار لاگین می‌کند و قیمت خودرو و موتور را می‌گیرد",
+      "notes": "هر ۵ دقیقه؛ هر سایت یک بار لاگین می‌کند و قیمت خودرو و موتور را می‌گیرد",
       "notesInFlow": true
     },
     {
@@ -400,13 +399,13 @@
         }
       },
       "onError": "continueErrorOutput",
-      "maxTries": 4,
-      "waitBetweenTries": 15000
+      "maxTries": 3,
+      "waitBetweenTries": 10000
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission?on_conflict=vehicle,site,company_key,coverage",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "sendHeaders": true,
@@ -418,7 +417,7 @@
             },
             {
               "name": "Prefer",
-              "value": "return=minimal"
+              "value": "resolution=merge-duplicates,return=minimal"
             },
             {
               "name": "Content-Type",
@@ -456,8 +455,8 @@
         }
       },
       "onError": "continueErrorOutput",
-      "maxTries": 4,
-      "waitBetweenTries": 15000
+      "maxTries": 3,
+      "waitBetweenTries": 10000
     },
     {
       "parameters": {
@@ -629,13 +628,13 @@
         }
       },
       "onError": "continueErrorOutput",
-      "maxTries": 4,
-      "waitBetweenTries": 15000
+      "maxTries": 3,
+      "waitBetweenTries": 10000
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission?on_conflict=vehicle,site,company_key,coverage",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "sendHeaders": true,
@@ -647,7 +646,7 @@
             },
             {
               "name": "Prefer",
-              "value": "return=minimal"
+              "value": "resolution=merge-duplicates,return=minimal"
             },
             {
               "name": "Content-Type",
@@ -685,8 +684,8 @@
         }
       },
       "onError": "continueErrorOutput",
-      "maxTries": 4,
-      "waitBetweenTries": 15000
+      "maxTries": 3,
+      "waitBetweenTries": 10000
     },
     {
       "parameters": {
@@ -930,7 +929,7 @@
         1120
       ],
       "retryOnFail": true,
-      "waitBetweenTries": 15000,
+      "waitBetweenTries": 10000,
       "credentials": {
         "httpCustomAuth": {
           "id": "SbtIrqvB3YJ8V2x4",
@@ -938,12 +937,12 @@
         }
       },
       "onError": "continueErrorOutput",
-      "maxTries": 4
+      "maxTries": 3
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission?on_conflict=vehicle,site,company_key,coverage",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -957,7 +956,7 @@
             },
             {
               "name": "Prefer",
-              "value": "return=minimal"
+              "value": "resolution=merge-duplicates,return=minimal"
             }
           ]
         },
@@ -986,8 +985,8 @@
       },
       "onError": "continueErrorOutput",
       "retryOnFail": true,
-      "maxTries": 4,
-      "waitBetweenTries": 15000
+      "maxTries": 3,
+      "waitBetweenTries": 10000
     },
     {
       "parameters": {
@@ -1174,7 +1173,7 @@
         1360
       ],
       "retryOnFail": true,
-      "waitBetweenTries": 15000,
+      "waitBetweenTries": 10000,
       "credentials": {
         "httpCustomAuth": {
           "id": "SbtIrqvB3YJ8V2x4",
@@ -1182,12 +1181,12 @@
         }
       },
       "onError": "continueErrorOutput",
-      "maxTries": 4
+      "maxTries": 3
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission?on_conflict=vehicle,site,company_key,coverage",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -1201,7 +1200,7 @@
             },
             {
               "name": "Prefer",
-              "value": "return=minimal"
+              "value": "resolution=merge-duplicates,return=minimal"
             }
           ]
         },
@@ -1230,8 +1229,8 @@
       },
       "onError": "continueErrorOutput",
       "retryOnFail": true,
-      "maxTries": 4,
-      "waitBetweenTries": 15000
+      "maxTries": 3,
+      "waitBetweenTries": 10000
     },
     {
       "parameters": {
@@ -1438,13 +1437,13 @@
       },
       "onError": "continueErrorOutput",
       "retryOnFail": true,
-      "maxTries": 4,
-      "waitBetweenTries": 15000
+      "maxTries": 3,
+      "waitBetweenTries": 10000
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission?on_conflict=vehicle,site,company_key,coverage",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "sendHeaders": true,
@@ -1456,7 +1455,7 @@
             },
             {
               "name": "Prefer",
-              "value": "return=minimal"
+              "value": "resolution=merge-duplicates,return=minimal"
             },
             {
               "name": "Content-Type",
@@ -1480,7 +1479,7 @@
         1680
       ],
       "retryOnFail": true,
-      "waitBetweenTries": 15000,
+      "waitBetweenTries": 10000,
       "credentials": {
         "httpCustomAuth": {
           "id": "SbtIrqvB3YJ8V2x4",
@@ -1488,7 +1487,7 @@
         }
       },
       "onError": "continueErrorOutput",
-      "maxTries": 4
+      "maxTries": 3
     },
     {
       "parameters": {
@@ -1665,13 +1664,13 @@
       },
       "onError": "continueErrorOutput",
       "retryOnFail": true,
-      "maxTries": 4,
-      "waitBetweenTries": 15000
+      "maxTries": 3,
+      "waitBetweenTries": 10000
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission?on_conflict=vehicle,site,company_key,coverage",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "sendHeaders": true,
@@ -1683,7 +1682,7 @@
             },
             {
               "name": "Prefer",
-              "value": "return=minimal"
+              "value": "resolution=merge-duplicates,return=minimal"
             },
             {
               "name": "Content-Type",
@@ -1707,7 +1706,7 @@
         1920
       ],
       "retryOnFail": true,
-      "waitBetweenTries": 15000,
+      "waitBetweenTries": 10000,
       "credentials": {
         "httpCustomAuth": {
           "id": "SbtIrqvB3YJ8V2x4",
@@ -1715,7 +1714,7 @@
         }
       },
       "onError": "continueErrorOutput",
-      "maxTries": 4
+      "maxTries": 3
     },
     {
       "parameters": {

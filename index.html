@@ -273,7 +273,8 @@ document.documentElement.style.setProperty('--n',SITES.length);
 const FA={novin:'نوین',razi:'رازی',hekmat:'حکمت صبا',sina:'سینا',moalem:'معلم',mihan:'میهن',kowsar:'کوثر',pardis:'پردیس',dana:'دانا',alborz:'البرز',iran:'ایران',asia:'آسیا',ma:'ما',saman:'سامان',day:'دی',
  parsian:'پارسیان',pasargad:'پاسارگاد',karafarin:'کارآفرین',melat:'ملت',hafez:'حافظ',omid:'امید',taavon:'تعاون',sarmad:'سرمد',arman:'آرمان',hoshmand:'هوشمند',tejaratno:'تجارت‌نو'};
 const FILE={kowsar:'kosar',moalem:'moallem'};
-const STALE_HOURS=13; // workflow هر ۶ ساعت اجرا می‌شود
+const STALE_MIN=20; // workflow هر ۵ دقیقه اجرا می‌شود؛ بیشتر از ۲۰ دقیقه یعنی چند اجرا جا افتاده
+const AUTO_REFRESH_MS=60000; // داشبورد هر ۱ دقیقه خودش داده‌ی تازه را می‌خواند
 const logo=k=>'logos/bimeh-'+(FILE[k]||k)+'.png';
 const fa=n=>n==null?null:Number(n).toLocaleString('fa-IR');
 const $=id=>document.getElementById(id);
@@ -302,28 +303,34 @@ function setVeh(v){
  try{localStorage.setItem('dashboardVehicle',v)}catch(e){}
  tabs();load();
 }
-async function load(){
+async function load(silent){
  const v=veh,id=++reqId;
- $('sub').textContent='در حال بارگذاری…';
- if(cache[v]){rows=cache[v];failed=null;render()}
- else{pinned=null;panel(null);$('cols').innerHTML='<div class="msg" style="grid-column:1/-1">در حال بارگذاری…</div>'}
+ if(!silent){
+  $('sub').textContent='در حال بارگذاری…';
+  if(cache[v]){rows=cache[v];failed=null;render()}
+  else{pinned=null;panel(null);$('cols').innerHTML='<div class="msg" style="grid-column:1/-1">در حال بارگذاری…</div>'}
+ }
  try{
-  const r=await fetch(SUPABASE_URL+'/rest/v1/current_commission?select=site,company_key,rate,captured_at&coverage=eq.third&vehicle=eq.'+encodeURIComponent(v)+'&order=captured_at.desc',{headers:HEADERS});
+  const r=await fetch(SUPABASE_URL+'/rest/v1/current_commission?select=site,company_key,rate,captured_at&coverage=eq.third&vehicle=eq.'+encodeURIComponent(v)+'&order=captured_at.desc',{headers:HEADERS,cache:'no-store'});
   if(!r.ok)throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,140));
   const raw=await r.json(),seen=new Set();
   if(id!==reqId)return; // در این فاصله تب عوض شده
-  rows=raw.filter(x=>{const k=x.site+'|'+x.company_key;if(seen.has(k))return false;seen.add(k);return true});cache[v]=rows;failed=null;
+  const next=raw.filter(x=>{const k=x.site+'|'+x.company_key;if(seen.has(k))return false;seen.add(k);return true});
+  rows=next;cache[v]=rows;failed=null;
   $('sub').textContent='روی هر شرکت بزن تا همتایش در سایت‌های دیگر و اختلاف نشان داده شود';
- }catch(e){if(id!==reqId)return;failed=e.message;$('sub').textContent='ناموفق'}
+ }catch(e){if(id!==reqId)return;if(silent&&rows.length)return;failed=e.message;$('sub').textContent='ناموفق'}
+ // در به‌روزرسانی خودکار، شرکت انتخاب‌شده و جستجو حفظ می‌شود
+ const keep=silent?pinned:null;
  render();
+ if(keep&&merged[keep]){pinned=keep;focus(keep);panel(keep);press()}
 }
 function siteCard(s,list){
  const ts=list.map(r=>Date.parse(r.captured_at)).filter(Number.isFinite),last=ts.length?Math.max(...ts):null;
  const rates=list.map(r=>r.rate).filter(v=>v!=null),top=rates.length?Math.max(...rates):null;
  const best=top==null?null:list.find(r=>r.rate===top);
  let fresh='<div class="fresh">هنوز داده‌ای ثبت نشده</div>';
- if(last){const h=(Date.now()-last)/36e5,old=h>STALE_HOURS;
-  fresh='<div class="fresh'+(old?' old':'')+'">آخرین داده: '+esc(new Date(last).toLocaleString('fa-IR'))+(old?' (بیش از '+fa(Math.floor(h))+' ساعت پیش)':'')+'</div>'}
+ if(last){const mins=(Date.now()-last)/6e4,old=mins>STALE_MIN,h=mins/60;
+  fresh='<div class="fresh'+(old?' old':'')+'">آخرین داده: '+esc(new Date(last).toLocaleString('fa-IR'))+(old?' ('+(h>=1?'بیش از '+fa(Math.floor(h))+' ساعت':fa(Math.floor(mins))+' دقیقه')+' پیش)':'')+'</div>'}
  return'<div class="site"><div class="sh"><div><h2>'+esc(s.n)+'</h2><div class="host">'+esc(s.h)+'</div></div><span class="slogo"><img src="'+esc(s.logo)+'" alt="'+esc(s.n)+'" onerror="this.style.display=\'none\'"></span></div><div class="glass"><div class="stats">'+
   '<div class="st"><b>'+fa(list.length)+'</b><span>شرکت در صفحه مقایسه</span></div>'+
   '<div class="st"><b>'+(top==null?'—':fa2(top)+'٪')+'</b><span>بیشترین کارمزد'+(best?' · '+esc(FA[best.company_key]||best.company_key):'')+'</span></div></div>'+fresh+'</div></div>';
@@ -451,7 +458,10 @@ $('tablist').addEventListener('keydown',e=>{
  const i=VEH.findIndex(x=>x.k===veh),n=VEH[(i+d+VEH.length)%VEH.length].k;setVeh(n);$('tab-'+n).focus()});
 addEventListener('hashchange',()=>setVeh(decodeURIComponent(location.hash.slice(1))));
 if(location.hash.slice(1)!==veh)history.replaceState(null,'','#'+veh);
-$('q').oninput=render;$('r').onclick=load;tabs();load();
+$('q').oninput=render;$('r').onclick=()=>load();tabs();load();
+// به‌روزرسانی خودکار: هر دقیقه (وقتی صفحه دیده می‌شود) و هر بار که کاربر به صفحه برمی‌گردد
+setInterval(()=>{if(!document.hidden)load(true)},AUTO_REFRESH_MS);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)load(true)});
 </script>
 </body>
 </html>
