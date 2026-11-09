@@ -515,7 +515,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// خطای «پلاس‌بیمه · خودرو» — بقیه‌ی شاخه‌ها ادامه می‌دهند؛ Check Errors در پایان گزارشش می‌کند\nconst step = (typeof $prevNode !== 'undefined' && $prevNode.name) || '';\nconst shared = ['Cookie', 'Extract Token Site2', 'Login', 'Login Site2'].includes(step); // لاگین مشترک: هر دو وسیله\nreturn $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site3', vehicle: shared ? 'both' : '206_1397', step, error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});"
+        "jsCode": "// خطای «پلاس‌بیمه · خودرو» — بقیه‌ی شاخه‌ها ادامه می‌دهند؛ Check Errors در پایان گزارشش می‌کند\nconst step = (typeof $prevNode !== 'undefined' && $prevNode.name) || '';\nconst shared = ['Cookie', 'Extract Token Site2', 'Login', 'Login Site2'].includes(step); // لاگین مشترک: هر دو وسیله\nconst rows = $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site3', vehicle: shared ? 'both' : '206_1397', step, error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});\nconst sd = $getWorkflowStaticData('global');\nconst run = String($execution.id);\nif (sd.failRun !== run) { sd.failRun = run; sd.fails = []; }\nsd.fails.push(...rows.map(r => r.json));\nreturn rows;"
       },
       "id": "e32d2ecb-18af-4db6-8208-1e77005c0295",
       "name": "Failed Site3 Car",
@@ -738,7 +738,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// خطای «پلاس‌بیمه · موتور» — بقیه‌ی شاخه‌ها ادامه می‌دهند؛ Check Errors در پایان گزارشش می‌کند\nconst step = (typeof $prevNode !== 'undefined' && $prevNode.name) || '';\nconst shared = ['Cookie', 'Extract Token Site2', 'Login', 'Login Site2'].includes(step); // لاگین مشترک: هر دو وسیله\nreturn $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site3', vehicle: shared ? 'both' : 'moto_1403', step, error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});"
+        "jsCode": "// خطای «پلاس‌بیمه · موتور» — بقیه‌ی شاخه‌ها ادامه می‌دهند؛ Check Errors در پایان گزارشش می‌کند\nconst step = (typeof $prevNode !== 'undefined' && $prevNode.name) || '';\nconst shared = ['Cookie', 'Extract Token Site2', 'Login', 'Login Site2'].includes(step); // لاگین مشترک: هر دو وسیله\nconst rows = $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site3', vehicle: shared ? 'both' : 'moto_1403', step, error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});\nconst sd = $getWorkflowStaticData('global');\nconst run = String($execution.id);\nif (sd.failRun !== run) { sd.failRun = run; sd.fails = []; }\nsd.fails.push(...rows.map(r => r.json));\nreturn rows;"
       },
       "id": "477ca19a-5a6e-4dce-a5f4-4b904b187c8f",
       "name": "Failed Site3 Moto",
@@ -1029,7 +1029,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// خطای «ازکی ایجنت · خودرو» — بقیه‌ی شاخه‌ها ادامه می‌دهند؛ Check Errors در پایان گزارشش می‌کند\nconst step = (typeof $prevNode !== 'undefined' && $prevNode.name) || '';\nconst shared = ['Cookie', 'Extract Token Site2', 'Login', 'Login Site2'].includes(step); // لاگین مشترک: هر دو وسیله\nreturn $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site1', vehicle: shared ? 'both' : '206_1397', step, error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});"
+        "jsCode": "// خطای «ازکی ایجنت · خودرو» — بقیه‌ی شاخه‌ها ادامه می‌دهند؛ Check Errors در پایان گزارشش می‌کند\nconst step = (typeof $prevNode !== 'undefined' && $prevNode.name) || '';\nconst shared = ['Cookie', 'Extract Token Site2', 'Login', 'Login Site2'].includes(step); // لاگین مشترک: هر دو وسیله\nconst rows = $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site1', vehicle: shared ? 'both' : '206_1397', step, error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});\nconst sd = $getWorkflowStaticData('global');\nconst run = String($execution.id);\nif (sd.failRun !== run) { sd.failRun = run; sd.fails = []; }\nsd.fails.push(...rows.map(r => r.json));\nreturn rows;"
       },
       "id": "52259817-5f81-419f-afbd-7636ff9dab0a",
       "name": "Failed Site1 Car",
@@ -1265,7 +1265,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// خطای «ازکی ایجنت · موتور» — بقیه‌ی شاخه‌ها ادامه می‌دهند؛ Check Errors در پایان گزارشش می‌کند\nconst step = (typeof $prevNode !== 'undefined' && $prevNode.name) || '';\nconst shared = ['Cookie', 'Extract Token Site2', 'Login', 'Login Site2'].includes(step); // لاگین مشترک: هر دو وسیله\nreturn $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site1', vehicle: shared ? 'both' : 'moto_1403', step, error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});"
+        "jsCode": "// خطای «ازکی ایجنت · موتور» — بقیه‌ی شاخه‌ها ادامه می‌دهند؛ Check Errors در پایان گزارشش می‌کند\nconst step = (typeof $prevNode !== 'undefined' && $prevNode.name) || '';\nconst shared = ['Cookie', 'Extract Token Site2', 'Login', 'Login Site2'].includes(step); // لاگین مشترک: هر دو وسیله\nconst rows = $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site1', vehicle: shared ? 'both' : 'moto_1403', step, error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});\nconst sd = $getWorkflowStaticData('global');\nconst run = String($execution.id);\nif (sd.failRun !== run) { sd.failRun = run; sd.fails = []; }\nsd.fails.push(...rows.map(r => r.json));\nreturn rows;"
       },
       "id": "ded10c6e-8a9f-4ef3-8992-a3339f70d9dc",
       "name": "Failed Site1 Moto",
@@ -1514,7 +1514,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// خطای «شوراکا · خودرو» — بقیه‌ی شاخه‌ها ادامه می‌دهند؛ Check Errors در پایان گزارشش می‌کند\nconst step = (typeof $prevNode !== 'undefined' && $prevNode.name) || '';\nconst shared = ['Cookie', 'Extract Token Site2', 'Login', 'Login Site2'].includes(step); // لاگین مشترک: هر دو وسیله\nreturn $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site2', vehicle: shared ? 'both' : '206_1397', step, error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});"
+        "jsCode": "// خطای «شوراکا · خودرو» — بقیه‌ی شاخه‌ها ادامه می‌دهند؛ Check Errors در پایان گزارشش می‌کند\nconst step = (typeof $prevNode !== 'undefined' && $prevNode.name) || '';\nconst shared = ['Cookie', 'Extract Token Site2', 'Login', 'Login Site2'].includes(step); // لاگین مشترک: هر دو وسیله\nconst rows = $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site2', vehicle: shared ? 'both' : '206_1397', step, error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});\nconst sd = $getWorkflowStaticData('global');\nconst run = String($execution.id);\nif (sd.failRun !== run) { sd.failRun = run; sd.fails = []; }\nsd.fails.push(...rows.map(r => r.json));\nreturn rows;"
       },
       "id": "a29efb4b-597a-4b52-a733-16ac847865d9",
       "name": "Failed Site2 Car",
@@ -1733,7 +1733,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// خطای «شوراکا · موتور» — بقیه‌ی شاخه‌ها ادامه می‌دهند؛ Check Errors در پایان گزارشش می‌کند\nconst step = (typeof $prevNode !== 'undefined' && $prevNode.name) || '';\nconst shared = ['Cookie', 'Extract Token Site2', 'Login', 'Login Site2'].includes(step); // لاگین مشترک: هر دو وسیله\nreturn $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site2', vehicle: shared ? 'both' : 'moto_1403', step, error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});"
+        "jsCode": "// خطای «شوراکا · موتور» — بقیه‌ی شاخه‌ها ادامه می‌دهند؛ Check Errors در پایان گزارشش می‌کند\nconst step = (typeof $prevNode !== 'undefined' && $prevNode.name) || '';\nconst shared = ['Cookie', 'Extract Token Site2', 'Login', 'Login Site2'].includes(step); // لاگین مشترک: هر دو وسیله\nconst rows = $input.all().map(i => {\n  const e = i.json.error;\n  const msg = typeof e === 'string' ? e : (e && (e.message || e.description)) || JSON.stringify(i.json);\n  return { json: { site: 'site2', vehicle: shared ? 'both' : 'moto_1403', step, error: String(msg).slice(0, 500), at: new Date().toISOString() } };\n});\nconst sd = $getWorkflowStaticData('global');\nconst run = String($execution.id);\nif (sd.failRun !== run) { sd.failRun = run; sd.fails = []; }\nsd.fails.push(...rows.map(r => r.json));\nreturn rows;"
       },
       "id": "ecc45378-81d1-4c43-ac54-f88d788e3fdc",
       "name": "Failed Site2 Moto",
@@ -1748,7 +1748,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// آخرین شاخه (شوراکا · موتور، پایین‌ترین روی بوم) به اینجا می‌رسد؛ n8n شاخه‌ها را از بالا به پایین اجرا می‌کند\nconst NODES = [\"Failed Site3 Car\", \"Failed Site3 Moto\", \"Failed Site1 Car\", \"Failed Site1 Moto\", \"Failed Site2 Car\", \"Failed Site2 Moto\"];\nconst fails = [];\nfor (const n of NODES) {\n  try { if ($(n).isExecuted) fails.push(...$(n).all().map(i => i.json)); } catch (e) {}\n}\nif (fails.length) {\n  throw new Error('شاخه‌های ناموفق: ' + fails.map(f => f.site + '/' + f.vehicle + (f.step ? ' [' + f.step + ']' : '') + ': ' + f.error).join(' | '));\n}\nreturn [{ json: { ok: true, checked_at: new Date().toISOString() } }];"
+        "jsCode": "// همه‌ی نودهای Failed خطایشان را در حافظه‌ی همین اجرا (static data با شناسه‌ی اجرا) می‌گذارند.\n// آخرین شاخه (شوراکا · موتور، پایین‌ترین روی بوم) به اینجا می‌رسد؛ n8n شاخه‌ها را از بالا به پایین اجرا می‌کند.\nconst sd = $getWorkflowStaticData('global');\nconst run = String($execution.id);\nconst fails = sd.failRun === run ? (sd.fails || []) : [];\nsd.fails = []; sd.failRun = null;\nif (fails.length) {\n  const sites = [...new Set(fails.map(f => f.site + '/' + f.vehicle))];\n  throw new Error(fails.length + ' شاخه‌ی ناموفق (' + sites.join('، ') + '): ' +\n    fails.map(f => f.site + '/' + f.vehicle + (f.step ? ' [' + f.step + ']' : '') + ': ' + f.error).join(' | '));\n}\nreturn [{ json: { ok: true, checked_at: new Date().toISOString() } }];"
       },
       "id": "80104f3d-ea7c-414b-b1b0-a96dbb4bb6d0",
       "name": "Check Errors",
