@@ -198,27 +198,34 @@ color:var(--ink-soft);font:inherit;cursor:pointer;transition:background .15s,col
 .tab[aria-selected=true]{background:linear-gradient(135deg,#3B9BFF,var(--accent-deep));color:#fff;border-color:transparent;box-shadow:0 10px 24px -10px rgba(22,86,245,.7)}
 .tab:focus-visible,.side-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media(min-width:1101px){
- :root{--side-w:236px;--rail:calc(var(--side-w) + 24px)}
+ :root{--side-w:124px;--rail:calc(var(--side-w) + 24px)}
  html.side-closed{--side-w:76px}
  #app{padding-inline-start:var(--rail);transition:padding .2s}
  header.topbar{top:12px;margin:12px 12px 0;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
- .side{position:fixed;top:12px;bottom:12px;inset-inline-start:12px;z-index:30;width:var(--side-w);max-width:none;margin:0;padding:14px 12px;
- flex-direction:column;align-items:stretch;gap:6px;border-radius:22px;border:1px solid var(--line);overflow:hidden;
- background:rgba(255,255,255,.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);
- box-shadow:0 18px 40px -18px rgba(15,72,150,.35);transition:width .2s}
- html[data-theme=dark] .side{background:rgba(14,18,34,.86);box-shadow:0 18px 40px -18px rgba(0,0,0,.7)}
- .side-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:2px 2px 12px;margin-bottom:6px;border-bottom:1px solid var(--line)}
- .side-logo{height:28px;width:auto;display:block}
- .side-btn{flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--surface-tint);color:var(--ink-soft);
+ /* سایدبار شیشه‌ای */
+ .side{position:fixed;top:12px;bottom:12px;inset-inline-start:12px;z-index:30;width:var(--side-w);max-width:none;margin:0;padding:12px 10px;
+ flex-direction:column;align-items:stretch;gap:10px;border-radius:22px;overflow:hidden;
+ background:linear-gradient(160deg,rgba(255,255,255,.42),rgba(255,255,255,.18));border:1px solid rgba(255,255,255,.6);
+ backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%);
+ box-shadow:0 18px 40px -18px rgba(15,72,150,.35),inset 0 1px 0 rgba(255,255,255,.7);transition:width .2s}
+ html[data-theme=dark] .side{background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.03));border-color:rgba(255,255,255,.14);
+ box-shadow:0 18px 40px -18px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.1)}
+ .side-top{display:flex;align-items:center;justify-content:center;padding:2px 0 10px;border-bottom:1px solid var(--line)}
+ .side-btn{flex:none;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--surface-tint);color:var(--ink-soft);
  display:flex;align-items:center;justify-content:center;cursor:pointer}
  .side-btn:hover{color:var(--ink)}.side-btn svg{width:20px;height:20px}
- .side-h{display:block;font-size:12px;color:var(--ink-faint);padding:4px 10px 6px;white-space:nowrap}
- .tab{flex:none;justify-content:flex-start;padding:11px 14px;border:0;background:none;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
- .tab:hover{background:var(--surface-tint)}
- .tab[aria-selected=true]{background:linear-gradient(135deg,#3B9BFF,var(--accent-deep))}
- html.side-closed .side-logo,html.side-closed .side-h,html.side-closed .tab b{display:none}
- html.side-closed .side-top{justify-content:center}
- html.side-closed .tab{justify-content:center;padding:11px 0}
+ .side-h{display:block;font-size:11.5px;font-weight:700;color:var(--ink-faint);text-align:center;white-space:nowrap}
+ /* حالت باز: کارت با آیکون بالا و نام پایین */
+ .tab{flex:none;flex-direction:column;justify-content:center;gap:8px;padding:16px 6px;border-radius:16px;border:1px solid var(--line);
+ background:var(--surface);box-shadow:var(--shadow);color:var(--ink)}
+ .tab svg{width:34px;height:34px}
+ .tab b{font-size:14.5px;font-weight:900}
+ /* حالت بسته: فقط آیکون */
+ html.side-closed .side-h,html.side-closed .tab b{display:none}
+ html.side-closed .tab{padding:11px 0;border:0;background:none;box-shadow:none;color:var(--ink-soft)}
+ html.side-closed .tab svg{width:22px;height:22px}
+ html.side-closed .tab:hover{background:var(--surface-tint)}
+ html.side-closed .tab[aria-selected=true]{background:linear-gradient(135deg,#3B9BFF,var(--accent-deep));color:#fff}
 }
 @media(prefers-reduced-motion:reduce){.tab,.side,#app{transition:none}}
 </style>
@@ -236,7 +243,6 @@ color:var(--ink-soft);font:inherit;cursor:pointer;transition:background .15s,col
 </header>
 <nav class="side" id="side" aria-label="نوع وسیله">
  <div class="side-top">
-  <img class="side-logo" src="brand/azki-agent.png" alt="ازکی ایجنت">
   <button type="button" class="side-btn" id="sideToggle" aria-expanded="true" aria-controls="side" aria-label="بستن منو" title="بستن منو">
    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
   </button>
