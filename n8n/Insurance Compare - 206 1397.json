@@ -72,7 +72,13 @@
         1328
       ],
       "notes": "Credential: Custom Auth «Shoraka Login» → body: username, password",
-      "onError": "continueRegularOutput"
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "set-me-shoraka-login",
+          "name": "Shoraka Login"
+        }
+      }
     },
     {
       "parameters": {
@@ -373,7 +379,13 @@
         1136
       ],
       "notes": "Credential: Custom Auth «Azkiagent Login» → body: username, password",
-      "onError": "continueRegularOutput"
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "set-me-azkiagent-login",
+          "name": "Azkiagent Login"
+        }
+      }
     },
     {
       "parameters": {
@@ -751,7 +763,13 @@
       ],
       "notesInFlow": true,
       "notes": "Credential: Custom Auth «Plusbimeh Mobile» → body: MobileNumber",
-      "onError": "continueRegularOutput"
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "set-me-plusbimeh-mobile",
+          "name": "Plusbimeh Mobile"
+        }
+      }
     },
     {
       "parameters": {
@@ -807,7 +825,13 @@
       ],
       "notesInFlow": true,
       "notes": "Credential: Custom Auth «Plusbimeh Password» → body: Password",
-      "onError": "continueRegularOutput"
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "set-me-plusbimeh-password",
+          "name": "Plusbimeh Password"
+        }
+      }
     },
     {
       "parameters": {
