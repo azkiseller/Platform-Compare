@@ -12,25 +12,51 @@
 ## ۱. قبل از import
 workflowهای قبلی (هم نسخه‌ی قدیمی که به Supabase قبلی می‌نویسد، هم دو فایل جدای خودرو/موتور اگر import کرده‌اید) را **غیرفعال یا حذف** کنید.
 
-## ۲. لاگین‌ها و کلید Supabase
-**لاگین سایت‌ها** مثل نسخه‌ی v4 داخل خود workflow است (credential جدا لازم نیست):
+## ۲. تنظیمات: فقط دو جا
 
-| سایت | کجا |
+### الف) نود `Settings` (اولین نود بعد از Schedule)
+همه‌ی مقدارهای قابل‌تغییر اینجاست و بقیه‌ی نودها از آن می‌خوانند:
+
+| فیلد | چه چیزی |
 |---|---|
-| شوراکا | نود `Login Site2` ← بدنه: `{"username":"…","password":"…"}` |
-| ازکی ایجنت | نود `Login` ← بدنه: `{"username":"…","password":"…"}` |
-| پلاس‌بیمه | نود `Config Site3` ← فیلدهای `mobile` و `password` |
+| `supabaseUrl` | `https://akaczqhvyemkjnwzgjzr.supabase.co` (بدون `/` آخر) |
+| `shorakaUsername` / `shorakaPassword` | لاگین شوراکا |
+| `azkiUsername` / `azkiPassword` | لاگین ازکی ایجنت |
+| `plusbimehMobile` / `plusbimehPassword` | لاگین پلاس‌بیمه |
+| `plusbimehDeviceToken` / `plusbimehInquiryToken` | توکن‌های ثابت پلاس‌بیمه؛ دست نزنید |
 
-فایل داخل این مخزن به‌جای مقدار واقعی `SHORAKA_USERNAME`، `AZKI_PASSWORD`، `PLUSBIMEH_MOBILE` و … دارد؛ رمز واقعی را **هرگز** در مخزن commit نکنید.
+فایل داخل مخزن به‌جای مقدار واقعی `SHORAKA_USERNAME` و … دارد؛ رمز واقعی را **هرگز** در مخزن commit نکنید.
 
-**نوشتن در Supabase** با credential از نوع Custom Auth به نام `Custom Auth account`:
-`{"headers":{"apikey":"sb_secret_..."}}` ← Secret key پروژه‌ی جدید (Project Settings ← API Keys).
-اگر کلید قدیمی `service_role` (JWT) پروژه‌ی جدید را استفاده می‌کنید: `{"headers":{"apikey":"<key>","Authorization":"Bearer <key>"}}`.
-کلید `service_role` پروژه‌ی **قبلی** (که در فایل v4 بود) برای پروژه‌ی جدید کار نمی‌کند.
+### ب) credential «Custom Auth account» (کلید Supabase)
+Overview ← Credentials ← «Custom Auth account». هر ۱۲ نود Supabase از همین استفاده می‌کنند.
+
+**JSON** — با Secret key جدید (Project Settings ← API Keys ← Secret keys، با `sb_secret_` شروع می‌شود):
+```json
+{
+  "headers": {
+    "apikey": "sb_secret_..."
+  }
+}
+```
+خط `Authorization` را **پاک کنید**؛ این کلید در Authorization قبول نمی‌شود.
+
+یا با کلید Legacy `service_role` (API Keys ← Legacy API keys ← service_role؛ با `eyJ` شروع می‌شود):
+```json
+{
+  "headers": {
+    "apikey": "eyJ...",
+    "Authorization": "Bearer eyJ..."
+  }
+}
+```
+هر دو مقدار همان کلید است؛ در دومی کلمه‌ی `Bearer` و یک فاصله قبلش. کلید پروژه‌ی **قبلی** (که در وسطش `ssqqjkhzgcgojbacjitq` دارد) کار نمی‌کند.
+
+**Allowed HTTP Request Domains** ← `Specific Domains` ← `akaczqhvyemkjnwzgjzr.supabase.co`
+(تا این کلید فقط به Supabase خودتان فرستاده شود.)
 
 ## ۳. Import و فعال‌سازی
 1. Workflows ← Import from File ← همین فایل.
-2. اگر فایل مخزن را import کرده‌اید، مقدارهای لاگین را در `Login Site2`، `Login` و `Config Site3` پر کنید. روی یکی از نودهای Supabase مطمئن شوید credential «Custom Auth account» انتخاب شده.
+2. اگر فایل مخزن را import کرده‌اید، مقدارهای نود `Settings` را پر کنید. روی یکی از نودهای Supabase مطمئن شوید credential «Custom Auth account» انتخاب شده.
 3. یک بار «Execute Workflow» بزنید و نود آخر هر شاخه را نگاه کنید:
    - `Pack Car/Moto` (ازکی)، `Site2 Output Car/Moto` (شوراکا)، `Site3 Output Car/Moto` (پلاس‌بیمه)
    - `Check Errors` اگر سایتی شکست خورده باشد اجرا را ناموفق می‌کند و نام سایت و پیام خطا را می‌نویسد.

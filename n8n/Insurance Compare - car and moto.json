@@ -18,55 +18,11 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -80,
+        -304,
         1240
       ],
       "notes": "هر ۶ ساعت؛ هر سایت یک بار لاگین می‌کند و قیمت خودرو و موتور را می‌گیرد",
       "notesInFlow": true
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "a1",
-              "name": "mobile",
-              "value": "PLUSBIMEH_MOBILE",
-              "type": "string"
-            },
-            {
-              "id": "a2",
-              "name": "password",
-              "value": "PLUSBIMEH_PASSWORD",
-              "type": "string"
-            },
-            {
-              "id": "a3",
-              "name": "deviceToken",
-              "value": "da4aa2f8-70d9-4d56-b577-3162dfae2c0f",
-              "type": "string"
-            },
-            {
-              "id": "a4",
-              "name": "inquiryToken",
-              "value": "7bd3ebac-81a3-11ec-9304-00505689da93",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "37a1826b-8c5b-4f80-9225-938474fefd49",
-      "name": "Config Site3",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        208,
-        680
-      ],
-      "notesInFlow": true,
-      "notes": "موبایل و رمز پلاس‌بیمه + توکن‌های دستگاه/استعلام",
-      "onError": "stopWorkflow"
     },
     {
       "parameters": {
@@ -97,7 +53,7 @@
             },
             {
               "name": "token",
-              "value": "={{ $('Config Site3').item.json.deviceToken }}"
+              "value": "={{ $('Settings').first().json.plusbimehDeviceToken }}"
             },
             {
               "name": "user-agent",
@@ -107,7 +63,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ MobileNumber: $('Config Site3').item.json.mobile }) }}",
+        "jsonBody": "={{ JSON.stringify({ MobileNumber: $('Settings').first().json.plusbimehMobile }) }}",
         "options": {}
       },
       "id": "4c35cd5d-e77b-413e-8819-152198e2aef3",
@@ -115,11 +71,11 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        432,
+        208,
         680
       ],
       "notesInFlow": true,
-      "notes": "موبایل را می‌دهد و SecurityData (۴ دقیقه اعتبار) را برمی‌گرداند",
+      "notes": "موبایل از Settings؛ SecurityData (۴ دقیقه اعتبار) برمی‌گرداند",
       "onError": "continueRegularOutput"
     },
     {
@@ -151,7 +107,7 @@
             },
             {
               "name": "token",
-              "value": "={{ $('Config Site3').item.json.deviceToken }}"
+              "value": "={{ $('Settings').first().json.plusbimehDeviceToken }}"
             },
             {
               "name": "user-agent",
@@ -161,7 +117,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ SecurityData: $json.SecurityData, Password: $('Config Site3').item.json.password, type: 'marketerRegister', queryParam: '' }) }}",
+        "jsonBody": "={{ JSON.stringify({ SecurityData: $json.SecurityData, Password: $('Settings').first().json.plusbimehPassword, type: 'marketerRegister', queryParam: '' }) }}",
         "options": {}
       },
       "id": "2697448e-2743-402a-ae79-36741d13493a",
@@ -169,7 +125,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        656,
+        432,
         680
       ],
       "notesInFlow": true,
@@ -207,7 +163,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{\"username\": \"AZKI_USERNAME\", \"password\": \"AZKI_PASSWORD\"}",
+        "jsonBody": "={{ JSON.stringify({ username: $('Settings').first().json.azkiUsername, password: $('Settings').first().json.azkiPassword }) }}",
         "options": {
           "response": {
             "response": {
@@ -224,7 +180,7 @@
         208,
         1240
       ],
-      "notes": "نام کاربری و رمز ازکی ایجنت داخل بدنه‌ی همین نود است",
+      "notes": "نام کاربری و رمز از نود Settings",
       "onError": "continueRegularOutput",
       "notesInFlow": true
     },
@@ -269,7 +225,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{\"username\": \"SHORAKA_USERNAME\", \"password\": \"SHORAKA_PASSWORD\"}",
+        "jsonBody": "={{ JSON.stringify({ username: $('Settings').first().json.shorakaUsername, password: $('Settings').first().json.shorakaPassword }) }}",
         "options": {
           "response": {
             "response": {
@@ -287,7 +243,7 @@
         208,
         1800
       ],
-      "notes": "نام کاربری و رمز شوراکا داخل بدنه‌ی همین نود است",
+      "notes": "نام کاربری و رمز از نود Settings",
       "onError": "continueRegularOutput",
       "notesInFlow": true
     },
@@ -334,7 +290,7 @@
             },
             {
               "name": "token",
-              "value": "={{ $('Config Site3').item.json.inquiryToken }}"
+              "value": "={{ $('Settings').first().json.plusbimehInquiryToken }}"
             },
             {
               "name": "user-agent",
@@ -394,7 +350,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/companies?on_conflict=site,company_key",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/companies?on_conflict=site,company_key",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "sendHeaders": true,
@@ -447,7 +403,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/commission",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "sendHeaders": true,
@@ -557,7 +513,7 @@
             },
             {
               "name": "token",
-              "value": "={{ $('Config Site3').item.json.inquiryToken }}"
+              "value": "={{ $('Settings').first().json.plusbimehInquiryToken }}"
             },
             {
               "name": "user-agent",
@@ -617,7 +573,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/companies?on_conflict=site,company_key",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/companies?on_conflict=site,company_key",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "sendHeaders": true,
@@ -670,7 +626,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/commission",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "sendHeaders": true,
@@ -926,7 +882,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/companies?on_conflict=site,company_key",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/companies?on_conflict=site,company_key",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -972,7 +928,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/commission",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -1162,7 +1118,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/companies?on_conflict=site,company_key",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/companies?on_conflict=site,company_key",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -1208,7 +1164,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/commission",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -1411,7 +1367,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/companies?on_conflict=site,company_key",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/companies?on_conflict=site,company_key",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "sendHeaders": true,
@@ -1455,7 +1411,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/commission",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "sendHeaders": true,
@@ -1630,7 +1586,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/companies?on_conflict=site,company_key",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/companies?on_conflict=site,company_key",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "sendHeaders": true,
@@ -1674,7 +1630,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/commission",
+        "url": "={{ $('Settings').first().json.supabaseUrl }}/rest/v1/commission",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth",
         "sendHeaders": true,
@@ -1808,6 +1764,79 @@
         160,
         1480
       ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "s0",
+              "name": "supabaseUrl",
+              "value": "https://akaczqhvyemkjnwzgjzr.supabase.co",
+              "type": "string"
+            },
+            {
+              "id": "s1",
+              "name": "shorakaUsername",
+              "value": "SHORAKA_USERNAME",
+              "type": "string"
+            },
+            {
+              "id": "s2",
+              "name": "shorakaPassword",
+              "value": "SHORAKA_PASSWORD",
+              "type": "string"
+            },
+            {
+              "id": "s3",
+              "name": "azkiUsername",
+              "value": "AZKI_USERNAME",
+              "type": "string"
+            },
+            {
+              "id": "s4",
+              "name": "azkiPassword",
+              "value": "AZKI_PASSWORD",
+              "type": "string"
+            },
+            {
+              "id": "s5",
+              "name": "plusbimehMobile",
+              "value": "PLUSBIMEH_MOBILE",
+              "type": "string"
+            },
+            {
+              "id": "s6",
+              "name": "plusbimehPassword",
+              "value": "PLUSBIMEH_PASSWORD",
+              "type": "string"
+            },
+            {
+              "id": "s7",
+              "name": "plusbimehDeviceToken",
+              "value": "da4aa2f8-70d9-4d56-b577-3162dfae2c0f",
+              "type": "string"
+            },
+            {
+              "id": "s8",
+              "name": "plusbimehInquiryToken",
+              "value": "7bd3ebac-81a3-11ec-9304-00505689da93",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ba4c98e8-4be2-454f-ba2a-7779038ef8d5",
+      "name": "Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -80,
+        1240
+      ],
+      "notesInFlow": true,
+      "notes": "همه‌ی تنظیمات اینجاست: آدرس Supabase و لاگین سه سایت. کلید Supabase در credential «Custom Auth account» است."
     }
   ],
   "pinData": {},
@@ -1816,28 +1845,7 @@
       "main": [
         [
           {
-            "node": "Config Site3",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Login",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Login Site2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Config Site3": {
-      "main": [
-        [
-          {
-            "node": "Login Step1 Site3",
+            "node": "Settings",
             "type": "main",
             "index": 0
           }
@@ -2417,6 +2425,27 @@
         [
           {
             "node": "Check Errors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settings": {
+      "main": [
+        [
+          {
+            "node": "Login Step1 Site3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Login",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Login Site2",
             "type": "main",
             "index": 0
           }
