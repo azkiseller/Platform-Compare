@@ -1,0 +1,1197 @@
+{
+  "name": "Insurance Compare – موتور تک‌سیلندر مدل ۱۴۰۳",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "id": "8ffa1481-5e3f-4236-9713-86dba91a3233",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        1136
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://shoraka.net/api/v1/password-login/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "brand",
+              "value": "shoraka"
+            },
+            {
+              "name": "origin",
+              "value": "https://shoraka.net"
+            },
+            {
+              "name": "referer",
+              "value": "https://shoraka.net/login"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth"
+      },
+      "id": "22a4cd7c-e76b-4a5e-b087-ce820b04c127",
+      "name": "Login Site2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        1328
+      ],
+      "notes": "Credential: Custom Auth «Shoraka Login» → body: username, password",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const res = $input.first().json;\nif (res.statusCode !== 200) {\n  throw new Error('Shoraka login failed: HTTP ' + res.statusCode + ' ' + JSON.stringify(res.body).slice(0, 400));\n}\nconst raw = res.headers?.['set-cookie'] || [];\nconst cookies = (Array.isArray(raw) ? raw : [raw]).map(c => c.split(';')[0]);\nconst get = name => {\n  const hit = cookies.find(c => c.startsWith(name + '='));\n  return hit ? decodeURIComponent(hit.split('=').slice(1).join('=')) : null;\n};\nconst b = res.body || {};\nconst token = get('auth-token') || b.token || b.data?.token || b.auth_token || b.data?.auth_token || null;\nif (!token && !cookies.length) {\n  throw new Error('No token and no cookies in login response. body: ' + JSON.stringify(b).slice(0, 400));\n}\nreturn [{ json: { token, cookie: cookies.join('; ') } }];"
+      },
+      "id": "ca45d289-2e99-49ae-b411-2c4014208a8b",
+      "name": "Extract Token Site2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        1328
+      ],
+      "onError": "stopWorkflow"
+    },
+    {
+      "parameters": {
+        "url": "https://shoraka.net/api/v1/thirdpartymotor/offers/",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "car_brand",
+              "value": "one_cylinder"
+            },
+            {
+              "name": "car_production_year",
+              "value": "1403"
+            },
+            {
+              "name": "policy_status",
+              "value": "without"
+            },
+            {
+              "name": "policy_term",
+              "value": "12"
+            },
+            {
+              "name": "financial_coverage",
+              "value": "70000000"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "authorization",
+              "value": "={{ $json.token ? 'Token ' + $json.token : '' }}"
+            },
+            {
+              "name": "cookie",
+              "value": "={{ $json.cookie }}"
+            },
+            {
+              "name": "brand",
+              "value": "shoraka"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "9da2c934-1078-47bb-88f9-44913f594c72",
+      "name": "Get Offers Site2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        656,
+        1328
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
+      "onError": "continueRegularOutput",
+      "notes": "ثالث موتور: تک‌سیلندر، ۱۴۰۳، بدون بیمه‌نامه‌ی قبلی، یک‌ساله، ۷۰ میلیون",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const COVERAGE = 70000000;\nlet body = $input.first().json;\n// پاسخ ممکن است داخل فیلد data به صورت رشته آمده باشد\nif (typeof body.data === 'string') {\n  try { body = JSON.parse(body.data); }\n  catch (e) { throw new Error('Offers response is not valid JSON: ' + body.data.slice(0, 200)); }\n}\nif (body.status && body.status !== 'ok') {\n  throw new Error('Shoraka motor offers status: ' + body.status + ' ' + (body.message || ''));\n}\nconst offers = body.data?.offers ?? [];\nif (!offers.length) throw new Error('Shoraka motor offers list is empty');\nconst captured_at = new Date().toISOString();\nconst r2 = n => Math.round(Number(n || 0) * 100) / 100;\nreturn offers.map(o => {\n  const tariff = (o.tariffs || []).find(t => Number(t.financial_coverage) === COVERAGE) || o.tariffs?.[0];\n  // عددی که خود سایت به عنوان کارمزد نشان می‌دهد\n  const rate = r2(tariff?.total_discount_percent);\n  return { json: {\n    site: 'site2',\n    vehicle: 'moto_1403',\n    company_key: o.company_url_name,\n    company_name: o.company_name,\n    coverage: 'third',\n    rate,\n    rate_fixed: r2(o.commissions?.fixed),\n    rate_shoraka: r2(o.commissions?.shoraka),\n    premium: tariff?.tariff ?? null,\n    status: tariff ? 'ok' : 'off',\n    captured_at\n  } };\n});"
+      },
+      "id": "4c0a6dab-dbb3-4710-8c53-71b22226a2d6",
+      "name": "Normalize Site2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        1328
+      ],
+      "onError": "stopWorkflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().map(i => i.json);\nreturn [{ json: {\n  companies: items.map(i => ({ site: i.site, company_key: i.company_key, name: i.company_name, status: i.status })),\n  commissions: items.filter(i => i.status === 'ok').map(i => ({ site: i.site, company_key: i.company_key, coverage: i.coverage, vehicle: i.vehicle, rate: i.rate, captured_at: i.captured_at }))\n} }];"
+      },
+      "id": "870dfff5-88e1-4107-ae19-a7f0ddddef9f",
+      "name": "Build Payload Site2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        1328
+      ],
+      "onError": "stopWorkflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/companies?on_conflict=site,company_key",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Profile",
+              "value": "compare"
+            },
+            {
+              "name": "Prefer",
+              "value": "resolution=merge-duplicates,return=minimal"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Build Payload Site2').first().json.companies) }}",
+        "options": {}
+      },
+      "id": "66b45e68-7993-420f-8bb5-5324f3ec076d",
+      "name": "Upsert Companies",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1328,
+        1328
+      ],
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "SbtIrqvB3YJ8V2x4",
+          "name": "Custom Auth account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/commission",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Profile",
+              "value": "compare"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Build Payload Site2').first().json.commissions) }}",
+        "options": {}
+      },
+      "id": "c2403b4d-dbf8-40e0-931b-ee10579b7128",
+      "name": "Insert Commission",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1552,
+        1328
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "SbtIrqvB3YJ8V2x4",
+          "name": "Custom Auth account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Normalize Site2').all();"
+      },
+      "id": "67b1a360-dcf3-4667-b27f-91cdf3353468",
+      "name": "Site2 Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1776,
+        1328
+      ],
+      "onError": "stopWorkflow"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a3",
+              "name": "deviceToken",
+              "value": "da4aa2f8-70d9-4d56-b577-3162dfae2c0f",
+              "type": "string"
+            },
+            {
+              "id": "a4",
+              "name": "inquiryToken",
+              "value": "7bd3ebac-81a3-11ec-9304-00505689da93",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "34a27e87-92bd-4780-b95d-b915c6ea8cae",
+      "name": "Config Site3",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        848
+      ],
+      "notesInFlow": true,
+      "notes": "فقط توکن‌های دستگاه/استعلام؛ موبایل و رمز در Credentials است",
+      "onError": "stopWorkflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://coreapi.bimeh.com/v1/authentication/plusbimeh",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            },
+            {
+              "name": "accept",
+              "value": "application/json, text/plain, */*"
+            },
+            {
+              "name": "authorization",
+              "value": "Bearer"
+            },
+            {
+              "name": "origin",
+              "value": "https://plusbimeh.com"
+            },
+            {
+              "name": "referer",
+              "value": "https://plusbimeh.com/"
+            },
+            {
+              "name": "token",
+              "value": "={{ $('Config Site3').item.json.deviceToken }}"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {},
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth"
+      },
+      "id": "da3bb531-d45b-435c-9fa1-15c6edab29e9",
+      "name": "Login Step1 Site3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        432,
+        848
+      ],
+      "notesInFlow": true,
+      "notes": "Credential: Custom Auth «Plusbimeh Mobile» → body: MobileNumber",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://coreapi.bimeh.com/v1/authentication/login",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            },
+            {
+              "name": "accept",
+              "value": "application/json, text/plain, */*"
+            },
+            {
+              "name": "authorization",
+              "value": "Bearer"
+            },
+            {
+              "name": "origin",
+              "value": "https://plusbimeh.com"
+            },
+            {
+              "name": "referer",
+              "value": "https://plusbimeh.com/"
+            },
+            {
+              "name": "token",
+              "value": "={{ $('Config Site3').item.json.deviceToken }}"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ SecurityData: $json.SecurityData, type: 'marketerRegister', queryParam: '' }) }}",
+        "options": {},
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth"
+      },
+      "id": "6e870024-a1a8-4d75-973a-12b39ffcce24",
+      "name": "Login Step2 Site3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        656,
+        848
+      ],
+      "notesInFlow": true,
+      "notes": "Credential: Custom Auth «Plusbimeh Password» → body: Password",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://coreapi.bimeh.com/v1/insurance/motor/inquiry",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            },
+            {
+              "name": "accept",
+              "value": "*/*"
+            },
+            {
+              "name": "authorization",
+              "value": "={{ 'Bearer ' + $('Login Step2 Site3').item.json.JWT }}"
+            },
+            {
+              "name": "origin",
+              "value": "https://plusbimeh.com"
+            },
+            {
+              "name": "referer",
+              "value": "https://plusbimeh.com/"
+            },
+            {
+              "name": "token",
+              "value": "={{ $('Config Site3').item.json.inquiryToken }}"
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ (() => {\n  const q = { MotorTypeId:7, ProductionYearId:2024, PreviousInsuranceStatusId:1, isRenewal:false, DurationId:2, coverages:188 };\n  const url = 'https://plusbimeh.com/thirdpartyMotor/planlist?' + Object.entries(q).map(([k,v]) => k + '=' + v).join('&');\n  return JSON.stringify({ ...q, InquiryUrl: url });\n})() }}",
+        "options": {}
+      },
+      "id": "901733af-813e-4889-949e-6b810a5c11f7",
+      "name": "Inquiry Site3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        848
+      ],
+      "notesInFlow": true,
+      "notes": "موتور تک‌سیلندر (MotorTypeId=7)، ۱۴۰۳ (=2024)، فاقد بیمه‌نامه، یک‌ساله، پوشش ۱۸۸ = ۷۰ میلیون",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const COVERAGE_ID = 188;   // پوشش مالی ۷۰ میلیون تومان (همان سناریوی شوراکا)\nconst DURATION_ID = 2;     // یک ساله\n\n// شناسه‌ی شرکت در سایت سوم ← همان company_key که در شوراکا/ازکی استفاده می‌شود\nconst KEYS = {\n  1019: 'day', 1020: 'moalem', 1021: 'saman', 1023: 'parsian', 1024: 'asia', 1025: 'razi', 1026: 'iran',\n  1027: 'sarmad', 1028: 'taavon', 1029: 'dana', 1030: 'mihan', 1031: 'arman', 1032: 'sina', 1033: 'novin',\n  1034: 'alborz', 1038: 'kowsar', 1039: 'tejaratno', 1060: 'hekmat', 1066: 'pardis', 1067: 'hoshmand'\n};\n\nlet body = $input.first().json;\nif (Array.isArray(body)) body = body[0];\nconst inquiries = body?.Inquiries ?? [];\nconst companies = body?.Companies ?? [];\nif (!inquiries.length) throw new Error('Site3: Inquiries list is empty');\n\nconst cov = (body.Coverages || []).find(c => c.Id === COVERAGE_ID);\nif (!cov) throw new Error('Site3: coverage ' + COVERAGE_ID + ' not found in response');\n\nconst names = {};\ncompanies.forEach(c => { names[c.Id] = String(c.Title || '').trim(); });\n\nconst captured_at = new Date().toISOString();\nconst r2 = n => Math.round(Number(n || 0) * 100) / 100;\n// «۱۴%» یا «14%» → ۱۴ ؛ خالی → null (یعنی سایت کارمزد نشان نداده، نه صفر)\nconst pct = h => {\n  if (h == null || h === '') return null;\n  const fa = '۰۱۲۳۴۵۶۷۸۹';\n  const s = String(h).replace(/[۰-۹]/g, d => fa.indexOf(d)).replace('٫', '.');\n  const m = s.match(/[\\d.]+/);\n  return m ? Number(m[0]) : null;\n};\n\nconst rows = inquiries.filter(x => x.Details?.CoverageId === COVERAGE_ID && x.DurationId === DURATION_ID);\nif (!rows.length) throw new Error('Site3: no rows for coverage/duration');\n\n// برای هر شرکت فقط یک ردیف\nconst seen = new Set();\nconst out = [];\nfor (const x of rows) {\n  const id = x.CompanyId;\n  if (seen.has(id)) continue;\n  seen.add(id);\n  const cp = x.CashPrice || {};\n  out.push({ json: {\n    site: 'site3',\n    vehicle: 'moto_1403',\n    company_key: KEYS[id] || ('c' + id),\n    company_name: names[id] || String(id),\n    coverage: 'third',\n    rate: pct(cp.Hint) == null ? null : r2(pct(cp.Hint)),\n    premium: cp.FinalAmount ?? null,\n    status: x.IsLocked ? 'off' : 'ok',\n    captured_at\n  } });\n}\nreturn out;\n"
+      },
+      "id": "4aaa5064-d800-48b5-a55a-45165dba04fd",
+      "name": "Normalize Site3",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1104,
+        848
+      ],
+      "notesInFlow": true,
+      "notes": "کارمزد = CashPrice.Hint (مثلاً «۱۴%»)؛ فقط پوشش ۱۸۸ (۷۰ میلیون) و یک‌ساله",
+      "onError": "stopWorkflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().map(i => i.json);\nconst seen = new Set();\nconst companies = [];\nfor (const i of items) {\n  const k = i.site + '|' + i.company_key;\n  if (seen.has(k)) continue;\n  seen.add(k);\n  companies.push({ site: i.site, company_key: i.company_key, name: i.company_name, status: i.status, updated_at: i.captured_at });\n}\nconst commissions = items\n  .filter(i => i.status === 'ok')\n  .map(i => ({ site: i.site, company_key: i.company_key, coverage: i.coverage, vehicle: i.vehicle, rate: i.rate == null ? null : Number(i.rate), captured_at: i.captured_at }));\nreturn [{ json: { companies, commissions } }];\n"
+      },
+      "id": "ed6bb1a1-52f2-43a6-9049-a73006fb3be3",
+      "name": "Build Payload Site3",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        848
+      ],
+      "notesInFlow": true,
+      "notes": "ساخت دو آرایه: شرکت‌ها (با company_name و بدون تکرار) و کمیسیون‌ها",
+      "onError": "stopWorkflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/companies?on_conflict=site,company_key",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Profile",
+              "value": "compare"
+            },
+            {
+              "name": "Prefer",
+              "value": "resolution=merge-duplicates,return=minimal"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Accept-Profile",
+              "value": "compare"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.companies) }}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "6efe6ff1-f50f-4128-b8c4-100098ee0214",
+      "name": "Upsert Companies Site3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1552,
+        848
+      ],
+      "retryOnFail": false,
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "SbtIrqvB3YJ8V2x4",
+          "name": "Custom Auth account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/commission",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Profile",
+              "value": "compare"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Accept-Profile",
+              "value": "compare"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Build Payload Site3').first().json.commissions) }}",
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "a9a08783-4424-4555-8323-6e5c835cc22b",
+      "name": "Insert Commission Site3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1776,
+        848
+      ],
+      "retryOnFail": false,
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "SbtIrqvB3YJ8V2x4",
+          "name": "Custom Auth account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('Normalize Site3').all();"
+      },
+      "id": "eb7a3137-55f6-401c-93f3-40fd4f47d02e",
+      "name": "Site3 Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        848
+      ],
+      "notesInFlow": true,
+      "notes": "خروجی شاخه‌ی پلاس‌بیمه",
+      "onError": "stopWorkflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://azkiagent.com/api/sellerAuthenticate/login_with_password",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Origin",
+              "value": "https://azkiagent.com"
+            },
+            {
+              "name": "Referer",
+              "value": "https://azkiagent.com/auth/login/verify-password"
+            },
+            {
+              "name": "x-client-app",
+              "value": "renaissance"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        },
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth"
+      },
+      "id": "a593aff7-3870-442d-a1d3-6fc0de33f26c",
+      "name": "Login",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        208,
+        1136
+      ],
+      "notes": "Credential: Custom Auth «Azkiagent Login» → body: username, password",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// استخراج کوکی نشست (و توکن، اگر در بدنه یا کوکی باشد)\nconst res = $input.first().json;\nconst sc = (res.headers && (res.headers['set-cookie'] || res.headers['Set-Cookie'])) || [];\nconst arr = Array.isArray(sc) ? sc : [sc];\nconst cookies = arr.filter(Boolean).map(c => c.split(';')[0]);\nconst cookie = cookies.join('; ');\n\n// TODO: اگر توکن در بدنه‌ی پاسخ است، مسیرش را اینجا بگذار\nlet token = null;\nif (res.body && typeof res.body === 'object') {\n  token = (res.body.value && res.body.value.token) || res.body.token || null;\n}\n// TODO: اگر توکن داخل کوکی است (مثل auth-token در شوراکا) نامش را بگذار\nconst tokenCookieName = 'securityToken';\nif (!token) {\n  const hit = cookies.find(c => c.startsWith(tokenCookieName + '='));\n  if (hit) token = hit.split('=').slice(1).join('=');\n}\n\nif (!cookie && !token) {\n  throw new Error('Login: no cookie or token found. Check the login response.');\n}\nreturn [{ json: { cookie, token } }];"
+      },
+      "id": "1e018c0d-8bb1-4baf-a326-027a15a3e069",
+      "name": "Cookie",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        1136
+      ],
+      "onError": "stopWorkflow"
+    },
+    {
+      "parameters": {
+        "url": "https://azkiagent.com/api/Insurance/pricing",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "coverId",
+              "value": "64e47ed9fb4d070f4440a52e"
+            },
+            {
+              "name": "durationId",
+              "value": "12"
+            },
+            {
+              "name": "vehicleTypeId",
+              "value": "65e7465b0e118b4f12a01ac2"
+            },
+            {
+              "name": "vehicleBrandId",
+              "value": "65e7465b0e118b4f12a01ad2"
+            },
+            {
+              "name": "vehicleModelId",
+              "value": "65e7465c0e118b4f12a01ae3"
+            },
+            {
+              "name": "vehicleUsageId",
+              "value": "64e47ed1fb4d070f4440a432"
+            },
+            {
+              "name": "vehicleConstructionYear",
+              "value": "1403"
+            },
+            {
+              "name": "VehicleChangedOwner",
+              "value": "false"
+            },
+            {
+              "name": "oldInsureUsed",
+              "value": "false"
+            },
+            {
+              "name": "marketer",
+              "value": "false"
+            },
+            {
+              "name": "zeroKilometer",
+              "value": "false"
+            },
+            {
+              "name": "withoutInsure",
+              "value": "true"
+            },
+            {
+              "name": "VehicleType",
+              "value": "Motor"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $json.token ? 'Bearer ' + $json.token : '' }}"
+            },
+            {
+              "name": "Cookie",
+              "value": "={{ $json.cookie }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Referer",
+              "value": "https://azkiagent.com/crm/pricing/motor-thirdParty"
+            },
+            {
+              "name": "x-client-app",
+              "value": "renaissance"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "da13b7c8-4eab-4f9d-a1ce-027eed060957",
+      "name": "Get Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        656,
+        1136
+      ],
+      "notes": "ثالث موتور: تک‌سیلندر ۱۴۰۳، فاقد بیمه‌نامه، یک‌ساله، پوشش ۷۰ میلیون (بدون draftId)",
+      "onError": "continueRegularOutput",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// پاسخ: آرایه‌ای از شرکت‌ها. کارمزد نقدی‌ای که سایت نشان می‌دهد = سهم سلر + کمپین\nconst ALIAS = { tejarateno: 'tejaratno', kosar: 'kowsar', moallem: 'moalem', dey: 'day', mellat: 'melat', hekmatsaba: 'hekmat' };\nconst KNOWN = new Set(['novin','razi','hekmat','sina','moalem','mihan','kowsar','pardis','dana','alborz','iran','asia','ma','saman','day','parsian','pasargad','karafarin','melat','hafez','omid','taavon','sarmad','arman','hoshmand','tejaratno']);\nconst SITE = 'site1', COVERAGE = 'third', VEHICLE = 'moto_1403';\nconst now = new Date().toISOString();\n\nlet list = $input.first().json;\nif (!Array.isArray(list)) list = list.value || list.data || $input.all().map(i => i.json);\nif (!Array.isArray(list) || !list.length || !list[0].prices) throw new Error('Azki motor pricing: unexpected response');\n\nconst companies = [], commission = [], unmapped = [], seen = new Set();\nfor (const it of list) {\n  const raw = String(it.id || '').toLowerCase();\n  const key = ALIAS[raw] || raw;\n  if (!KNOWN.has(key)) { unmapped.push(it.id + ' ' + (it.title || '')); continue; }\n  if (seen.has(key)) continue;\n  seen.add(key);\n  const s = it.sellerCommissionPercent, c = it.campaignCommissionPercent;\n  const rate = (s == null && c == null) ? null : Number(s || 0) + Number(c || 0);\n  companies.push({ site: SITE, company_key: key, name: String(it.title || it.id).trim(), status: 'ok' });\n  commission.push({ site: SITE, company_key: key, coverage: COVERAGE, vehicle: VEHICLE, rate, captured_at: now });\n}\nreturn [{ json: { site: SITE, coverage: COVERAGE, captured_at: now, companies, commission, unmapped } }];"
+      },
+      "id": "44cf6eda-6914-42ae-83aa-e1c1de413483",
+      "name": "Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        1136
+      ],
+      "onError": "stopWorkflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/companies?on_conflict=site,company_key",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Profile",
+              "value": "compare"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "resolution=merge-duplicates,return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.companies) }}",
+        "options": {},
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth"
+      },
+      "id": "1ff5ae13-ce31-449d-92dc-a25b8379763f",
+      "name": "Save Companies",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1104,
+        1136
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "SbtIrqvB3YJ8V2x4",
+          "name": "Custom Auth account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://akaczqhvyemkjnwzgjzr.supabase.co/rest/v1/commission",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Profile",
+              "value": "compare"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Normalize').item.json.commission) }}",
+        "options": {},
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpCustomAuth"
+      },
+      "id": "77f33c5e-545c-49ab-9310-a5054b5a52c2",
+      "name": "Save Commission",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1328,
+        1136
+      ],
+      "credentials": {
+        "httpCustomAuth": {
+          "id": "SbtIrqvB3YJ8V2x4",
+          "name": "Custom Auth account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const n = $('Normalize').item.json;\nreturn [{ json: {\n  site: n.site,\n  coverage: n.coverage,\n  captured_at: n.captured_at,\n  count: n.commission.length,\n  max_rate: Math.max(...n.commission.map(r => r.rate ?? -1)),\n  rows: n.commission,\n  unmapped: n.unmapped\n} }];"
+      },
+      "id": "60419b1f-4134-4710-93d6-b8d5e1b9b57f",
+      "name": "Pack",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1552,
+        1136
+      ],
+      "onError": "stopWorkflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Login Site2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Config Site3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Login",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Login Site2": {
+      "main": [
+        [
+          {
+            "node": "Extract Token Site2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Token Site2": {
+      "main": [
+        [
+          {
+            "node": "Get Offers Site2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Offers Site2": {
+      "main": [
+        [
+          {
+            "node": "Normalize Site2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Site2": {
+      "main": [
+        [
+          {
+            "node": "Build Payload Site2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Payload Site2": {
+      "main": [
+        [
+          {
+            "node": "Upsert Companies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert Companies": {
+      "main": [
+        [
+          {
+            "node": "Insert Commission",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Commission": {
+      "main": [
+        [
+          {
+            "node": "Site2 Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config Site3": {
+      "main": [
+        [
+          {
+            "node": "Login Step1 Site3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Login Step1 Site3": {
+      "main": [
+        [
+          {
+            "node": "Login Step2 Site3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Login Step2 Site3": {
+      "main": [
+        [
+          {
+            "node": "Inquiry Site3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inquiry Site3": {
+      "main": [
+        [
+          {
+            "node": "Normalize Site3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Site3": {
+      "main": [
+        [
+          {
+            "node": "Build Payload Site3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Payload Site3": {
+      "main": [
+        [
+          {
+            "node": "Upsert Companies Site3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Commission Site3": {
+      "main": [
+        [
+          {
+            "node": "Site3 Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert Companies Site3": {
+      "main": [
+        [
+          {
+            "node": "Insert Commission Site3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Login": {
+      "main": [
+        [
+          {
+            "node": "Cookie",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cookie": {
+      "main": [
+        [
+          {
+            "node": "Get Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Data": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize": {
+      "main": [
+        [
+          {
+            "node": "Save Companies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Companies": {
+      "main": [
+        [
+          {
+            "node": "Save Commission",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Commission": {
+      "main": [
+        [
+          {
+            "node": "Pack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "meta": {
+    "instanceId": "4ff4ec2c22fafababa77c99b095ff54d20c58102f4116e99c67c8c6f85c58fe9"
+  },
+  "nodeGroups": [],
+  "tags": []
+}
