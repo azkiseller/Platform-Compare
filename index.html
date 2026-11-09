@@ -184,6 +184,32 @@ html[data-theme=dark] .dp{background:rgba(14,18,30,.95)}
 .dp-t{font-size:13.5px;font-weight:600;text-align:center;line-height:1.7}
 @media(max-width:700px){header.topbar{flex-direction:column;gap:6px;padding:12px 16px}header.topbar #r{position:static;transform:none}.site .st+.st{border-inline-start:0;margin-top:10px}.dp{left:68px;right:12px;width:auto;transform:none}}
 @media(prefers-reduced-motion:reduce){.cc{transition:none}.cc.hl{transform:none}}
+/* سایدبار تب‌ها: خودرو / موتور */
+.side{position:relative;z-index:5;display:flex;gap:10px;max-width:1180px;margin:0 auto;padding:16px 16px 0}
+.side-h{display:none}
+.tab{flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius);border:1px solid var(--line);
+background:var(--surface);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);box-shadow:var(--shadow);
+color:var(--ink);font:inherit;text-align:start;cursor:pointer;transition:background .15s,color .15s,box-shadow .15s}
+.tab svg{width:28px;height:28px;flex:none}
+.tab b{display:block;font-size:14.5px;font-weight:900}
+.tab small{display:block;font-size:11.5px;color:var(--ink-faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tab:hover{border-color:var(--accent)}
+.tab[aria-selected=true]{background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff;border-color:transparent;box-shadow:0 10px 24px -10px rgba(22,86,245,.7)}
+.tab[aria-selected=true] small{color:rgba(255,255,255,.85)}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(min-width:1101px){
+ :root{--rail:116px}
+ #app{padding-inline-start:var(--rail)}
+ .bg-glow{inset-inline-start:var(--rail)}
+ .side{position:fixed;top:0;bottom:0;inset-inline-start:0;z-index:30;width:var(--rail);max-width:none;margin:0;padding:18px 12px;flex-direction:column;gap:12px;
+ background:#F3F8FF;border-inline-end:1px solid var(--line);box-shadow:0 0 30px -12px rgba(15,72,150,.3)}
+ html[data-theme=dark] .side{background:#070b16}
+ .side-h{display:block;font-size:11.5px;font-weight:700;color:var(--ink-faint);text-align:center;padding:4px 0 6px;border-bottom:1px solid var(--line);margin-bottom:4px}
+ .tab{flex:none;flex-direction:column;justify-content:center;text-align:center;gap:6px;padding:14px 6px}
+ .tab svg{width:36px;height:36px}
+ .tab small{white-space:normal;line-height:1.5}
+}
+@media(prefers-reduced-motion:reduce){.tab{transition:none}}
 </style>
 </head>
 <body>
@@ -194,19 +220,30 @@ html[data-theme=dark] .dp{background:rgba(14,18,30,.95)}
 </button>
 <div id="app">
 <header class="topbar">
- <div class="brand"><div><h1>مقایسه صفحه کامپیر ثالث شرکت‌ها</h1><div class="sync" id="sub">در حال بارگذاری…</div></div></div>
+ <div class="brand"><div><h1 id="h">مقایسه صفحه کامپیر ثالث شرکت‌ها</h1><div class="sync" id="sub">در حال بارگذاری…</div></div></div>
  <button class="ghost" id="r">↻ بروزرسانی</button>
 </header>
+<nav class="side" id="side" role="tablist" aria-label="نوع وسیله" aria-orientation="vertical">
+ <div class="side-h">بیمه ثالث</div>
+ <button type="button" class="tab" role="tab" id="tab-206_1397" data-v="206_1397" aria-controls="cols" aria-selected="false">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13.5l1.8-4.6A2 2 0 0 1 6.7 7.6h10.6a2 2 0 0 1 1.9 1.3l1.8 4.6"/><path d="M3 13.5h18v3.5a1 1 0 0 1-1 1h-1.2M3 13.5V17a1 1 0 0 0 1 1h1.2M9.2 18h5.6"/><circle cx="7.2" cy="17.6" r="1.9"/><circle cx="16.8" cy="17.6" r="1.9"/></svg>
+  <span><b>خودرو</b><small>۲۰۶ تیپ ۲ · مدل ۱۳۹۷</small></span>
+ </button>
+ <button type="button" class="tab" role="tab" id="tab-moto_1403" data-v="moto_1403" aria-controls="cols" aria-selected="false">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="16" r="3.2"/><circle cx="19" cy="16" r="3.2"/><path d="M5 16h4.5l3-5h3.5l3 5"/><path d="M12.5 11l-1.8-3.2H7.5M14.5 7.2h2.3l2.2 3.8"/></svg>
+  <span><b>موتور</b><small>تک‌سیلندر · مدل ۱۴۰۳</small></span>
+ </button>
+</nav>
 <main>
  <input class="search" id="q" placeholder="جستجوی شرکت (نام فارسی یا انگلیسی)">
- <div class="cols" id="cols"></div>
+ <div class="cols" id="cols" role="tabpanel"></div>
 </main>
 <div class="dp" id="dp" hidden role="dialog" aria-label="جزئیات مقایسه"></div>
 </div>
 <script>
 // ---- تنظیمات: فقط کلید anon را بگذار ----
-const SUPABASE_URL='https://ssqqjkhzgcgojbacjitq.supabase.co';
-const ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzcXFqa2h6Z2Nnb2piYWNqaXRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjczOTEsImV4cCI6MjEwNTE0MzM5MX0.0a9maOTpqGBRNs5mIVvNONXpYBauL8yjlY-O8EtsDxU';
+const SUPABASE_URL='https://akaczqhvyemkjnwzgjzr.supabase.co';
+const ANON_KEY='sb_publishable_uup5CXqDLkXph4jdC1Qb_A_9PW3n9oG';
 // ----------------------------------------
 const SITES=[ // ترتیب در صفحه‌ی راست‌به‌چپ: اولی راست، دومی وسط، سومی چپ
  {k:'site3',c:'s3',n:'بیمه پلاس',h:'plusbimeh.com',logo:'brand/plusbimeh.png'},
@@ -223,16 +260,43 @@ const fa=n=>n==null?null:Number(n).toLocaleString('fa-IR');
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let rows=[],failed=null,pinned=null,merged={};
+// تب‌ها: هر تب یک سناریوی وسیله در ستون vehicle جدول compare.commission
+const VEH=[{k:'206_1397',n:'خودرو',d:'۲۰۶ تیپ ۲ · مدل ۱۳۹۷'},{k:'moto_1403',n:'موتور',d:'تک‌سیلندر · مدل ۱۴۰۳'}];
+const isVeh=v=>VEH.some(x=>x.k===v);
+let veh=(()=>{const h=decodeURIComponent(location.hash.slice(1));if(isVeh(h))return h;
+ try{const s=localStorage.getItem('dashboardVehicle');if(isVeh(s))return s}catch(e){}return VEH[0].k})();
+const cache={};let reqId=0;
+const HEADERS={apikey:ANON_KEY,'Accept-Profile':'compare'};
+if(ANON_KEY.startsWith('eyJ'))HEADERS.Authorization='Bearer '+ANON_KEY; // کلید قدیمی JWT؛ کلید sb_publishable فقط در apikey
 const fa2=n=>n==null?null:Number(n).toLocaleString('fa-IR',{maximumFractionDigits:2});
 $('tt').onclick=()=>{const h=document.documentElement,t=h.dataset.theme==='dark'?'light':'dark';h.dataset.theme=t;try{localStorage.setItem('dashboardTheme',t)}catch(e){}};
+function tabs(){
+ const v=VEH.find(x=>x.k===veh);
+ document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.v===veh;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1});
+ $('cols').setAttribute('aria-labelledby','tab-'+veh);
+ $('h').textContent='مقایسه صفحه کامپیر ثالث شرکت‌ها · '+v.n;
+ document.title='مقایسه کامپیر ثالث · '+v.n+' ('+v.d+')';
+}
+function setVeh(v){
+ if(!isVeh(v)||v===veh)return;
+ veh=v;
+ if(location.hash.slice(1)!==v)history.replaceState(null,'','#'+v);
+ try{localStorage.setItem('dashboardVehicle',v)}catch(e){}
+ tabs();load();
+}
 async function load(){
+ const v=veh,id=++reqId;
  $('sub').textContent='در حال بارگذاری…';
+ if(cache[v]){rows=cache[v];failed=null;render()}
+ else{pinned=null;panel(null);$('cols').innerHTML='<div class="msg" style="grid-column:1/-1">در حال بارگذاری…</div>'}
  try{
-  const r=await fetch(SUPABASE_URL+'/rest/v1/current_commission?select=site,company_key,rate,captured_at&coverage=eq.third&order=captured_at.desc',
-   {headers:{apikey:ANON_KEY,Authorization:'Bearer '+ANON_KEY,'Accept-Profile':'compare'}});
+  const r=await fetch(SUPABASE_URL+'/rest/v1/current_commission?select=site,company_key,rate,captured_at&coverage=eq.third&vehicle=eq.'+encodeURIComponent(v)+'&order=captured_at.desc',{headers:HEADERS});
   if(!r.ok)throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,140));
-  const raw=await r.json(),seen=new Set();rows=raw.filter(x=>{const k=x.site+'|'+x.company_key;if(seen.has(k))return false;seen.add(k);return true});failed=null;$('sub').textContent='روی هر شرکت بزن تا همتایش در سایت‌های دیگر و اختلاف نشان داده شود';
- }catch(e){failed=e.message;$('sub').textContent='ناموفق'}
+  const raw=await r.json(),seen=new Set();
+  if(id!==reqId)return; // در این فاصله تب عوض شده
+  rows=raw.filter(x=>{const k=x.site+'|'+x.company_key;if(seen.has(k))return false;seen.add(k);return true});cache[v]=rows;failed=null;
+  $('sub').textContent='روی هر شرکت بزن تا همتایش در سایت‌های دیگر و اختلاف نشان داده شود';
+ }catch(e){if(id!==reqId)return;failed=e.message;$('sub').textContent='ناموفق'}
  render();
 }
 function siteCard(s,list){
@@ -358,7 +422,13 @@ $('cols').addEventListener('mouseout',e=>{if(pinned)return;const to=e.relatedTar
 $('dp').addEventListener('click',e=>{if(e.target.closest('#dpx'))unpin()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&pinned)unpin()});
 addEventListener('resize',align);addEventListener('load',align);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(align);
-$('q').oninput=render;$('r').onclick=load;load();
+$('side').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)setVeh(b.dataset.v)});
+$('side').addEventListener('keydown',e=>{
+ const d={ArrowDown:1,ArrowUp:-1,ArrowLeft:1,ArrowRight:-1}[e.key];if(!d)return;e.preventDefault();
+ const i=VEH.findIndex(x=>x.k===veh),n=VEH[(i+d+VEH.length)%VEH.length].k;setVeh(n);$('tab-'+n).focus()});
+addEventListener('hashchange',()=>setVeh(decodeURIComponent(location.hash.slice(1))));
+if(location.hash.slice(1)!==veh)history.replaceState(null,'','#'+veh);
+$('q').oninput=render;$('r').onclick=load;tabs();load();
 </script>
 </body>
 </html>
