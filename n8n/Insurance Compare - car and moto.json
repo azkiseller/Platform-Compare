@@ -380,7 +380,8 @@
         "options": {
           "response": {
             "response": {}
-          }
+          },
+          "timeout": 30000
         }
       },
       "id": "eee72e76-a652-4e9f-8b5d-870b00830ac1",
@@ -391,14 +392,16 @@
         1552,
         560
       ],
-      "retryOnFail": false,
+      "retryOnFail": true,
       "credentials": {
         "httpCustomAuth": {
           "id": "SbtIrqvB3YJ8V2x4",
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "maxTries": 4,
+      "waitBetweenTries": 15000
     },
     {
       "parameters": {
@@ -433,7 +436,8 @@
         "options": {
           "response": {
             "response": {}
-          }
+          },
+          "timeout": 30000
         }
       },
       "id": "ceebfab3-4ef2-4cdd-8337-b034571747fc",
@@ -444,14 +448,16 @@
         1776,
         560
       ],
-      "retryOnFail": false,
+      "retryOnFail": true,
       "credentials": {
         "httpCustomAuth": {
           "id": "SbtIrqvB3YJ8V2x4",
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "maxTries": 4,
+      "waitBetweenTries": 15000
     },
     {
       "parameters": {
@@ -603,7 +609,8 @@
         "options": {
           "response": {
             "response": {}
-          }
+          },
+          "timeout": 30000
         }
       },
       "id": "1c2dcfb6-451a-47a5-b6fb-d74a14491ecc",
@@ -614,14 +621,16 @@
         1552,
         800
       ],
-      "retryOnFail": false,
+      "retryOnFail": true,
       "credentials": {
         "httpCustomAuth": {
           "id": "SbtIrqvB3YJ8V2x4",
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "maxTries": 4,
+      "waitBetweenTries": 15000
     },
     {
       "parameters": {
@@ -656,7 +665,8 @@
         "options": {
           "response": {
             "response": {}
-          }
+          },
+          "timeout": 30000
         }
       },
       "id": "aedf5bc3-4549-4a57-a5cc-7c9bc2537ab6",
@@ -667,14 +677,16 @@
         1776,
         800
       ],
-      "retryOnFail": false,
+      "retryOnFail": true,
       "credentials": {
         "httpCustomAuth": {
           "id": "SbtIrqvB3YJ8V2x4",
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "maxTries": 4,
+      "waitBetweenTries": 15000
     },
     {
       "parameters": {
@@ -903,7 +915,9 @@
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($json.companies) }}",
-        "options": {},
+        "options": {
+          "timeout": 30000
+        },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth"
       },
@@ -916,14 +930,15 @@
         1120
       ],
       "retryOnFail": true,
-      "waitBetweenTries": 5000,
+      "waitBetweenTries": 15000,
       "credentials": {
         "httpCustomAuth": {
           "id": "SbtIrqvB3YJ8V2x4",
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "maxTries": 4
     },
     {
       "parameters": {
@@ -949,7 +964,9 @@
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($('Normalize Car').item.json.commission) }}",
-        "options": {},
+        "options": {
+          "timeout": 30000
+        },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth"
       },
@@ -967,7 +984,10 @@
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "retryOnFail": true,
+      "maxTries": 4,
+      "waitBetweenTries": 15000
     },
     {
       "parameters": {
@@ -1139,7 +1159,9 @@
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($json.companies) }}",
-        "options": {},
+        "options": {
+          "timeout": 30000
+        },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth"
       },
@@ -1152,14 +1174,15 @@
         1360
       ],
       "retryOnFail": true,
-      "waitBetweenTries": 5000,
+      "waitBetweenTries": 15000,
       "credentials": {
         "httpCustomAuth": {
           "id": "SbtIrqvB3YJ8V2x4",
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "maxTries": 4
     },
     {
       "parameters": {
@@ -1185,7 +1208,9 @@
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($('Normalize Moto').item.json.commission) }}",
-        "options": {},
+        "options": {
+          "timeout": 30000
+        },
         "authentication": "genericCredentialType",
         "genericAuthType": "httpCustomAuth"
       },
@@ -1203,7 +1228,10 @@
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "retryOnFail": true,
+      "maxTries": 4,
+      "waitBetweenTries": 15000
     },
     {
       "parameters": {
@@ -1390,7 +1418,9 @@
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($('Build Payload Site2 Car').first().json.companies) }}",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "id": "f7592375-ca65-4e00-94ba-e151561e5d43",
       "name": "Upsert Companies Car",
@@ -1406,7 +1436,10 @@
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "retryOnFail": true,
+      "maxTries": 4,
+      "waitBetweenTries": 15000
     },
     {
       "parameters": {
@@ -1434,7 +1467,9 @@
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($('Build Payload Site2 Car').first().json.commissions) }}",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "id": "d33bd773-33f0-4046-a36b-2c1bbce812b9",
       "name": "Insert Commission Car",
@@ -1444,15 +1479,16 @@
         1552,
         1680
       ],
-      "retryOnFail": false,
-      "waitBetweenTries": 5000,
+      "retryOnFail": true,
+      "waitBetweenTries": 15000,
       "credentials": {
         "httpCustomAuth": {
           "id": "SbtIrqvB3YJ8V2x4",
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "maxTries": 4
     },
     {
       "parameters": {
@@ -1609,7 +1645,9 @@
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($('Build Payload Site2 Moto').first().json.companies) }}",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "id": "af867c34-f36c-4089-b349-0da9746f332d",
       "name": "Upsert Companies Moto",
@@ -1625,7 +1663,10 @@
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "retryOnFail": true,
+      "maxTries": 4,
+      "waitBetweenTries": 15000
     },
     {
       "parameters": {
@@ -1653,7 +1694,9 @@
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($('Build Payload Site2 Moto').first().json.commissions) }}",
-        "options": {}
+        "options": {
+          "timeout": 30000
+        }
       },
       "id": "8e38c834-0c3f-41ec-9b0d-e2ac824cefcf",
       "name": "Insert Commission Moto",
@@ -1663,15 +1706,16 @@
         1552,
         1920
       ],
-      "retryOnFail": false,
-      "waitBetweenTries": 5000,
+      "retryOnFail": true,
+      "waitBetweenTries": 15000,
       "credentials": {
         "httpCustomAuth": {
           "id": "SbtIrqvB3YJ8V2x4",
           "name": "Custom Auth account"
         }
       },
-      "onError": "continueErrorOutput"
+      "onError": "continueErrorOutput",
+      "maxTries": 4
     },
     {
       "parameters": {
