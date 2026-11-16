@@ -258,6 +258,9 @@ html[data-theme=dark] .lk-na{color:#F0B24A}
 .lk-chip{background:var(--surface-tint);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:12.5px;font-weight:700}
 .lk-chip.ok{background:var(--good-soft);color:var(--good);border-color:transparent}
 .lk-chip.bad{background:rgba(224,69,63,.12);color:var(--danger);border-color:transparent}
+.lk-chip.wait{background:rgba(245,158,11,.14);color:#b45309;border-color:transparent}
+.lk-poll{display:inline-block;width:8px;height:8px;border-radius:50%;background:#f59e0b;margin-inline-end:6px;animation:lkp 1.2s ease-in-out infinite}
+@keyframes lkp{50%{opacity:.25}}
 .lk-res h2{margin:0 0 4px;font-size:17px;font-weight:900}
 .lk-wrap{overflow-x:auto}
 .lk-table{border-collapse:collapse;width:100%;min-width:560px}
@@ -315,7 +318,7 @@ html[data-theme=dark] .lk-table th.s1{color:#5C9BFF}html[data-theme=dark] .lk-ta
    <p class="lk-legend">مقایسه‌ی اصلی از نتیجه‌های ذخیره‌شده‌ی ماتریس (ورک‌فلوی Coverage Matrix) خوانده می‌شود و به n8n نیاز ندارد. «استعلام زنده» همین حالا از سایت‌ها می‌پرسد و فقط وقتی کار می‌کند که n8n در دسترس باشد.</p>
   </details>
   <div class="lk-card">
-   <p class="lk-h">خودرو، کاربری و سال ساخت را انتخاب کن تا هم‌زمان از سه سایت استعلام بگیرد و ببینی هر سایت کدام شرکت‌ها را با چه قیمت و کارمزدی نشان می‌دهد.</p>
+   <p class="lk-h">خودرو، کاربری و سال ساخت را انتخاب کن و «مقایسه» را بزن تا ببینی هر سایت کدام شرکت‌ها را با چه قیمتی نشان می‌دهد. اگر این خودرو هنوز بررسی نشده یا نتیجه‌اش قدیمی است، همان لحظه در صف بررسی قرار می‌گیرد و نتیجه خودکار نمایش داده می‌شود.</p>
    <div class="lk-grid">
     <div><label for="lkType">نوع وسیله</label><select id="lkType"></select></div>
     <div><label for="lkUsage">کاربری</label><select id="lkUsage"></select></div>
@@ -545,7 +548,11 @@ const openLookup=(()=>{
  const LS=[{id:'site1',c:'s1'},{id:'site2',c:'s2'},{id:'site3',c:'s3'}].map(x=>({...x,name:(SITES.find(s=>s.k===x.id)||{}).n||x.id}));
  const store={get:k=>{try{return localStorage.getItem(k)||''}catch(e){return''}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
  let BASE=(store.get('pc_base')||N8N_BASE).replace(/\/+$/,''),KEY=store.get('pc_key')||LOOKUP_KEY;
- let CAT=null,loading=false,started=false;
+ let CAT=null,loading=false,started=false,pollT=null,pollN=0,pollKey='';
+ // استعلام زنده به n8n روی کامپیوتر سرپرست نیاز دارد؛ فقط با ‎?live=1‎ (یک بار) برای همان مرورگر فعال می‌شود
+ if(/[?&]live=1\b/.test(location.search))store.set('pc_live','1');
+ if(/[?&]live=0\b/.test(location.search))store.set('pc_live','');
+ const LIVE=store.get('pc_live')==='1';
  const FAD='۰۱۲۳۴۵۶۷۸۹',ARD='٠١٢٣٤٥٦٧٨٩';
  const norm=s=>String(s||'').replace(/[۰-۹]/g,d=>FAD.indexOf(d)).replace(/[٠-٩]/g,d=>ARD.indexOf(d)).replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/[\u200c\-_()\/.,]+/g,' ').toLowerCase().replace(/\s+/g,' ').trim();
  const USAGE_ALIAS={'آژانس':'تاکسی اینترنتی یا آژانس','تاکسی های اینترنتی یا آژانس':'تاکسی اینترنتی یا آژانس','یخچال دار':'یخچالدار'};
@@ -572,7 +579,7 @@ const openLookup=(()=>{
    CAT=j;
    const counts=LS.map(s=>s.name+': '+(((CAT[s.id]||{}).types||[]).reduce((a,t)=>a+t.brands.reduce((b,x)=>b+x.models.length,0),0)).toLocaleString('fa-IR')+' مدل');
    $('lkStatus').textContent='کاتالوگ آماده است · '+counts.join(' · ');
-   buildTypes();$('lkGo').disabled=false;$('lkLive').disabled=!BASE;
+   buildTypes();$('lkGo').disabled=false;$('lkLive').disabled=!BASE||!LIVE;
   }catch(e){
    CAT=null;$('lkStatus').innerHTML='<span class="lk-err">کاتالوگ بارگذاری نشد: '+esc(e.message)+'</span>';
   }finally{loading=false}
@@ -624,28 +631,38 @@ const openLookup=(()=>{
   return{t,u,year,sites};
  }
  // ---- مقایسه از نتیجه‌های ماتریس (دیتابیس) ----
- async function compareMatrix(){
+ // خودرویی که هنوز بررسی نشده یا نتیجه‌اش قدیمی است در «صف فوری» می‌رود (ورک‌فلو هر ۱۵ ثانیه)؛ صفحه خودش چک می‌کند تا نتیجه برسد
+ const ago=d=>{const m=Math.max(0,Math.round((Date.now()-new Date(d))/60000));return m<1?'همین الان':m<60?m.toLocaleString('fa-IR')+' دقیقه پیش':m<1440?Math.round(m/60).toLocaleString('fa-IR')+' ساعت پیش':Math.round(m/1440).toLocaleString('fa-IR')+' روز پیش'};
+ function stopPoll(){clearTimeout(pollT);pollT=null}
+ async function compareMatrix(ev){
+  const auto=ev==='poll';
   const{t,u,year,sites}=picked();
   if(!Object.keys(sites).length){$('lkStatus').textContent='هیچ سایتی انتخاب نشده.';return}
-  $('lkGo').disabled=true;$('lkStatus').textContent='در حال خواندن نتیجه‌ها…';
+  const key=JSON.stringify([year,sites]);
+  if(!auto){stopPoll();pollN=0;pollKey=key}else if(key!==pollKey){stopPoll();return}
+  if(!auto){$('lkGo').disabled=true;$('lkStatus').textContent='در حال خواندن نتیجه‌ها…'}
   try{
    const items={};for(const[k,v]of Object.entries(sites))items[k]={type_id:String(v.type_id),brand_id:String(v.brand_id),model_id:String(v.model_id),usage_id:String(v.usage_id)};
    const r=await fetch(SUPABASE_URL+'/rest/v1/rpc/coverage_lookup',{method:'POST',headers:{...HEADERS,'Content-Profile':'compare','Content-Type':'application/json'},body:JSON.stringify({p_year:year,p_items:items})});
    if(!r.ok)throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,140));
    const res=await r.json();
+   if(auto&&key!==pollKey)return;
    // تبدیل به همان شکل خروجی استعلام زنده تا یک نمایش مشترک داشته باشند
-   const out={sites:{},request:sites,companies:[],matrix:true},by={};
+   const out={sites:{},request:sites,companies:[],matrix:true},by={};let waiting=false;
    for(const s of LS){
     const x=sites[s.id]?res[s.id]:null;
     if(!x){out.sites[s.id]={skipped:true};continue}
-    if(x.status==='done'){out.sites[s.id]={ok:true,companies:x.companies||[],done_at:x.done_at};
-     for(const c of x.companies||[]){const k=canon(c.name||c.key);(by[k]||(by[k]={company:dispName(k,c.name)}))[s.id]={premium:c.premium,locked:!!c.locked}}}
-    else out.sites[s.id]={ok:false,state:x.status,error:x.error||''};
+    const busy=x.status==='pending'||x.status==='running';if(busy)waiting=true;
+    if(Array.isArray(x.companies)){out.sites[s.id]={ok:true,companies:x.companies,done_at:x.done_at,state:x.status,refreshing:busy,ahead:x.ahead,blocked_until:x.blocked_until};
+     for(const c of x.companies){const k=canon(c.name||c.key);(by[k]||(by[k]={company:dispName(k,c.name)}))[s.id]={premium:c.premium,locked:!!c.locked}}}
+    else out.sites[s.id]={ok:false,state:x.status,error:x.error||'',ahead:x.ahead,blocked_until:x.blocked_until};
    }
-   out.companies=Object.values(by);
+   out.companies=Object.values(by);out.polling=waiting&&pollN<40;
    render2(out,t,u,year);$('lkStatus').textContent='';
-  }catch(e){$('lkResult').hidden=false;$('lkResult').innerHTML='<div class="lk-err">نتیجه خوانده نشد: '+esc(e.message)+'</div>';$('lkStatus').textContent=''}
-  finally{$('lkGo').disabled=false}
+   if(out.polling){pollN++;stopPoll();pollT=setTimeout(()=>compareMatrix('poll'),15000)}
+  }catch(e){if(!auto){$('lkResult').hidden=false;$('lkResult').innerHTML='<div class="lk-err">نتیجه خوانده نشد: '+esc(e.message)+'</div>'}$('lkStatus').textContent='';
+   if(auto&&pollN<40){pollN++;stopPoll();pollT=setTimeout(()=>compareMatrix('poll'),15000)}}
+  finally{if(!auto)$('lkGo').disabled=false}
  }
  // ---- استعلام زنده از n8n (اختیاری) ----
  async function lookup(){
@@ -665,15 +682,18 @@ const openLookup=(()=>{
   finally{$('lkLive').disabled=!BASE}
  }
  function render2(j,t,u,year){
-  const ST={pending:'در صف بررسی',running:'در حال بررسی',none:'هنوز در ماتریس نیست',error:'خطا در بررسی'};
+  const ST={pending:'در صف بررسی',running:'در حال بررسی',none:'این مدل در کاتالوگ نیست',error:'خطا در بررسی'};
+  const waitTxt=r=>r.blocked_until?'سایت موقتاً محدود کرده؛ حدود '+Math.max(1,Math.ceil((new Date(r.blocked_until)-Date.now())/60000)).toLocaleString('fa-IR')+' دقیقه دیگر':
+   r.state==='running'?'در حال بررسی':r.ahead?'در صف فوری ('+Number(r.ahead).toLocaleString('fa-IR')+' مورد جلوتر)':'در صف فوری';
   const chips=LS.map(s=>{const r=j.sites[s.id];
    if(!r||r.skipped)return'<span class="lk-chip">'+esc(s.name)+': انتخاب نشده</span>';
+   if(!r.ok&&j.matrix&&(r.state==='pending'||r.state==='running'))return'<span class="lk-chip wait">'+esc(s.name)+': '+waitTxt(r)+'</span>';
    if(!r.ok)return'<span class="lk-chip bad" title="'+esc(r.error||'')+'">'+esc(s.name)+': '+(ST[r.state]||'خطا')+'</span>';
-   return'<span class="lk-chip ok">'+esc(s.name)+': '+(r.companies||[]).length.toLocaleString('fa-IR')+' شرکت</span>'}).join('');
+   return'<span class="lk-chip ok">'+esc(s.name)+': '+(r.companies||[]).length.toLocaleString('fa-IR')+' شرکت'+(r.done_at?'، '+ago(r.done_at):'')+'</span>'+(r.refreshing?'<span class="lk-chip wait">'+esc(s.name)+': به‌روزرسانی — '+waitTxt(r)+'</span>':'')}).join('');
   const errs=LS.filter(s=>j.sites[s.id]&&j.sites[s.id].ok===false&&(!j.matrix||j.sites[s.id].state==='error')).map(s=>'<div class="lk-err"><b>'+esc(s.name)+':</b> '+esc(j.sites[s.id].error||'')+'</div>').join('');
   const pend=j.matrix?LS.filter(s=>j.sites[s.id]&&j.sites[s.id].ok===false&&j.sites[s.id].state!=='error'):[];
-  const pendNote=pend.length?'<p class="lk-legend" style="margin:0 0 10px">'+pend.map(s=>esc(s.name)).join('، ')+': این خودرو/سال هنوز توسط ماتریس بررسی نشده؛ چند دقیقه بعد دوباره «مقایسه» را بزن یا «استعلام زنده» را امتحان کن.</p>':'';
-  const when=j.matrix?LS.filter(s=>j.sites[s.id]&&j.sites[s.id].done_at).map(s=>esc(s.name)+': '+new Date(j.sites[s.id].done_at).toLocaleString('fa-IR')).join(' · '):'';
+  const pendNote=(pend.length||j.polling)?'<p class="lk-legend" style="margin:0 0 10px">'+(j.polling?'<span class="lk-poll"></span>':'')+(pend.length?pend.map(s=>esc(s.name)).join('، ')+': این خودرو/سال الان در صف فوری بررسی است. ':'')+(j.polling?'نتیجه که برسد همین‌جا خودکار نمایش داده می‌شود (معمولاً کمتر از یک دقیقه؛ اگر سایتی محدودمان کرده باشد بیشتر).':'اگر هنوز نرسیده، کمی بعد دوباره «مقایسه» را بزن.')+'</p>':'';
+  const when=j.matrix?LS.filter(s=>j.sites[s.id]&&j.sites[s.id].done_at).map(s=>esc(s.name)+': '+new Date(j.sites[s.id].done_at).toLocaleString('fa-IR')+' ('+ago(j.sites[s.id].done_at)+')').join(' · '):'';
   const active=LS.filter(s=>j.sites[s.id]&&j.sites[s.id].ok);
   // مثل صفحه‌ی مقایسه: اول شرکت‌های مشترک در همه، بعد چندسایتی، بعد فقط یک سایت؛ ارزان‌ترین قیمت هر ردیف سبز
   const cnt=c=>active.filter(s=>c[s.id]).length;
@@ -692,12 +712,13 @@ const openLookup=(()=>{
   $('lkResult').hidden=false;
   $('lkResult').innerHTML='<h2>'+esc(t)+' · '+esc(u)+' · مدل '+faYear(year)+'</h2><p class="lk-h" style="margin-bottom:12px">'+req+'</p><div class="lk-chips">'+chips+(active.length>1?'<span class="lk-chip">مشترک در همه: '+both.toLocaleString('fa-IR')+'</span>':'')+'</div>'+errs+pendNote+
    (active.length?'<div class="lk-wrap"><table class="lk-table"><thead><tr><th>شرکت بیمه</th>'+active.map(s=>'<th class="'+s.c+'">'+esc(s.name)+'<br>حق بیمه (تومان)</th>').join('')+'</tr></thead><tbody>'+(rows||'<tr><td colspan="'+(active.length+1)+'">هیچ شرکتی برنگشت</td></tr>')+'</tbody></table></div>'+
-   '<p class="lk-legend">«—» یعنی آن سایت این شرکت را برای این خودرو نشان نمی‌دهد. قیمت سبز = ارزان‌ترین در همان ردیف. قیمت‌ها نقدی، یک‌ساله، پوشش مالی ۷۰ میلیون و بدون بیمه‌نامه‌ی قبلی است.'+(when?'<br>زمان بررسی ماتریس — '+when:'')+(j.matrix?'':'<br>نتیجه‌ی استعلام زنده (همین لحظه).')+'</p>':'');
+   '<p class="lk-legend">«—» یعنی آن سایت این شرکت را برای این خودرو نشان نمی‌دهد. قیمت سبز = ارزان‌ترین در همان ردیف. قیمت‌ها نقدی، یک‌ساله، پوشش مالی ۷۰ میلیون و بدون بیمه‌نامه‌ی قبلی است.'+(when?'<br>زمان آخرین بررسی — '+when:'')+(j.matrix?'':'<br>نتیجه‌ی استعلام زنده (همین لحظه).')+'</p>':'');
  }
  function init(){
   $('lkBase').value=BASE;$('lkKey').value=KEY;
+  if(!LIVE){$('lkLive').hidden=true;$('lkCfg').hidden=true}
   $('lkSave').onclick=()=>{BASE=$('lkBase').value.trim().replace(/\/+$/,'');KEY=$('lkKey').value.trim()||LOOKUP_KEY;store.set('pc_base',BASE);store.set('pc_key',KEY);$('lkCfgStatus').textContent='ذخیره شد';$('lkLive').disabled=!BASE||!CAT};
-  $('lkType').onchange=onType;$('lkUsage').onchange=buildSites;$('lkQ').oninput=autoMatch;$('lkGo').onclick=compareMatrix;$('lkLive').onclick=lookup;
+  $('lkType').onchange=onType;$('lkUsage').onchange=buildSites;$('lkQ').oninput=autoMatch;$('lkGo').onclick=()=>compareMatrix();$('lkLive').onclick=()=>{stopPoll();lookup()};
   $('lkYear').innerHTML=Array.from({length:46},(_,i)=>1405-i).map(y=>'<option value="'+y+'">'+faYear(y)+'</option>').join('');
   $('lkYear').value='1397';
  }
