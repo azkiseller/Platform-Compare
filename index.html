@@ -228,6 +228,51 @@ color:var(--ink-soft);font:inherit;cursor:pointer;transition:background .15s,col
  html.side-closed .tab[aria-selected=true]{background:linear-gradient(135deg,#3B9BFF,var(--accent-deep));color:#fff}
 }
 @media(prefers-reduced-motion:reduce){.tab,.side,#app{transition:none}}
+/* تب «استعلام هم‌زمان» */
+#lookup{padding:0 18px 90px}
+#lookup[hidden],#app.lk-on .search,#app.lk-on #cols{display:none}
+.lk-card{background:var(--surface);backdrop-filter:blur(var(--blur)) saturate(180%);-webkit-backdrop-filter:blur(var(--blur)) saturate(180%);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:16px 18px;margin-bottom:16px}
+.lk-h{font-size:13px;color:var(--ink-soft);margin:0 0 14px;line-height:1.8}
+.lk-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.lk-card label,.lk-site .lbl{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:5px}
+.lk-card select,.lk-card input:not([type=checkbox]){width:100%;font:inherit;font-size:13.5px;color:var(--ink);background:var(--surface-tint);border:1.5px solid var(--line);border-radius:var(--radius-sm);padding:9px 12px}
+.lk-card select:focus,.lk-card input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.lk-sites{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.lk-site{border:1px solid var(--line);border-top:4px solid var(--site);border-radius:var(--radius);padding:12px 14px;background:var(--surface-tint)}
+.lk-site.s1{--site:#1656F5}.lk-site.s2{--site:#F59E0B}.lk-site.s3{--site:#7A47C2}
+.lk-site h3{margin:0 0 10px;font-size:15px;font-weight:900;display:flex;align-items:center;gap:8px;cursor:pointer}
+.lk-site h3 input{width:18px;height:18px;accent-color:var(--site);margin:0}
+.lk-site.off{opacity:.45}
+.lk-na{font-size:12px;font-weight:600;color:#B8700E;background:rgba(224,138,23,.14);border-radius:8px;padding:4px 10px;margin-bottom:8px}
+html[data-theme=dark] .lk-na{color:#F0B24A}
+.lk-legend{font-size:12px;color:var(--ink-faint);margin:10px 0 0;line-height:1.8}
+.lk-bar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.lk-go{font:inherit;font-weight:900;font-size:14px;border:0;border-radius:999px;padding:11px 26px;color:#fff;cursor:pointer;background:linear-gradient(135deg,#3B9BFF,var(--accent-deep));box-shadow:0 10px 24px -10px rgba(22,86,245,.7)}
+.lk-go:disabled{opacity:.5;cursor:default}
+.lk-status{font-size:13px;color:var(--ink-soft)}
+.lk-cfg summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--ink-soft)}
+.lk-cfg .lk-bar{margin:12px 0 0}
+.lk-btn2{font:inherit;font-weight:700;font-size:13px;border:1px solid var(--line);border-radius:999px;padding:8px 18px;background:var(--surface-tint);color:var(--ink);cursor:pointer}
+.lk-err{color:var(--danger);background:rgba(224,69,63,.12);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;white-space:pre-wrap;margin-bottom:8px}
+.lk-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.lk-chip{background:var(--surface-tint);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:12.5px;font-weight:700}
+.lk-chip.ok{background:var(--good-soft);color:var(--good);border-color:transparent}
+.lk-chip.bad{background:rgba(224,69,63,.12);color:var(--danger);border-color:transparent}
+.lk-res h2{margin:0 0 4px;font-size:17px;font-weight:900}
+.lk-wrap{overflow-x:auto}
+.lk-table{border-collapse:collapse;width:100%;min-width:560px}
+.lk-table th,.lk-table td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:center;white-space:nowrap}
+.lk-table th:first-child,.lk-table td:first-child{text-align:right}
+.lk-table th{font-size:12px;color:var(--ink-soft);font-weight:700}
+.lk-table th.s1{color:#1656F5}.lk-table th.s2{color:#D97706}.lk-table th.s3{color:#7A47C2}
+html[data-theme=dark] .lk-table th.s1{color:#5C9BFF}html[data-theme=dark] .lk-table th.s2{color:#FFA21F}html[data-theme=dark] .lk-table th.s3{color:#B692F0}
+.lk-table td.miss{color:var(--ink-faint)}
+.lk-table .p{font-weight:900;font-variant-numeric:tabular-nums}
+.lk-table .c{display:block;font-size:12px;color:var(--good);font-weight:700}
+.lk-table .lock{display:block;font-size:11px;color:#B8700E}
+.lk-table tr.partial td:first-child::after{content:" •";color:#E08A17}
+.lk-co{display:flex;align-items:center;gap:8px}.lk-co .logo{width:32px;height:32px;border-radius:9px;font-size:13px}
+@media(min-width:1101px){#tab-lookup b{white-space:normal;text-align:center;line-height:1.35}}
 </style>
 </head>
 <body>
@@ -251,11 +296,37 @@ color:var(--ink-soft);font:inherit;cursor:pointer;transition:background .15s,col
  <div role="tablist" aria-label="نوع وسیله" aria-orientation="vertical" id="tablist" style="display:contents">
  <button type="button" class="tab" role="tab" id="tab-206_1397" data-v="206_1397" aria-controls="cols" aria-selected="false" title="خودرو"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13.5l1.8-4.6A2 2 0 0 1 6.7 7.6h10.6a2 2 0 0 1 1.9 1.3l1.8 4.6"/><path d="M3 13.5h18v3.5a1 1 0 0 1-1 1h-1.2M3 13.5V17a1 1 0 0 0 1 1h1.2M9.2 18h5.6"/><circle cx="7.2" cy="17.6" r="1.9"/><circle cx="16.8" cy="17.6" r="1.9"/></svg><b>خودرو</b></button>
  <button type="button" class="tab" role="tab" id="tab-moto_1403" data-v="moto_1403" aria-controls="cols" aria-selected="false" title="موتور"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="16" r="3.2"/><circle cx="19" cy="16" r="3.2"/><path d="M5 16h4.5l3-5h3.5l3 5"/><path d="M12.5 11l-1.8-3.2H7.5M14.5 7.2h2.3l2.2 3.8"/></svg><b>موتور</b></button>
+ <button type="button" class="tab" role="tab" id="tab-lookup" data-v="lookup" aria-controls="lookup" aria-selected="false" title="استعلام هم‌زمان"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5M8 10.5h5M10.5 8v5"/></svg><b>استعلام هم‌زمان</b></button>
  </div>
 </nav>
 <main>
  <input class="search" id="q" placeholder="جستجوی شرکت (نام فارسی یا انگلیسی)">
  <div class="cols" id="cols" role="tabpanel"></div>
+ <section id="lookup" role="tabpanel" aria-labelledby="tab-lookup" hidden>
+  <details class="lk-card lk-cfg" id="lkCfg">
+   <summary>تنظیمات اتصال به n8n</summary>
+   <div class="lk-grid" style="margin-top:12px">
+    <div><label for="lkBase">آدرس n8n (مثلاً https://n8n.example.com)</label><input id="lkBase" dir="ltr"></div>
+    <div><label for="lkKey">کلید</label><input id="lkKey" dir="ltr"></div>
+   </div>
+   <div class="lk-bar"><button type="button" class="lk-btn2" id="lkSave">ذخیره و بارگذاری کاتالوگ</button><span class="lk-status" id="lkCfgStatus"></span></div>
+  </details>
+  <div class="lk-card">
+   <p class="lk-h">خودرو، کاربری و سال ساخت را انتخاب کن تا هم‌زمان از سه سایت استعلام بگیرد و ببینی هر سایت کدام شرکت‌ها را با چه قیمت و کارمزدی نشان می‌دهد.</p>
+   <div class="lk-grid">
+    <div><label for="lkType">نوع وسیله</label><select id="lkType"></select></div>
+    <div><label for="lkUsage">کاربری</label><select id="lkUsage"></select></div>
+    <div><label for="lkYear">سال ساخت</label><select id="lkYear"></select></div>
+    <div><label for="lkQ">جستجوی خودرو (مثلاً پژو ۲۰۶ تیپ ۲)</label><input id="lkQ" placeholder="نام برند و مدل"></div>
+   </div>
+  </div>
+  <div class="lk-card">
+   <div class="lk-sites" id="lkSites"></div>
+   <p class="lk-legend">با جستجو، نزدیک‌ترین مدل در هر سایت خودکار انتخاب می‌شود؛ اگر درست نبود، همان‌جا عوضش کن. تیک هر سایت را بردار تا آن سایت استعلام نشود.</p>
+  </div>
+  <div class="lk-bar"><button type="button" class="lk-go" id="lkGo" disabled>استعلام از هر سه سایت</button><span class="lk-status" id="lkStatus"></span></div>
+  <div class="lk-card lk-res" id="lkResult" hidden></div>
+ </section>
 </main>
 <div class="dp" id="dp" hidden role="dialog" aria-label="جزئیات مقایسه"></div>
 </div>
@@ -263,6 +334,9 @@ color:var(--ink-soft);font:inherit;cursor:pointer;transition:background .15s,col
 // ---- تنظیمات: فقط کلید anon را بگذار ----
 const SUPABASE_URL='https://akaczqhvyemkjnwzgjzr.supabase.co';
 const ANON_KEY='sb_publishable_uup5CXqDLkXph4jdC1Qb_A_9PW3n9oG';
+// تب «استعلام هم‌زمان» (ورک‌فلوی n8n «Platform Compare – Live Lookup»)
+const N8N_BASE=''; // آدرس n8n، مثلاً https://n8n.example.com (بدون / آخر)؛ خالی = از «تنظیمات اتصال» در همان تب
+const LOOKUP_KEY='J4mm3PdLfiFKMwRNfp4bIM6h'; // راز نیست؛ فقط ترافیک تصادفی را از webhookها دور نگه می‌دارد
 // ----------------------------------------
 const SITES=[ // ترتیب در صفحه‌ی راست‌به‌چپ: اولی راست، دومی وسط، سومی چپ
  {k:'site3',c:'s3',n:'بیمه پلاس',h:'plusbimeh.com',logo:'brand/plusbimeh.png'},
@@ -290,18 +364,22 @@ const HEADERS={apikey:ANON_KEY,'Accept-Profile':'compare'};
 if(ANON_KEY.startsWith('eyJ'))HEADERS.Authorization='Bearer '+ANON_KEY; // کلید قدیمی JWT؛ کلید sb_publishable فقط در apikey
 const fa2=n=>n==null?null:Number(n).toLocaleString('fa-IR',{maximumFractionDigits:2});
 $('tt').onclick=()=>{const h=document.documentElement,t=h.dataset.theme==='dark'?'light':'dark';h.dataset.theme=t;try{localStorage.setItem('dashboardTheme',t)}catch(e){}};
+let lkOn=decodeURIComponent(location.hash.slice(1))==='lookup';
 function tabs(){
- const v=VEH.find(x=>x.k===veh);
- document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.v===veh;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1});
+ const v=VEH.find(x=>x.k===veh),cur=lkOn?'lookup':veh;
+ document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.v===cur;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1});
  $('cols').setAttribute('aria-labelledby','tab-'+veh);
- document.title='مقایسه صفحه کامپیر شرکت‌ها · '+v.n;
+ $('app').classList.toggle('lk-on',lkOn);$('lookup').hidden=!lkOn;
+ if(lkOn){pinned=null;panel(null);focus(null);$('sub').textContent='استعلام هم‌زمان ثالث از سه سایت'}
+ document.title='مقایسه صفحه کامپیر شرکت‌ها · '+(lkOn?'استعلام هم‌زمان':v.n);
 }
 function setVeh(v){
- if(!isVeh(v)||v===veh)return;
- veh=v;
+ if(v==='lookup'){if(lkOn)return;lkOn=true;if(location.hash.slice(1)!==v)history.replaceState(null,'','#'+v);tabs();openLookup();return}
+ if(!isVeh(v)||(v===veh&&!lkOn))return;
+ const wasLk=lkOn;lkOn=false;veh=v;
  if(location.hash.slice(1)!==v)history.replaceState(null,'','#'+v);
  try{localStorage.setItem('dashboardVehicle',v)}catch(e){}
- tabs();load();
+ tabs();load();if(wasLk)setTimeout(align,50);
 }
 async function load(silent){
  const v=veh,id=++reqId;
@@ -455,13 +533,128 @@ $('sideToggle').onclick=()=>{const c=document.documentElement.classList.toggle('
 sideState();
 $('tablist').addEventListener('keydown',e=>{
  const d={ArrowDown:1,ArrowUp:-1,ArrowLeft:1,ArrowRight:-1}[e.key];if(!d)return;e.preventDefault();
- const i=VEH.findIndex(x=>x.k===veh),n=VEH[(i+d+VEH.length)%VEH.length].k;setVeh(n);$('tab-'+n).focus()});
+ const T=VEH.map(x=>x.k).concat('lookup'),i=T.indexOf(lkOn?'lookup':veh),n=T[(i+d+T.length)%T.length];setVeh(n);$('tab-'+n).focus()});
 addEventListener('hashchange',()=>setVeh(decodeURIComponent(location.hash.slice(1))));
-if(location.hash.slice(1)!==veh)history.replaceState(null,'','#'+veh);
-$('q').oninput=render;$('r').onclick=()=>load();tabs();load();
+if(!lkOn&&location.hash.slice(1)!==veh)history.replaceState(null,'','#'+veh);
+$('q').oninput=render;$('r').onclick=()=>{if(lkOn)openLookup(true);else load()};tabs();load();
+// ---- تب «استعلام هم‌زمان»: کاتالوگ فقط با اولین باز شدن تب بارگذاری می‌شود ----
+const openLookup=(()=>{
+ const LS=[{id:'site1',c:'s1'},{id:'site2',c:'s2'},{id:'site3',c:'s3'}].map(x=>({...x,name:(SITES.find(s=>s.k===x.id)||{}).n||x.id}));
+ const store={get:k=>{try{return localStorage.getItem(k)||''}catch(e){return''}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+ let BASE=(store.get('pc_base')||N8N_BASE).replace(/\/+$/,''),KEY=store.get('pc_key')||LOOKUP_KEY;
+ let CAT=null,loading=false,started=false;
+ const FAD='۰۱۲۳۴۵۶۷۸۹',ARD='٠١٢٣٤٥٦٧٨٩';
+ const norm=s=>String(s||'').replace(/[۰-۹]/g,d=>FAD.indexOf(d)).replace(/[٠-٩]/g,d=>ARD.indexOf(d)).replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/[\u200c\-_()\/.,]+/g,' ').toLowerCase().replace(/\s+/g,' ').trim();
+ const USAGE_ALIAS={'آژانس':'تاکسی اینترنتی یا آژانس','تاکسی های اینترنتی یا آژانس':'تاکسی اینترنتی یا آژانس','یخچال دار':'یخچالدار'};
+ const uName=s=>USAGE_ALIAS[String(s).trim()]||String(s).trim();
+ const TYPE_ALIAS={'اتوبوس و مینی بوس':['اتوبوس','مینی بوس']};
+ const toman=n=>n==null?'—':Math.round(n).toLocaleString('fa-IR');
+ const faYear=y=>Number(y).toLocaleString('fa-IR',{useGrouping:false});
+ const COMP_FA=Object.fromEntries(Object.entries(FA).map(([k,v])=>[norm(v),k]));
+ function siteTypes(site){const out={};for(const t of(CAT[site]&&CAT[site].types)||[])for(const n of TYPE_ALIAS[t.name]||[t.name])out[n]=t;return out}
+ async function loadCatalog(){
+  $('lkGo').disabled=true;$('lkStatus').textContent='در حال بارگذاری کاتالوگ…';$('lkCfgStatus').textContent='';
+  if(!BASE||!KEY){$('lkStatus').textContent='اول آدرس n8n را در «تنظیمات اتصال» وارد کن.';$('lkCfg').open=true;return}
+  loading=true;
+  try{
+   const r=await fetch(BASE+'/webhook/compare-catalog?key='+encodeURIComponent(KEY));
+   const j=await r.json();
+   if(!r.ok||j.error)throw new Error(j.error||('HTTP '+r.status));
+   CAT=j;$('lkCfgStatus').textContent='وصل شد';$('lkCfg').open=false;
+   const counts=LS.map(s=>s.name+': '+(((CAT[s.id]||{}).types||[]).reduce((a,t)=>a+t.brands.reduce((b,x)=>b+x.models.length,0),0)).toLocaleString('fa-IR')+' مدل');
+   $('lkStatus').textContent='کاتالوگ آماده است · '+counts.join(' · ');
+   buildTypes();$('lkGo').disabled=false;
+  }catch(e){
+   CAT=null;$('lkStatus').textContent='';$('lkCfg').open=true;
+   $('lkCfgStatus').innerHTML='<span class="lk-err">کاتالوگ بارگذاری نشد: '+esc(e.message)+'</span>';
+  }finally{loading=false}
+ }
+ function buildTypes(){
+  const names=[];
+  for(const s of LS)for(const n of Object.keys(siteTypes(s.id)))if(!names.includes(n))names.push(n);
+  const order=['سواری','وانت','ون','کامیونت','کامیون','مینی بوس','اتوبوس','موتور سیکلت'];
+  names.sort((a,b)=>(order.indexOf(a)+1||99)-(order.indexOf(b)+1||99));
+  $('lkType').innerHTML=names.map(n=>'<option>'+esc(n)+'</option>').join('');
+  onType();
+ }
+ function onType(){
+  const t=$('lkType').value,us=[];
+  for(const s of LS){const st=siteTypes(s.id)[t];for(const[n]of(st?st.usages:[]))if(!us.includes(uName(n)))us.push(uName(n))}
+  const prev=$('lkUsage').value;
+  $('lkUsage').innerHTML=us.map(n=>'<option'+(n===prev?' selected':'')+'>'+esc(n)+'</option>').join('');
+  if(!$('lkUsage').value&&us.includes('شخصی'))$('lkUsage').value='شخصی';
+  if(us.includes('شخصی')&&!us.includes(prev))$('lkUsage').value='شخصی';
+  buildSites();
+ }
+ function buildSites(){
+  const t=$('lkType').value,u=$('lkUsage').value;
+  $('lkSites').innerHTML=LS.map(s=>{
+   const st=siteTypes(s.id)[t],usage=st&&st.usages.find(([n])=>uName(n)===u);
+   const opts=st?st.brands.flatMap(b=>b.models.map(([mn,mid])=>({v:b.id+'|'+mid,label:(mn===b.name||mn.startsWith(b.name)?mn:b.name+' — '+mn)}))):[];
+   return'<div class="lk-site '+s.c+(st?'':' off')+'" data-site="'+s.id+'">'+
+    '<h3><label style="display:flex;align-items:center;gap:8px;margin:0;font-size:15px;color:inherit;cursor:pointer"><input type="checkbox" '+(st&&usage?'checked':'')+' '+(st?'':'disabled')+'> '+esc(s.name)+'</label></h3>'+
+    (!st?'<div class="lk-na">این نوع وسیله در این سایت نیست</div>':!usage?'<div class="lk-na">این کاربری برای این نوع وسیله در این سایت نیست</div>':'')+
+    '<span class="lbl">مدل در '+esc(s.name)+'</span><select class="lk-model" '+(st?'':'disabled')+'>'+opts.map(o=>'<option value="'+esc(o.v)+'">'+esc(o.label)+'</option>').join('')+'</select></div>';
+  }).join('');
+  autoMatch();
+ }
+ function score(q,label){const a=norm(q).split(' ').filter(Boolean),b=norm(label);if(!a.length)return 0;let s=0;for(const w of a)if(b.includes(w))s+=w.length+2;return s-b.length/100}
+ function autoMatch(){
+  const q=$('lkQ').value;if(!q.trim())return;
+  for(const sel of document.querySelectorAll('#lkSites select.lk-model')){let best=-1,bi=0;[...sel.options].forEach((o,i)=>{const sc=score(q,o.textContent);if(sc>best){best=sc;bi=i}});if(sel.options.length)sel.selectedIndex=bi}
+ }
+ async function lookup(){
+  const t=$('lkType').value,u=$('lkUsage').value,year=+$('lkYear').value,sites={};
+  for(const box of document.querySelectorAll('#lkSites .lk-site')){
+   const s=box.dataset.site,st=siteTypes(s)[t];
+   if(!st||!box.querySelector('input[type=checkbox]').checked)continue;
+   const usage=st.usages.find(([n])=>uName(n)===u);if(!usage)continue;
+   const sel=box.querySelector('select.lk-model');if(!sel.value)continue;
+   const[brand_id,model_id]=sel.value.split('|');
+   sites[s]={vehicle_type:st.name,type_id:st.id,brand_id,model_id,usage_id:usage[1],label:sel.selectedOptions[0].textContent};
+  }
+  if(!Object.keys(sites).length){$('lkStatus').textContent='هیچ سایتی برای استعلام انتخاب نشده.';return}
+  $('lkGo').disabled=true;$('lkStatus').textContent='در حال استعلام… (۱۰ تا ۳۰ ثانیه)';
+  try{
+   // فرم (نه JSON) تا مرورگر درخواست preflight نفرستد
+   const body=new URLSearchParams({payload:JSON.stringify({key:KEY,year,usage:u,sites})});
+   const r=await fetch(BASE+'/webhook/compare-lookup',{method:'POST',body});
+   const j=await r.json();
+   if(!r.ok||j.error)throw new Error(j.error||('HTTP '+r.status));
+   render2(j,t,u,year);$('lkStatus').textContent='';
+  }catch(e){$('lkResult').hidden=false;$('lkResult').innerHTML='<div class="lk-err">استعلام انجام نشد: '+esc(e.message)+'</div>';$('lkStatus').textContent=''}
+  finally{$('lkGo').disabled=false}
+ }
+ function render2(j,t,u,year){
+  const chips=LS.map(s=>{const r=j.sites[s.id];
+   if(!r||r.skipped)return'<span class="lk-chip">'+esc(s.name)+': استعلام نشد</span>';
+   if(!r.ok)return'<span class="lk-chip bad" title="'+esc(r.error||'')+'">'+esc(s.name)+': خطا</span>';
+   return'<span class="lk-chip ok">'+esc(s.name)+': '+(r.companies||[]).length.toLocaleString('fa-IR')+' شرکت</span>'}).join('');
+  const errs=LS.filter(s=>j.sites[s.id]&&j.sites[s.id].ok===false).map(s=>'<div class="lk-err"><b>'+esc(s.name)+':</b> '+esc(j.sites[s.id].error||'')+'</div>').join('');
+  const active=LS.filter(s=>j.sites[s.id]&&j.sites[s.id].ok);
+  const rows=(j.companies||[]).map(c=>{
+   const n=active.filter(s=>c[s.id]).length,key=COMP_FA[norm(c.company)];
+   return'<tr class="'+(n<active.length?'partial':'')+'"><td><span class="lk-co">'+(key?logoHtml(key):'')+esc(c.company)+'</span></td>'+active.map(s=>{const v=c[s.id];if(!v)return'<td class="miss">—</td>';
+    return'<td><span class="p">'+toman(v.premium)+'</span>'+(v.commission!=null?'<span class="c">کارمزد '+Number(v.commission).toLocaleString('fa-IR')+'٪</span>':'')+(v.locked?'<span class="lock">قفل</span>':'')+'</td>'}).join('')+'</tr>'}).join('');
+  const req=LS.filter(s=>j.request&&j.request[s.id]).map(s=>esc(s.name)+': '+esc(j.request[s.id].label)).join(' · ');
+  $('lkResult').hidden=false;
+  $('lkResult').innerHTML='<h2>'+esc(t)+' · '+esc(u)+' · مدل '+faYear(year)+'</h2><p class="lk-h" style="margin-bottom:12px">'+req+'</p><div class="lk-chips">'+chips+'</div>'+errs+
+   (active.length?'<div class="lk-wrap"><table class="lk-table"><thead><tr><th>شرکت بیمه</th>'+active.map(s=>'<th class="'+s.c+'">'+esc(s.name)+'<br>حق بیمه (تومان)</th>').join('')+'</tr></thead><tbody>'+(rows||'<tr><td colspan="'+(active.length+1)+'">هیچ شرکتی برنگشت</td></tr>')+'</tbody></table></div>'+
+   '<p class="lk-legend">«—» یعنی آن سایت این شرکت را برای این خودرو نشان نمی‌دهد. «•» کنار نام شرکت یعنی همه‌ی سایت‌ها آن را ندارند. قیمت‌ها نقدی، یک‌ساله، پوشش مالی ۷۰ میلیون و بدون بیمه‌نامه‌ی قبلی است.</p>':'');
+ }
+ function init(){
+  $('lkBase').value=BASE;$('lkKey').value=KEY;
+  $('lkSave').onclick=()=>{BASE=$('lkBase').value.trim().replace(/\/+$/,'');KEY=$('lkKey').value.trim()||LOOKUP_KEY;store.set('pc_base',BASE);store.set('pc_key',KEY);loadCatalog()};
+  $('lkType').onchange=onType;$('lkUsage').onchange=buildSites;$('lkQ').oninput=autoMatch;$('lkGo').onclick=lookup;
+  $('lkYear').innerHTML=Array.from({length:46},(_,i)=>1405-i).map(y=>'<option value="'+y+'">'+faYear(y)+'</option>').join('');
+  $('lkYear').value='1397';
+ }
+ return reload=>{if(!started){started=true;init()}if((!CAT||reload)&&!loading)loadCatalog()};
+})();
+if(lkOn)openLookup(); // صفحه مستقیم با #lookup باز شده
 // به‌روزرسانی خودکار: هر دقیقه (وقتی صفحه دیده می‌شود) و هر بار که کاربر به صفحه برمی‌گردد
-setInterval(()=>{if(!document.hidden)load(true)},AUTO_REFRESH_MS);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)load(true)});
+setInterval(()=>{if(!document.hidden&&!lkOn)load(true)},AUTO_REFRESH_MS);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!lkOn)load(true)});
 </script>
 </body>
 </html>
