@@ -270,9 +270,11 @@ html[data-theme=dark] .lk-table th.s1{color:#5C9BFF}html[data-theme=dark] .lk-ta
 .lk-table .p{font-weight:900;font-variant-numeric:tabular-nums}
 .lk-table .c{display:block;font-size:12px;color:var(--good);font-weight:700}
 .lk-table .lock{display:block;font-size:11px;color:#B8700E}
-.lk-table tr.partial td:first-child::after{content:" •";color:#E08A17}
+.lk-table tr.lk-grp td{font-size:12px;font-weight:700;color:var(--ink-soft);background:var(--surface-tint);text-align:right}
+.lk-table td.cheap .p{color:var(--good)}
 .lk-co{display:flex;align-items:center;gap:8px}.lk-co .logo{width:32px;height:32px;border-radius:9px;font-size:13px}
-@media(min-width:1101px){#tab-lookup b{white-space:normal;text-align:center;line-height:1.35}}
+@media(min-width:1101px){.tab b{white-space:normal;text-align:center;line-height:1.35}}
+@media(max-width:1100px){.tab b{white-space:normal;text-align:center;line-height:1.3;font-size:13px}.tab{padding:9px 8px}}
 </style>
 </head>
 <body>
@@ -294,9 +296,9 @@ html[data-theme=dark] .lk-table th.s1{color:#5C9BFF}html[data-theme=dark] .lk-ta
  </div>
  <div class="side-h">بیمه ثالث</div>
  <div role="tablist" aria-label="نوع وسیله" aria-orientation="vertical" id="tablist" style="display:contents">
- <button type="button" class="tab" role="tab" id="tab-206_1397" data-v="206_1397" aria-controls="cols" aria-selected="false" title="خودرو"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13.5l1.8-4.6A2 2 0 0 1 6.7 7.6h10.6a2 2 0 0 1 1.9 1.3l1.8 4.6"/><path d="M3 13.5h18v3.5a1 1 0 0 1-1 1h-1.2M3 13.5V17a1 1 0 0 0 1 1h1.2M9.2 18h5.6"/><circle cx="7.2" cy="17.6" r="1.9"/><circle cx="16.8" cy="17.6" r="1.9"/></svg><b>خودرو</b></button>
- <button type="button" class="tab" role="tab" id="tab-moto_1403" data-v="moto_1403" aria-controls="cols" aria-selected="false" title="موتور"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="16" r="3.2"/><circle cx="19" cy="16" r="3.2"/><path d="M5 16h4.5l3-5h3.5l3 5"/><path d="M12.5 11l-1.8-3.2H7.5M14.5 7.2h2.3l2.2 3.8"/></svg><b>موتور</b></button>
- <button type="button" class="tab" role="tab" id="tab-lookup" data-v="lookup" aria-controls="lookup" aria-selected="false" title="استعلام هم‌زمان"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5M8 10.5h5M10.5 8v5"/></svg><b>استعلام هم‌زمان</b></button>
+ <button type="button" class="tab" role="tab" id="tab-206_1397" data-v="206_1397" aria-controls="cols" aria-selected="false" title="بیمه شخص ثالث خودرو"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13.5l1.8-4.6A2 2 0 0 1 6.7 7.6h10.6a2 2 0 0 1 1.9 1.3l1.8 4.6"/><path d="M3 13.5h18v3.5a1 1 0 0 1-1 1h-1.2M3 13.5V17a1 1 0 0 0 1 1h1.2M9.2 18h5.6"/><circle cx="7.2" cy="17.6" r="1.9"/><circle cx="16.8" cy="17.6" r="1.9"/></svg><b>بیمه شخص ثالث خودرو</b></button>
+ <button type="button" class="tab" role="tab" id="tab-moto_1403" data-v="moto_1403" aria-controls="cols" aria-selected="false" title="بیمه شخص ثالث موتور"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="16" r="3.2"/><circle cx="19" cy="16" r="3.2"/><path d="M5 16h4.5l3-5h3.5l3 5"/><path d="M12.5 11l-1.8-3.2H7.5M14.5 7.2h2.3l2.2 3.8"/></svg><b>بیمه شخص ثالث موتور</b></button>
+ <button type="button" class="tab" role="tab" id="tab-lookup" data-v="lookup" aria-controls="lookup" aria-selected="false" title="استعلام خودرو"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5M8 10.5h5M10.5 8v5"/></svg><b>استعلام خودرو</b></button>
  </div>
 </nav>
 <main>
@@ -304,12 +306,13 @@ html[data-theme=dark] .lk-table th.s1{color:#5C9BFF}html[data-theme=dark] .lk-ta
  <div class="cols" id="cols" role="tabpanel"></div>
  <section id="lookup" role="tabpanel" aria-labelledby="tab-lookup" hidden>
   <details class="lk-card lk-cfg" id="lkCfg">
-   <summary>تنظیمات اتصال به n8n</summary>
+   <summary>تنظیمات استعلام زنده (n8n) — اختیاری</summary>
    <div class="lk-grid" style="margin-top:12px">
     <div><label for="lkBase">آدرس n8n (مثلاً https://n8n.example.com)</label><input id="lkBase" dir="ltr"></div>
     <div><label for="lkKey">کلید</label><input id="lkKey" dir="ltr"></div>
    </div>
-   <div class="lk-bar"><button type="button" class="lk-btn2" id="lkSave">ذخیره و بارگذاری کاتالوگ</button><span class="lk-status" id="lkCfgStatus"></span></div>
+   <div class="lk-bar"><button type="button" class="lk-btn2" id="lkSave">ذخیره</button><span class="lk-status" id="lkCfgStatus"></span></div>
+   <p class="lk-legend">مقایسه‌ی اصلی از نتیجه‌های ذخیره‌شده‌ی ماتریس (ورک‌فلوی Coverage Matrix) خوانده می‌شود و به n8n نیاز ندارد. «استعلام زنده» همین حالا از سایت‌ها می‌پرسد و فقط وقتی کار می‌کند که n8n در دسترس باشد.</p>
   </details>
   <div class="lk-card">
    <p class="lk-h">خودرو، کاربری و سال ساخت را انتخاب کن تا هم‌زمان از سه سایت استعلام بگیرد و ببینی هر سایت کدام شرکت‌ها را با چه قیمت و کارمزدی نشان می‌دهد.</p>
@@ -324,7 +327,7 @@ html[data-theme=dark] .lk-table th.s1{color:#5C9BFF}html[data-theme=dark] .lk-ta
    <div class="lk-sites" id="lkSites"></div>
    <p class="lk-legend">با جستجو، نزدیک‌ترین مدل در هر سایت خودکار انتخاب می‌شود؛ اگر درست نبود، همان‌جا عوضش کن. تیک هر سایت را بردار تا آن سایت استعلام نشود.</p>
   </div>
-  <div class="lk-bar"><button type="button" class="lk-go" id="lkGo" disabled>استعلام از هر سه سایت</button><span class="lk-status" id="lkStatus"></span></div>
+  <div class="lk-bar"><button type="button" class="lk-go" id="lkGo" disabled>مقایسه‌ی سه سایت</button><button type="button" class="lk-btn2" id="lkLive" disabled title="همین حالا از هر سه سایت می‌پرسد (به n8n نیاز دارد)">استعلام زنده (n8n)</button><span class="lk-status" id="lkStatus"></span></div>
   <div class="lk-card lk-res" id="lkResult" hidden></div>
  </section>
 </main>
@@ -355,7 +358,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let rows=[],failed=null,pinned=null,merged={};
 // تب‌ها: هر تب یک سناریوی وسیله در ستون vehicle جدول compare.commission
-const VEH=[{k:'206_1397',n:'خودرو',d:'۲۰۶ تیپ ۲ · مدل ۱۳۹۷'},{k:'moto_1403',n:'موتور',d:'تک‌سیلندر · مدل ۱۴۰۳'}];
+const VEH=[{k:'206_1397',n:'بیمه شخص ثالث خودرو',d:'۲۰۶ تیپ ۲ · مدل ۱۳۹۷'},{k:'moto_1403',n:'بیمه شخص ثالث موتور',d:'تک‌سیلندر · مدل ۱۴۰۳'}];
 const isVeh=v=>VEH.some(x=>x.k===v);
 let veh=(()=>{const h=decodeURIComponent(location.hash.slice(1));if(isVeh(h))return h;
  try{const s=localStorage.getItem('dashboardVehicle');if(isVeh(s))return s}catch(e){}return VEH[0].k})();
@@ -370,8 +373,8 @@ function tabs(){
  document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.v===cur;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1});
  $('cols').setAttribute('aria-labelledby','tab-'+veh);
  $('app').classList.toggle('lk-on',lkOn);$('lookup').hidden=!lkOn;
- if(lkOn){pinned=null;panel(null);focus(null);$('sub').textContent='استعلام هم‌زمان ثالث از سه سایت'}
- document.title='مقایسه صفحه کامپیر شرکت‌ها · '+(lkOn?'استعلام هم‌زمان':v.n);
+ if(lkOn){pinned=null;panel(null);focus(null);$('sub').textContent='استعلام خودرو در سه سایت'}
+ document.title='مقایسه صفحه کامپیر شرکت‌ها · '+(lkOn?'استعلام خودرو':v.n);
 }
 function setVeh(v){
  if(v==='lookup'){if(lkOn)return;lkOn=true;if(location.hash.slice(1)!==v)history.replaceState(null,'','#'+v);tabs();openLookup();return}
@@ -537,7 +540,7 @@ $('tablist').addEventListener('keydown',e=>{
 addEventListener('hashchange',()=>setVeh(decodeURIComponent(location.hash.slice(1))));
 if(!lkOn&&location.hash.slice(1)!==veh)history.replaceState(null,'','#'+veh);
 $('q').oninput=render;$('r').onclick=()=>{if(lkOn)openLookup(true);else load()};tabs();load();
-// ---- تب «استعلام هم‌زمان»: کاتالوگ فقط با اولین باز شدن تب بارگذاری می‌شود ----
+// ---- تب «استعلام خودرو»: کاتالوگ (از دیتابیس) فقط با اولین باز شدن تب بارگذاری می‌شود ----
 const openLookup=(()=>{
  const LS=[{id:'site1',c:'s1'},{id:'site2',c:'s2'},{id:'site3',c:'s3'}].map(x=>({...x,name:(SITES.find(s=>s.k===x.id)||{}).n||x.id}));
  const store={get:k=>{try{return localStorage.getItem(k)||''}catch(e){return''}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
@@ -551,22 +554,27 @@ const openLookup=(()=>{
  const toman=n=>n==null?'—':Math.round(n).toLocaleString('fa-IR');
  const faYear=y=>Number(y).toLocaleString('fa-IR',{useGrouping:false});
  const COMP_FA=Object.fromEntries(Object.entries(FA).map(([k,v])=>[norm(v),k]));
+ const bare=s=>norm(s).replace(/^(شرکت )?بیمه /,'').replace(/ بیمه$/,'').replace(/\s+/g,' ').trim();
+ // نام شرکت در سه سایت متفاوت نوشته می‌شود («بیمه رازی»، «رازی»، «حکمت صبا»/«حکمت»): کلید مشترک
+ function canon(name){const n=bare(name);if(COMP_FA[n])return COMP_FA[n];
+  for(const[fn,k]of Object.entries(COMP_FA)){if(n&&(n===fn||n.startsWith(fn+' ')||fn.startsWith(n+' ')||n.replace(/ /g,'')===fn.replace(/ /g,'')))return k}
+  return n||String(name||'')}
+ const dispName=(k,raw)=>FA[k]||String(raw||k).replace(/^\s*بیمه\s+/,'').trim();
  function siteTypes(site){const out={};for(const t of(CAT[site]&&CAT[site].types)||[])for(const n of TYPE_ALIAS[t.name]||[t.name])out[n]=t;return out}
  async function loadCatalog(){
-  $('lkGo').disabled=true;$('lkStatus').textContent='در حال بارگذاری کاتالوگ…';$('lkCfgStatus').textContent='';
-  if(!BASE||!KEY){$('lkStatus').textContent='اول آدرس n8n را در «تنظیمات اتصال» وارد کن.';$('lkCfg').open=true;return}
+  $('lkGo').disabled=true;$('lkLive').disabled=true;$('lkStatus').textContent='در حال بارگذاری کاتالوگ…';
   loading=true;
   try{
-   const r=await fetch(BASE+'/webhook/compare-catalog?key='+encodeURIComponent(KEY));
+   const r=await fetch(SUPABASE_URL+'/rest/v1/rpc/catalog_tree',{method:'POST',headers:{...HEADERS,'Content-Profile':'compare','Content-Type':'application/json'},body:'{}'});
+   if(!r.ok)throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,140));
    const j=await r.json();
-   if(!r.ok||j.error)throw new Error(j.error||('HTTP '+r.status));
-   CAT=j;$('lkCfgStatus').textContent='وصل شد';$('lkCfg').open=false;
+   if(!j||!Object.keys(j).length){CAT=null;$('lkStatus').textContent='کاتالوگ خودروها هنوز ساخته نشده (ورک‌فلوی Coverage Matrix: «Build Catalog» و ورود فایل‌های شوراکا/پلاس‌بیمه).';return}
+   CAT=j;
    const counts=LS.map(s=>s.name+': '+(((CAT[s.id]||{}).types||[]).reduce((a,t)=>a+t.brands.reduce((b,x)=>b+x.models.length,0),0)).toLocaleString('fa-IR')+' مدل');
    $('lkStatus').textContent='کاتالوگ آماده است · '+counts.join(' · ');
-   buildTypes();$('lkGo').disabled=false;
+   buildTypes();$('lkGo').disabled=false;$('lkLive').disabled=!BASE;
   }catch(e){
-   CAT=null;$('lkStatus').textContent='';$('lkCfg').open=true;
-   $('lkCfgStatus').innerHTML='<span class="lk-err">کاتالوگ بارگذاری نشد: '+esc(e.message)+'</span>';
+   CAT=null;$('lkStatus').innerHTML='<span class="lk-err">کاتالوگ بارگذاری نشد: '+esc(e.message)+'</span>';
   }finally{loading=false}
  }
  function buildTypes(){
@@ -603,7 +611,7 @@ const openLookup=(()=>{
   const q=$('lkQ').value;if(!q.trim())return;
   for(const sel of document.querySelectorAll('#lkSites select.lk-model')){let best=-1,bi=0;[...sel.options].forEach((o,i)=>{const sc=score(q,o.textContent);if(sc>best){best=sc;bi=i}});if(sel.options.length)sel.selectedIndex=bi}
  }
- async function lookup(){
+ function picked(){
   const t=$('lkType').value,u=$('lkUsage').value,year=+$('lkYear').value,sites={};
   for(const box of document.querySelectorAll('#lkSites .lk-site')){
    const s=box.dataset.site,st=siteTypes(s)[t];
@@ -613,39 +621,83 @@ const openLookup=(()=>{
    const[brand_id,model_id]=sel.value.split('|');
    sites[s]={vehicle_type:st.name,type_id:st.id,brand_id,model_id,usage_id:usage[1],label:sel.selectedOptions[0].textContent};
   }
+  return{t,u,year,sites};
+ }
+ // ---- مقایسه از نتیجه‌های ماتریس (دیتابیس) ----
+ async function compareMatrix(){
+  const{t,u,year,sites}=picked();
+  if(!Object.keys(sites).length){$('lkStatus').textContent='هیچ سایتی انتخاب نشده.';return}
+  $('lkGo').disabled=true;$('lkStatus').textContent='در حال خواندن نتیجه‌ها…';
+  try{
+   const items={};for(const[k,v]of Object.entries(sites))items[k]={type_id:String(v.type_id),brand_id:String(v.brand_id),model_id:String(v.model_id),usage_id:String(v.usage_id)};
+   const r=await fetch(SUPABASE_URL+'/rest/v1/rpc/coverage_lookup',{method:'POST',headers:{...HEADERS,'Content-Profile':'compare','Content-Type':'application/json'},body:JSON.stringify({p_year:year,p_items:items})});
+   if(!r.ok)throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,140));
+   const res=await r.json();
+   // تبدیل به همان شکل خروجی استعلام زنده تا یک نمایش مشترک داشته باشند
+   const out={sites:{},request:sites,companies:[],matrix:true},by={};
+   for(const s of LS){
+    const x=sites[s.id]?res[s.id]:null;
+    if(!x){out.sites[s.id]={skipped:true};continue}
+    if(x.status==='done'){out.sites[s.id]={ok:true,companies:x.companies||[],done_at:x.done_at};
+     for(const c of x.companies||[]){const k=canon(c.name||c.key);(by[k]||(by[k]={company:dispName(k,c.name)}))[s.id]={premium:c.premium,locked:!!c.locked}}}
+    else out.sites[s.id]={ok:false,state:x.status,error:x.error||''};
+   }
+   out.companies=Object.values(by);
+   render2(out,t,u,year);$('lkStatus').textContent='';
+  }catch(e){$('lkResult').hidden=false;$('lkResult').innerHTML='<div class="lk-err">نتیجه خوانده نشد: '+esc(e.message)+'</div>';$('lkStatus').textContent=''}
+  finally{$('lkGo').disabled=false}
+ }
+ // ---- استعلام زنده از n8n (اختیاری) ----
+ async function lookup(){
+  const{t,u,year,sites}=picked();
   if(!Object.keys(sites).length){$('lkStatus').textContent='هیچ سایتی برای استعلام انتخاب نشده.';return}
-  $('lkGo').disabled=true;$('lkStatus').textContent='در حال استعلام… (۱۰ تا ۳۰ ثانیه)';
+  if(!BASE){$('lkCfg').open=true;$('lkStatus').textContent='برای استعلام زنده آدرس n8n را وارد کن.';return}
+  $('lkLive').disabled=true;$('lkStatus').textContent='در حال استعلام زنده… (۱۰ تا ۳۰ ثانیه)';
   try{
    // فرم (نه JSON) تا مرورگر درخواست preflight نفرستد
    const body=new URLSearchParams({payload:JSON.stringify({key:KEY,year,usage:u,sites})});
    const r=await fetch(BASE+'/webhook/compare-lookup',{method:'POST',body});
    const j=await r.json();
    if(!r.ok||j.error)throw new Error(j.error||('HTTP '+r.status));
+   (j.companies||[]).forEach(c=>{c.company=dispName(canon(c.company),c.company)});
    render2(j,t,u,year);$('lkStatus').textContent='';
-  }catch(e){$('lkResult').hidden=false;$('lkResult').innerHTML='<div class="lk-err">استعلام انجام نشد: '+esc(e.message)+'</div>';$('lkStatus').textContent=''}
-  finally{$('lkGo').disabled=false}
+  }catch(e){$('lkResult').hidden=false;$('lkResult').innerHTML='<div class="lk-err">استعلام زنده انجام نشد: '+esc(e.message)+(BASE.includes('localhost')?' — n8n روی همین کامپیوتر روشن و ورک‌فلو Active است؟':'')+'</div>';$('lkStatus').textContent=''}
+  finally{$('lkLive').disabled=!BASE}
  }
  function render2(j,t,u,year){
+  const ST={pending:'در صف بررسی',running:'در حال بررسی',none:'هنوز در ماتریس نیست',error:'خطا در بررسی'};
   const chips=LS.map(s=>{const r=j.sites[s.id];
-   if(!r||r.skipped)return'<span class="lk-chip">'+esc(s.name)+': استعلام نشد</span>';
-   if(!r.ok)return'<span class="lk-chip bad" title="'+esc(r.error||'')+'">'+esc(s.name)+': خطا</span>';
+   if(!r||r.skipped)return'<span class="lk-chip">'+esc(s.name)+': انتخاب نشده</span>';
+   if(!r.ok)return'<span class="lk-chip bad" title="'+esc(r.error||'')+'">'+esc(s.name)+': '+(ST[r.state]||'خطا')+'</span>';
    return'<span class="lk-chip ok">'+esc(s.name)+': '+(r.companies||[]).length.toLocaleString('fa-IR')+' شرکت</span>'}).join('');
-  const errs=LS.filter(s=>j.sites[s.id]&&j.sites[s.id].ok===false).map(s=>'<div class="lk-err"><b>'+esc(s.name)+':</b> '+esc(j.sites[s.id].error||'')+'</div>').join('');
+  const errs=LS.filter(s=>j.sites[s.id]&&j.sites[s.id].ok===false&&(!j.matrix||j.sites[s.id].state==='error')).map(s=>'<div class="lk-err"><b>'+esc(s.name)+':</b> '+esc(j.sites[s.id].error||'')+'</div>').join('');
+  const pend=j.matrix?LS.filter(s=>j.sites[s.id]&&j.sites[s.id].ok===false&&j.sites[s.id].state!=='error'):[];
+  const pendNote=pend.length?'<p class="lk-legend" style="margin:0 0 10px">'+pend.map(s=>esc(s.name)).join('، ')+': این خودرو/سال هنوز توسط ماتریس بررسی نشده؛ چند دقیقه بعد دوباره «مقایسه» را بزن یا «استعلام زنده» را امتحان کن.</p>':'';
+  const when=j.matrix?LS.filter(s=>j.sites[s.id]&&j.sites[s.id].done_at).map(s=>esc(s.name)+': '+new Date(j.sites[s.id].done_at).toLocaleString('fa-IR')).join(' · '):'';
   const active=LS.filter(s=>j.sites[s.id]&&j.sites[s.id].ok);
-  const rows=(j.companies||[]).map(c=>{
-   const n=active.filter(s=>c[s.id]).length,key=COMP_FA[norm(c.company)];
-   return'<tr class="'+(n<active.length?'partial':'')+'"><td><span class="lk-co">'+(key?logoHtml(key):'')+esc(c.company)+'</span></td>'+active.map(s=>{const v=c[s.id];if(!v)return'<td class="miss">—</td>';
-    return'<td><span class="p">'+toman(v.premium)+'</span>'+(v.commission!=null?'<span class="c">کارمزد '+Number(v.commission).toLocaleString('fa-IR')+'٪</span>':'')+(v.locked?'<span class="lock">قفل</span>':'')+'</td>'}).join('')+'</tr>'}).join('');
+  // مثل صفحه‌ی مقایسه: اول شرکت‌های مشترک در همه، بعد چندسایتی، بعد فقط یک سایت؛ ارزان‌ترین قیمت هر ردیف سبز
+  const cnt=c=>active.filter(s=>c[s.id]).length;
+  const minOf=c=>{const ps=active.map(s=>c[s.id]&&c[s.id].premium).filter(v=>v!=null).map(Number);return ps.length>1?Math.min(...ps):null};
+  const sorted=(j.companies||[]).slice().sort((a,b)=>cnt(b)-cnt(a)||a.company.localeCompare(b.company,'fa'));
+  const grpOf=c=>{const n=cnt(c);return active.length<2?'':n===active.length?'در همه‌ی سایت‌ها':n>1?'در چند سایت':'فقط در '+(active.find(s=>c[s.id])||{}).name};
+  let lastG=null;
+  const rows=sorted.map(c=>{
+   const n=cnt(c),key=COMP_FA[norm(c.company)]||canon(c.company),mn=minOf(c),g=grpOf(c);
+   const head=g&&g!==lastG?'<tr class="lk-grp"><td colspan="'+(active.length+1)+'">'+esc(g)+'</td></tr>':'';lastG=g;
+   return head+'<tr class="'+(n<active.length?'partial':'')+'"><td><span class="lk-co">'+(FA[key]?logoHtml(key):'')+esc(c.company)+'</span></td>'+active.map(s=>{const v=c[s.id];if(!v)return'<td class="miss">—</td>';
+    const cheap=mn!=null&&v.premium!=null&&Number(v.premium)===mn;
+    return'<td'+(cheap?' class="cheap"':'')+'><span class="p">'+toman(v.premium)+'</span>'+(v.commission!=null?'<span class="c">کارمزد '+Number(v.commission).toLocaleString('fa-IR')+'٪</span>':'')+(v.locked?'<span class="lock">قفل</span>':'')+'</td>'}).join('')+'</tr>'}).join('');
+  const both=active.length>1?sorted.filter(c=>cnt(c)===active.length).length:0;
   const req=LS.filter(s=>j.request&&j.request[s.id]).map(s=>esc(s.name)+': '+esc(j.request[s.id].label)).join(' · ');
   $('lkResult').hidden=false;
-  $('lkResult').innerHTML='<h2>'+esc(t)+' · '+esc(u)+' · مدل '+faYear(year)+'</h2><p class="lk-h" style="margin-bottom:12px">'+req+'</p><div class="lk-chips">'+chips+'</div>'+errs+
+  $('lkResult').innerHTML='<h2>'+esc(t)+' · '+esc(u)+' · مدل '+faYear(year)+'</h2><p class="lk-h" style="margin-bottom:12px">'+req+'</p><div class="lk-chips">'+chips+(active.length>1?'<span class="lk-chip">مشترک در همه: '+both.toLocaleString('fa-IR')+'</span>':'')+'</div>'+errs+pendNote+
    (active.length?'<div class="lk-wrap"><table class="lk-table"><thead><tr><th>شرکت بیمه</th>'+active.map(s=>'<th class="'+s.c+'">'+esc(s.name)+'<br>حق بیمه (تومان)</th>').join('')+'</tr></thead><tbody>'+(rows||'<tr><td colspan="'+(active.length+1)+'">هیچ شرکتی برنگشت</td></tr>')+'</tbody></table></div>'+
-   '<p class="lk-legend">«—» یعنی آن سایت این شرکت را برای این خودرو نشان نمی‌دهد. «•» کنار نام شرکت یعنی همه‌ی سایت‌ها آن را ندارند. قیمت‌ها نقدی، یک‌ساله، پوشش مالی ۷۰ میلیون و بدون بیمه‌نامه‌ی قبلی است.</p>':'');
+   '<p class="lk-legend">«—» یعنی آن سایت این شرکت را برای این خودرو نشان نمی‌دهد. قیمت سبز = ارزان‌ترین در همان ردیف. قیمت‌ها نقدی، یک‌ساله، پوشش مالی ۷۰ میلیون و بدون بیمه‌نامه‌ی قبلی است.'+(when?'<br>زمان بررسی ماتریس — '+when:'')+(j.matrix?'':'<br>نتیجه‌ی استعلام زنده (همین لحظه).')+'</p>':'');
  }
  function init(){
   $('lkBase').value=BASE;$('lkKey').value=KEY;
-  $('lkSave').onclick=()=>{BASE=$('lkBase').value.trim().replace(/\/+$/,'');KEY=$('lkKey').value.trim()||LOOKUP_KEY;store.set('pc_base',BASE);store.set('pc_key',KEY);loadCatalog()};
-  $('lkType').onchange=onType;$('lkUsage').onchange=buildSites;$('lkQ').oninput=autoMatch;$('lkGo').onclick=lookup;
+  $('lkSave').onclick=()=>{BASE=$('lkBase').value.trim().replace(/\/+$/,'');KEY=$('lkKey').value.trim()||LOOKUP_KEY;store.set('pc_base',BASE);store.set('pc_key',KEY);$('lkCfgStatus').textContent='ذخیره شد';$('lkLive').disabled=!BASE||!CAT};
+  $('lkType').onchange=onType;$('lkUsage').onchange=buildSites;$('lkQ').oninput=autoMatch;$('lkGo').onclick=compareMatrix;$('lkLive').onclick=lookup;
   $('lkYear').innerHTML=Array.from({length:46},(_,i)=>1405-i).map(y=>'<option value="'+y+'">'+faYear(y)+'</option>').join('');
   $('lkYear').value='1397';
  }
