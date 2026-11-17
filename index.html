@@ -289,21 +289,25 @@ html[data-theme=dark] .lk-table th.s1{color:#5C9BFF}html[data-theme=dark] .lk-ta
 .lk-dd-btn svg{width:18px;height:18px;flex:none;color:var(--site);transition:transform .18s}
 .lk-dd.open .lk-dd-btn{border-color:var(--site);box-shadow:0 0 0 4px color-mix(in srgb,var(--site) 18%,transparent)}
 .lk-dd.open .lk-dd-btn svg{transform:rotate(180deg)}
-.lk-dd-pop{position:absolute;top:calc(100% + 8px);inset-inline:0;z-index:50;border-radius:16px;overflow:hidden;
+.lk-dd-pop{position:absolute;top:calc(100% + 8px);inset-inline:0;z-index:50;border-radius:16px;overflow:hidden;--pop:255,255,255;
  background:rgba(255,255,255,.97);border:1px solid color-mix(in srgb,var(--site) 35%,transparent);border-top:3px solid var(--site);
  box-shadow:0 22px 44px -16px rgba(15,40,120,.45);animation:ddin .14s ease-out}
-html[data-theme=dark] .lk-dd-pop{background:rgba(16,20,34,.98);box-shadow:0 22px 44px -16px rgba(0,0,0,.8)}
+html[data-theme=dark] .lk-dd-pop{background:rgba(16,20,34,.98);box-shadow:0 22px 44px -16px rgba(0,0,0,.8);--pop:16,20,34}
+.lk-dd-top{position:absolute;top:0;inset-inline:0;z-index:2;padding:10px;background:rgba(var(--pop),.38);
+ backdrop-filter:blur(2.5px) saturate(150%);-webkit-backdrop-filter:blur(2.5px) saturate(150%);border-bottom:1px solid color-mix(in srgb,var(--site) 22%,transparent);
+ box-shadow:0 8px 16px -10px rgba(15,40,120,.35)}
+.lk-dd-top .lk-dd-n{position:absolute;top:50%;inset-inline-end:20px;transform:translateY(-50%);pointer-events:none;font-size:11.5px;font-weight:700;
+ color:var(--site);background:color-mix(in srgb,var(--site) 13%,rgba(var(--pop),.9));border-radius:999px;padding:2px 10px;white-space:nowrap}
 @keyframes ddin{from{opacity:0;transform:translateY(-4px)}}
 .lk-dd-pop[hidden]{display:none}
-.lk-card input.lk-dd-q{display:block;width:calc(100% - 20px);margin:10px;font:inherit;font-size:13px;color:var(--ink);background:color-mix(in srgb,var(--site) 7%,transparent);
- border:1.5px solid transparent;border-radius:10px;padding:8px 12px;box-shadow:none}
+.lk-card input.lk-dd-q{display:block;width:100%;margin:0;font:inherit;font-size:13px;color:var(--ink);background:rgba(var(--pop),.72);
+ border:1.5px solid color-mix(in srgb,var(--site) 25%,transparent);border-radius:10px;padding:8px 12px;padding-inline-end:84px;box-shadow:none}
 .lk-card input.lk-dd-q:focus{outline:none;border-color:var(--site);box-shadow:none}
 /* گزینه‌های لیست‌های بومی (نوع وسیله، کاربری، سال) در تم تاریک */
 .lk-card select option{background:#fff;color:#0F1B33}
 html[data-theme=dark] .lk-card select option{background:#151b2e;color:#EAF0FB}
 html[data-theme=dark] .lk-card select option:checked{background:#1656F5;color:#fff}
-.lk-dd-n{font-size:11.5px;color:var(--ink-faint);padding:0 16px 4px}
-.lk-dd-list{list-style:none;margin:0;padding:4px 8px 8px;max-height:240px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--site) 55%,transparent) transparent}
+.lk-dd-list{list-style:none;margin:0;padding:66px 8px 8px;scroll-padding-top:66px;max-height:306px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--site) 55%,transparent) transparent}
 .lk-dd-list::-webkit-scrollbar{width:8px}.lk-dd-list::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--site) 50%,transparent);border-radius:8px}
 .lk-dd-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-radius:10px;font-size:13.5px;cursor:pointer;color:var(--ink)}
 .lk-dd-list li .m{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -327,8 +331,12 @@ html[data-theme=dark] .lk-site.s1{--site:#5C9BFF}html[data-theme=dark] .lk-site.
 .lk-cols .cc .cm{font-size:11.5px;font-weight:700;color:var(--good)}
 .lk-cols .cc .lk{font-size:11px;font-weight:700;color:#B8700E}
 .site .fresh .wait{display:inline-flex;align-items:center;gap:7px;font-weight:900}
-.site .fresh .now{display:inline-block;background:var(--good);color:#fff;border-radius:999px;padding:2px 12px;font-weight:900;animation:nowp 1.6s ease-in-out 3}
-@keyframes nowp{50%{transform:scale(1.07)}}
+.lk-stage{position:relative;min-height:260px}
+.lk-big{position:absolute;inset:0 0 auto;z-index:8;min-height:260px;height:100%;max-height:560px;display:flex;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px;
+ font-size:clamp(24px,3.6vw,44px);font-weight:900;color:var(--ink);border-radius:26px;background:rgba(255,255,255,.42);border:1px solid rgba(255,255,255,.7);
+ backdrop-filter:blur(8px) saturate(160%);-webkit-backdrop-filter:blur(8px) saturate(160%);box-shadow:0 18px 40px -18px rgba(15,72,150,.35)}
+html[data-theme=dark] .lk-big{background:rgba(10,14,26,.5);border-color:rgba(255,255,255,.12)}
+.lk-big .lk-poll{width:16px;height:16px;flex:none}
 .msg.wait{border-style:solid;color:var(--ink);font-weight:900;font-size:14.5px}
 .msg.wait .lk-poll{width:10px;height:10px}
 @media(min-width:1101px){.tab b{white-space:normal;text-align:center;line-height:1.35}}
@@ -667,7 +675,7 @@ const openLookup=(()=>{
     (!st?'<div class="lk-na">این نوع وسیله در این سایت نیست</div>':!usage?'<div class="lk-na">این کاربری برای این نوع وسیله در این سایت نیست</div>':'')+
     '<span class="lbl">مدل در '+esc(s.name)+'</span>'+
     '<div class="lk-dd" data-site="'+s.id+'"><button type="button" class="lk-dd-btn" aria-haspopup="listbox" aria-expanded="false"'+(st?'':' disabled')+'><span class="v">—</span>'+CHEV+'</button>'+
-    '<div class="lk-dd-pop" hidden><input class="lk-dd-q" placeholder="جستجوی برند یا مدل" autocomplete="off" aria-label="جستجوی مدل"><div class="lk-dd-n"></div><ul class="lk-dd-list" role="listbox"></ul></div></div></div>';
+    '<div class="lk-dd-pop" hidden><div class="lk-dd-top"><input class="lk-dd-q" placeholder="جستجوی برند یا مدل" autocomplete="off" aria-label="جستجوی مدل"><span class="lk-dd-n"></span></div><ul class="lk-dd-list" role="listbox"></ul></div></div></div>';
   }).join('');
   for(const s of LS)if(OPTS[s.id].length)setDD(s.id,OPTS[s.id][0]);
   autoMatch();
@@ -678,16 +686,16 @@ const openLookup=(()=>{
  function fillDD(d){
   const all=OPTS[d.dataset.site]||[],q=d.querySelector('.lk-dd-q').value.trim(),list=q?all.filter(o=>matches(o,q)):all;
   const ul=d.querySelector('.lk-dd-list');
-  d.querySelector('.lk-dd-n').textContent=q?list.length.toLocaleString('fa-IR')+' مدل':'همه‌ی مدل‌ها ('+all.length.toLocaleString('fa-IR')+')';
+  d.querySelector('.lk-dd-n').textContent=list.length.toLocaleString('fa-IR')+' مدل';
   if(!list.length){ul.innerHTML='<li class="lk-dd-empty" aria-disabled="true">مدلی با «'+esc(q)+'» پیدا نشد</li>';return}
   ul.innerHTML=list.map(o=>'<li role="option" data-i="'+o.i+'" aria-selected="'+(o.v===d.dataset.v)+'"><span class="m">'+esc(o.own?o.model:o.model)+'</span>'+(o.own?'':'<span class="b">'+esc(o.brand)+'</span>')+'</li>').join('');
-  const sel=ul.querySelector('[aria-selected=true]');ul.scrollTop=sel?Math.max(0,sel.offsetTop-ul.offsetTop-ul.clientHeight/2+sel.offsetHeight/2):0;
+  const sel=ul.querySelector('[aria-selected=true]');ul.scrollTop=sel?Math.max(0,sel.offsetTop-66-(ul.clientHeight-66)/2+sel.offsetHeight/2):0;
  }
  function closeDD(){document.querySelectorAll('#lkSites .lk-dd.open').forEach(d=>{d.classList.remove('open');d.querySelector('.lk-dd-btn').setAttribute('aria-expanded','false');d.querySelector('.lk-dd-pop').hidden=true})}
  function openDD(d){closeDD();d.classList.add('open');d.querySelector('.lk-dd-btn').setAttribute('aria-expanded','true');
   const pop=d.querySelector('.lk-dd-pop'),ul=d.querySelector('.lk-dd-list');pop.hidden=false;
   // ارتفاع لیست به اندازه‌ی جای خالی زیر فیلد، تا از صفحه بیرون نزند
-  const room=innerHeight-d.getBoundingClientRect().bottom-110;ul.style.maxHeight=Math.max(150,Math.min(240,room))+'px';
+  const room=innerHeight-d.getBoundingClientRect().bottom-110;ul.style.maxHeight=(Math.max(150,Math.min(240,room))+66)+'px';
   const qi=d.querySelector('.lk-dd-q');qi.value=$('lkQ').value;fillDD(d);qi.focus({preventScroll:true});
   const pb=pop.getBoundingClientRect().bottom;if(pb>innerHeight-8)scrollBy({top:pb-innerHeight+16,behavior:'smooth'})}
  function pickDD(d,li){const o=(OPTS[d.dataset.site]||[])[+li.dataset.i];if(o)setDD(d.dataset.site,o);closeDD();d.querySelector('.lk-dd-btn').focus()}
@@ -732,8 +740,8 @@ const openLookup=(()=>{
     const x=sites[s.id]?res[s.id]:null;
     if(!x){out.sites[s.id]={skipped:true};continue}
     const busy=x.status==='pending'||x.status==='running';if(busy)waiting=true;
-    const justDone=!busy&&waitSet.has(s.id);if(busy)waitSet.add(s.id);else waitSet.delete(s.id);
-    if(Array.isArray(x.companies)){out.sites[s.id]={ok:true,companies:x.companies,done_at:x.done_at,state:x.status,refreshing:busy,justDone,ahead:x.ahead,blocked_until:x.blocked_until};
+    
+    if(Array.isArray(x.companies)){out.sites[s.id]={ok:true,companies:x.companies,done_at:x.done_at,state:x.status,refreshing:busy,ahead:x.ahead,blocked_until:x.blocked_until};
      const div=RIAL[s.id]?10:1;
      for(const c of x.companies){const k=canon(c.name||c.key);(by[k]||(by[k]={company:dispName(k,c.name)}))[s.id]={premium:c.premium==null?null:c.premium/div,locked:!!c.locked}}}
     else out.sites[s.id]={ok:false,state:x.status,error:x.error||'',ahead:x.ahead,blocked_until:x.blocked_until};
@@ -793,21 +801,17 @@ const openLookup=(()=>{
     '<b class="nm">'+esc(m.name)+'</b><span class="pill'+(r.premium==null?' none':'')+'">'+money(r.premium)+'</span><span class="tm">تومان</span>'+
     (r.commission!=null?'<span class="cm">کارمزد '+Number(r.commission).toLocaleString('fa-IR')+'٪</span>':'')+(r.locked?'<span class="lk">قفل</span>':'')+badge(m,s)+'</button>'};
   const head=(s,r,list)=>{
-   const ps=list.map(k=>M[k][s.k].premium).filter(v=>v!=null).map(Number),low=ps.length?Math.min(...ps):null;
-   const lowK=low==null?null:list.find(k=>+M[k][s.k].premium===low);
    const busy=r.state==='pending'||r.state==='running';
    let fresh;
    if(r.skipped)fresh='انتخاب نشده';
    else if(r.blocked_until&&busy)fresh='<span class="wait"><span class="lk-poll"></span>'+esc(blockTxt(r))+'</span>';
-   else if(busy)fresh='<span class="wait"><span class="lk-poll"></span>'+WAIT_TXT+'</span>';
-   else if(r.justDone)fresh='<span class="now">حالا چک کن</span>';
+   else if(busy)fresh='در صف بررسی';
    else if(r.ok&&j.matrix&&r.done_at)fresh='آخرین بررسی: '+esc(ago(r.done_at));
    else if(r.ok)fresh='همین لحظه (استعلام زنده)';
    else if(r.state==='none')fresh='این مدل در این سایت نیست';
    else fresh='خطا در بررسی';
    return'<div class="site"><div class="sh"><div><h2>'+esc(s.n)+'</h2><div class="host">'+esc(s.h)+'</div></div><span class="slogo"><img src="'+esc(s.logo)+'" alt="'+esc(s.n)+'" onerror="this.style.display=\'none\'"></span></div><div class="glass"><div class="stats">'+
-    '<div class="st"><b>'+(r.ok?fa(list.length):'—')+'</b><span>شرکت برای این خودرو</span></div>'+
-    '<div class="st"><b>'+(low==null?'—':money(low))+'</b><span>ارزان‌ترین'+(lowK?': '+esc(M[lowK].name):'')+'</span></div></div><div class="fresh">'+fresh+'</div></div></div>'};
+    '<div class="st"><b>'+(r.ok?fa(list.length):'—')+'</b><span>شرکت برای این خودرو</span></div></div><div class="fresh">'+fresh+'</div></div></div>'};
   const cols=SITES.map(s=>{
    const r=R(s),list=r.ok?keys.filter(k=>M[k][s.k]):[];
    const part=partAll.filter(k=>M[k][s.k]);
@@ -816,7 +820,7 @@ const openLookup=(()=>{
    const busy=r.state==='pending'||r.state==='running';
    let body;
    if(r.skipped)body='<div class="msg">این سایت انتخاب نشده</div>';
-   else if(!r.ok&&busy)body='<div class="msg wait"><span class="lk-poll"></span>'+(r.blocked_until?esc(blockTxt(r)):WAIT_TXT)+'</div>';
+   else if(!r.ok&&busy)body=r.blocked_until?'<div class="msg wait"><span class="lk-poll"></span>'+esc(blockTxt(r))+'</div>':'';
    else if(!r.ok&&r.state==='none')body='<div class="msg">این مدل در کاتالوگ این سایت نیست</div>';
    else if(!r.ok)body='<div class="msg er" title="'+esc(r.error||'')+'">خطا در بررسی'+(r.error?': '+esc(String(r.error).slice(0,160)):'')+'</div>';
    else if(!list.length)body='<div class="msg">این سایت برای این خودرو شرکتی نشان نمی‌دهد</div>';
@@ -828,7 +832,9 @@ const openLookup=(()=>{
   }).join('');
   const req=LS.filter(s=>j.request&&j.request[s.id]).map(s=>esc(s.name)+': '+esc(j.request[s.id].label)).join('، ');
   $('lkResult').hidden=false;
-  $('lkResult').innerHTML='<div class="lk-card lk-head"><h2>'+esc(t)+' · '+esc(u)+' · مدل '+faYear(year)+'</h2><p class="lk-h">'+req+'</p></div><div class="cols lk-cols" id="lkCols">'+cols+'</div>';
+  const anyWait=SITES.some(s=>{const r=R(s);return(r.state==='pending'||r.state==='running')&&!r.blocked_until});
+  $('lkResult').innerHTML='<div class="lk-card lk-head"><h2>'+esc(t)+' · '+esc(u)+' · مدل '+faYear(year)+'</h2><p class="lk-h">'+req+'</p></div>'+
+   '<div class="lk-stage">'+(anyWait?'<div class="lk-big" role="status"><span class="lk-poll"></span>'+WAIT_TXT+'</div>':'')+'<div class="cols lk-cols" id="lkCols">'+cols+'</div></div>';
   lkPin=null;lkAlign();
  }
  function lkAlign(){
