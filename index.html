@@ -481,7 +481,7 @@ function siteCard(s,list){
   fresh='<div class="fresh'+(old?' old':'')+'">آخرین داده: '+esc(new Date(last).toLocaleString('fa-IR'))+(old?' ('+(h>=1?'بیش از '+fa(Math.floor(h))+' ساعت':fa(Math.floor(mins))+' دقیقه')+' پیش)':'')+'</div>'}
  return'<div class="site"><div class="sh"><div><h2>'+esc(s.n)+'</h2><div class="host">'+esc(s.h)+'</div></div><span class="slogo"><img src="'+esc(s.logo)+'" alt="'+esc(s.n)+'" onerror="this.style.display=\'none\'"></span></div><div class="glass"><div class="stats">'+
   '<div class="st"><b>'+fa(list.length)+'</b><span>شرکت در صفحه مقایسه</span></div>'+
-  '<div class="st"><b>'+(top==null?'—':fa2(top)+'٪')+'</b><span>بیشترین کارمزد'+(best?' · '+esc(FA[best.company_key]||best.company_key):'')+'</span></div></div>'+fresh+'</div></div>';
+  '<div class="st"><b>'+(top==null?'—':fa2(top)+'٪')+'</b><span>بیشترین کارمزد'+(best?': '+esc(FA[best.company_key]||best.company_key):'')+'</span></div></div>'+fresh+'</div></div>';
 }
 function cmp(c,s){
  const m=c[s.k];
@@ -530,9 +530,9 @@ function render(){
   if(!all.length)body='<div class="msg">هنوز داده‌ای از این سایت ثبت نشده</div>';
   else if(!mineFull.length&&!part.length&&!mine.length)body='<div class="msg">شرکتی با این جستجو پیدا نشد</div>';
   else body='<div class="cards">'+
-   (multi&&mineFull.length?'<div class="grp">'+(present.length===SITES.length?'در همه سایت‌ها':'در هر '+fa(present.length)+' سایت')+' · '+fa(mineFull.length)+'</div>':'')+mineFull.map(k=>card(merged[k],s,multi)).join('')+
-   (multi&&partAll.length?'<div class="grp">در چند سایت · '+fa(part.length)+'</div>':'')+partAll.map(k=>merged[k][s.k]?card(merged[k],s,multi):'<div class="cc ph" aria-hidden="true"></div>').join('')+
-   (multi&&mine.length?'<div class="grp">فقط در '+esc(s.n)+' · '+fa(mine.length)+'</div>':'')+mine.map(k=>card(merged[k],s,multi)).join('')+'</div>';
+   (multi&&mineFull.length?'<div class="grp">'+(present.length===SITES.length?'در همه سایت‌ها':'در هر '+fa(present.length)+' سایت')+' ('+fa(mineFull.length)+')</div>':'')+mineFull.map(k=>card(merged[k],s,multi)).join('')+
+   (multi&&partAll.length?'<div class="grp">در چند سایت ('+fa(part.length)+')</div>':'')+partAll.map(k=>merged[k][s.k]?card(merged[k],s,multi):'<div class="cc ph" aria-hidden="true"></div>').join('')+
+   (multi&&mine.length?'<div class="grp">فقط در '+esc(s.n)+' ('+fa(mine.length)+')</div>':'')+mine.map(k=>card(merged[k],s,multi)).join('')+'</div>';
   return'<section class="col '+s.c+'">'+siteCard(s,all)+body+'</section>';
  }).join('')+'<svg class="ln" id="ln" aria-hidden="true"></svg>';
  align();
