@@ -657,7 +657,8 @@ if(!lkOn&&location.hash.slice(1)!==veh)history.replaceState(null,'','#'+veh);
 $('q').oninput=render;$('r').onclick=()=>{if(lkOn)openLookup(true);else load()};tabs();load();
 // ---- تب «استعلام خودرو»: کاتالوگ (از دیتابیس) فقط با اولین باز شدن تب بارگذاری می‌شود ----
 const openLookup=(()=>{
- const LS=[{id:'site1',c:'s1'},{id:'site2',c:'s2'},{id:'site3',c:'s3'}].map(x=>{const S=SITES.find(s=>s.k===x.id)||{};return{...x,name:S.n||x.id,logo:S.logo,host:S.h}});
+ // همان ترتیب ستون‌های نتیجه (بیمه پلاس، ازکی سلر، شرکاء) تا کارت هر سایت بالای ستون خودش باشد
+ const LS=SITES.map(S=>({id:S.k,c:S.c,name:S.n,logo:S.logo,host:S.h}));
  const store={get:k=>{try{return localStorage.getItem(k)||''}catch(e){return''}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
  let BASE=(store.get('pc_base')||N8N_BASE).replace(/\/+$/,''),KEY=store.get('pc_key')||LOOKUP_KEY;
  let CAT=null,loading=false,started=false,pollT=null,pollN=0,pollKey='',waitSet=new Set();
