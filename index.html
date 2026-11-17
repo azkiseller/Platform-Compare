@@ -805,7 +805,7 @@ const openLookup=(()=>{
    let fresh;
    if(r.skipped)fresh='انتخاب نشده';
    else if(r.blocked_until&&busy)fresh='<span class="wait"><span class="lk-poll"></span>'+esc(blockTxt(r))+'</span>';
-   else if(busy)fresh='در صف بررسی';
+   else if(busy)fresh='<span class="wait"><span class="lk-poll"></span>'+WAIT_TXT+'</span>';
    else if(r.ok&&j.matrix&&r.done_at)fresh='آخرین بررسی: '+esc(ago(r.done_at));
    else if(r.ok)fresh='همین لحظه (استعلام زنده)';
    else if(r.state==='none')fresh='این مدل در این سایت نیست';
@@ -820,7 +820,7 @@ const openLookup=(()=>{
    const busy=r.state==='pending'||r.state==='running';
    let body;
    if(r.skipped)body='<div class="msg">این سایت انتخاب نشده</div>';
-   else if(!r.ok&&busy)body=r.blocked_until?'<div class="msg wait"><span class="lk-poll"></span>'+esc(blockTxt(r))+'</div>':'';
+   else if(!r.ok&&busy)body='<div class="msg wait"><span class="lk-poll"></span>'+(r.blocked_until?esc(blockTxt(r)):WAIT_TXT)+'</div>';
    else if(!r.ok&&r.state==='none')body='<div class="msg">این مدل در کاتالوگ این سایت نیست</div>';
    else if(!r.ok)body='<div class="msg er" title="'+esc(r.error||'')+'">خطا در بررسی'+(r.error?': '+esc(String(r.error).slice(0,160)):'')+'</div>';
    else if(!list.length)body='<div class="msg">این سایت برای این خودرو شرکتی نشان نمی‌دهد</div>';
@@ -832,9 +832,8 @@ const openLookup=(()=>{
   }).join('');
   const req=LS.filter(s=>j.request&&j.request[s.id]).map(s=>esc(s.name)+': '+esc(j.request[s.id].label)).join('، ');
   $('lkResult').hidden=false;
-  const anyWait=SITES.some(s=>{const r=R(s);return(r.state==='pending'||r.state==='running')&&!r.blocked_until});
   $('lkResult').innerHTML='<div class="lk-card lk-head"><h2>'+esc(t)+' · '+esc(u)+' · مدل '+faYear(year)+'</h2><p class="lk-h">'+req+'</p></div>'+
-   '<div class="lk-stage">'+(anyWait?'<div class="lk-big" role="status"><span class="lk-poll"></span>'+WAIT_TXT+'</div>':'')+'<div class="cols lk-cols" id="lkCols">'+cols+'</div></div>';
+   '<div class="cols lk-cols" id="lkCols">'+cols+'</div>';
   lkPin=null;lkAlign();
  }
  function lkAlign(){
