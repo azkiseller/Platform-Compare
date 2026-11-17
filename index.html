@@ -406,7 +406,7 @@ const LOOKUP_KEY='J4mm3PdLfiFKMwRNfp4bIM6h'; // راز نیست؛ فقط ترا�
 // ----------------------------------------
 const SITES=[ // ترتیب در صفحه‌ی راست‌به‌چپ: اولی راست، دومی وسط، سومی چپ
  {k:'site3',c:'s3',n:'بیمه پلاس',h:'plusbimeh.com',logo:'brand/plusbimeh.png'},
- {k:'site1',c:'s1',n:'ازکی ایجنت',h:'azkiagent.com',logo:'brand/azki-agent.png'},
+ {k:'site1',c:'s1',n:'ازکی ایجنت',h:'azkiseller.com',logo:'brand/azki-agent.png'},
  {k:'site2',c:'s2',n:'شرکاء',h:'shoraka.net',logo:'brand/shoraka.png'}];
 const SITE_COLOR={s1:'#1656F5',s2:'#F59E0B',s3:'#7A47C2'};
 document.documentElement.style.setProperty('--n',SITES.length);
@@ -770,7 +770,7 @@ const openLookup=(()=>{
   }catch(e){$('lkResult').hidden=false;$('lkResult').innerHTML='<div class="lk-err">استعلام زنده انجام نشد: '+esc(e.message)+(BASE.includes('localhost')?' — n8n روی همین کامپیوتر روشن و ورک‌فلو Active است؟':'')+'</div>';$('lkStatus').textContent=''}
   finally{$('lkLive').disabled=!BASE}
  }
- const WAIT_TXT='نهایتا ۱۵ ثانیه دیگه تو جیبته.';
+ const WAIT_TXT='تا ۱۵ ثانیه دیگه تو جیبته.';
  const money=n=>n==null?'—':Math.round(n).toLocaleString('fa-IR');
  const diffTxt=d=>d>=1e6?(Math.round(d/1e5)/10).toLocaleString('fa-IR')+' میلیون':Math.round(d).toLocaleString('fa-IR');
  const blockTxt=r=>'این سایت موقتاً شلوغه؛ حدود '+Math.max(1,Math.ceil((new Date(r.blocked_until)-Date.now())/60000)).toLocaleString('fa-IR')+' دقیقه دیگه';
