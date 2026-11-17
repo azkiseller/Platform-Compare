@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>مقایسه صفحه کامپیر شرکت‌ها</title>
+<link rel="icon" type="image/png" href="favicon.png">
 <script>
 (function(){try{if(localStorage.getItem('dashboardSide')==='closed')document.documentElement.classList.add('side-closed')}catch(e){}
 try{var s=localStorage.getItem('dashboardTheme');
@@ -276,6 +277,56 @@ html[data-theme=dark] .lk-table th.s1{color:#5C9BFF}html[data-theme=dark] .lk-ta
 .lk-table tr.lk-grp td{font-size:12px;font-weight:700;color:var(--ink-soft);background:var(--surface-tint);text-align:right}
 .lk-table td.cheap .p{color:var(--good)}
 .lk-co{display:flex;align-items:center;gap:8px}.lk-co .logo{width:32px;height:32px;border-radius:9px;font-size:13px}
+/* انتخاب مدل: لیست کشویی جستجوپذیر زیر همان فیلد */
+.lk-sites-card{position:relative;z-index:6}
+.lk-site{position:relative}
+.lk-dd{position:relative}
+.lk-dd-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;font:inherit;font-size:13.5px;color:var(--ink);text-align:right;
+ background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.lk-dd-btn:hover:not(:disabled){border-color:var(--site)}
+.lk-dd-btn:disabled{cursor:default;opacity:.6}
+.lk-dd-btn .v{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
+.lk-dd-btn svg{width:18px;height:18px;flex:none;color:var(--site);transition:transform .18s}
+.lk-dd.open .lk-dd-btn{border-color:var(--site);box-shadow:0 0 0 4px color-mix(in srgb,var(--site) 18%,transparent)}
+.lk-dd.open .lk-dd-btn svg{transform:rotate(180deg)}
+.lk-dd-pop{position:absolute;top:calc(100% + 8px);inset-inline:0;z-index:50;border-radius:16px;overflow:hidden;
+ background:rgba(255,255,255,.97);border:1px solid color-mix(in srgb,var(--site) 35%,transparent);border-top:3px solid var(--site);
+ box-shadow:0 22px 44px -16px rgba(15,40,120,.45);animation:ddin .14s ease-out}
+html[data-theme=dark] .lk-dd-pop{background:rgba(16,20,34,.98);box-shadow:0 22px 44px -16px rgba(0,0,0,.8)}
+@keyframes ddin{from{opacity:0;transform:translateY(-4px)}}
+.lk-dd-pop[hidden]{display:none}
+.lk-dd-q{display:block;width:calc(100% - 20px);margin:10px;font:inherit;font-size:13px;color:var(--ink);background:color-mix(in srgb,var(--site) 7%,transparent);
+ border:1.5px solid transparent;border-radius:10px;padding:8px 12px}
+.lk-dd-q:focus{outline:none;border-color:var(--site)}
+.lk-dd-n{font-size:11.5px;color:var(--ink-faint);padding:0 16px 4px}
+.lk-dd-list{list-style:none;margin:0;padding:4px 8px 8px;max-height:300px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--site) 55%,transparent) transparent}
+.lk-dd-list::-webkit-scrollbar{width:8px}.lk-dd-list::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--site) 50%,transparent);border-radius:8px}
+.lk-dd-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-radius:10px;font-size:13.5px;cursor:pointer;color:var(--ink)}
+.lk-dd-list li .m{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lk-dd-list li .b{flex:none;font-size:11.5px;font-weight:700;color:var(--site);background:color-mix(in srgb,var(--site) 12%,transparent);border-radius:999px;padding:1px 9px}
+.lk-dd-list li:hover,.lk-dd-list li.act{background:color-mix(in srgb,var(--site) 11%,transparent)}
+.lk-dd-list li[aria-selected=true]{background:var(--site);color:#fff}
+.lk-dd-list li[aria-selected=true] .b{background:rgba(255,255,255,.22);color:#fff}
+.lk-dd-list li.lk-dd-empty{justify-content:center;color:var(--ink-faint);cursor:default;font-size:12.5px}
+.lk-dd-list li.lk-dd-empty:hover{background:none}
+html[data-theme=dark] .lk-site.s1{--site:#5C9BFF}html[data-theme=dark] .lk-site.s2{--site:#FFA21F}html[data-theme=dark] .lk-site.s3{--site:#B692F0}
+/* نتیجه‌ی استعلام: همان ستون‌ها و کارت‌های صفحه‌ی مقایسه */
+.lk-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.lk-head h2{margin:0;font-size:17px;font-weight:900}
+.lk-head .lk-h{margin:0}
+.lk-cols{margin:0 -18px}
+.lk-cols .cc .pill{font-size:15.5px;min-width:0;padding:4px 12px}
+.lk-cols .site .st{flex:1 1 0;min-width:0;padding:0 8px}
+.lk-cols .site .st b{font-size:21px;white-space:nowrap}
+.lk-cols .site .stats{flex-wrap:nowrap}
+.lk-cols .cc .tm{font-size:11px;color:var(--ink-faint);margin-top:-4px}
+.lk-cols .cc .cm{font-size:11.5px;font-weight:700;color:var(--good)}
+.lk-cols .cc .lk{font-size:11px;font-weight:700;color:#B8700E}
+.site .fresh .wait{display:inline-flex;align-items:center;gap:7px;font-weight:900}
+.site .fresh .now{display:inline-block;background:var(--good);color:#fff;border-radius:999px;padding:2px 12px;font-weight:900;animation:nowp 1.6s ease-in-out 3}
+@keyframes nowp{50%{transform:scale(1.07)}}
+.msg.wait{border-style:solid;color:var(--ink);font-weight:900;font-size:14.5px}
+.msg.wait .lk-poll{width:10px;height:10px}
 @media(min-width:1101px){.tab b{white-space:normal;text-align:center;line-height:1.35}}
 @media(max-width:1100px){.tab b{white-space:normal;text-align:center;line-height:1.3;font-size:13px}.tab{padding:9px 8px}}
 </style>
@@ -315,23 +366,20 @@ html[data-theme=dark] .lk-table th.s1{color:#5C9BFF}html[data-theme=dark] .lk-ta
     <div><label for="lkKey">کلید</label><input id="lkKey" dir="ltr"></div>
    </div>
    <div class="lk-bar"><button type="button" class="lk-btn2" id="lkSave">ذخیره</button><span class="lk-status" id="lkCfgStatus"></span></div>
-   <p class="lk-legend">مقایسه‌ی اصلی از نتیجه‌های ذخیره‌شده‌ی ماتریس (ورک‌فلوی Coverage Matrix) خوانده می‌شود و به n8n نیاز ندارد. «استعلام زنده» همین حالا از سایت‌ها می‌پرسد و فقط وقتی کار می‌کند که n8n در دسترس باشد.</p>
   </details>
   <div class="lk-card">
-   <p class="lk-h">خودرو، کاربری و سال ساخت را انتخاب کن و «مقایسه» را بزن تا ببینی هر سایت کدام شرکت‌ها را با چه قیمتی نشان می‌دهد. اگر این خودرو هنوز بررسی نشده یا نتیجه‌اش قدیمی است، همان لحظه در صف بررسی قرار می‌گیرد و نتیجه خودکار نمایش داده می‌شود.</p>
    <div class="lk-grid">
     <div><label for="lkType">نوع وسیله</label><select id="lkType"></select></div>
     <div><label for="lkUsage">کاربری</label><select id="lkUsage"></select></div>
     <div><label for="lkYear">سال ساخت</label><select id="lkYear"></select></div>
-    <div><label for="lkQ">جستجوی خودرو (مثلاً پژو ۲۰۶ تیپ ۲)</label><input id="lkQ" placeholder="نام برند و مدل"></div>
+    <div><label for="lkQ">جستجوی خودرو</label><input id="lkQ" placeholder="برند یا مدل"></div>
    </div>
   </div>
-  <div class="lk-card">
+  <div class="lk-card lk-sites-card">
    <div class="lk-sites" id="lkSites"></div>
-   <p class="lk-legend">با جستجو، نزدیک‌ترین مدل در هر سایت خودکار انتخاب می‌شود؛ اگر درست نبود، همان‌جا عوضش کن. تیک هر سایت را بردار تا آن سایت استعلام نشود.</p>
   </div>
   <div class="lk-bar"><button type="button" class="lk-go" id="lkGo" disabled>مقایسه‌ی سه سایت</button><button type="button" class="lk-btn2" id="lkLive" disabled title="همین حالا از هر سه سایت می‌پرسد (به n8n نیاز دارد)">استعلام زنده (n8n)</button><span class="lk-status" id="lkStatus"></span></div>
-  <div class="lk-card lk-res" id="lkResult" hidden></div>
+  <div id="lkResult" hidden></div>
  </section>
 </main>
 <div class="dp" id="dp" hidden role="dialog" aria-label="جزئیات مقایسه"></div>
@@ -390,7 +438,7 @@ function setVeh(v){
 async function load(silent){
  const v=veh,id=++reqId;
  if(!silent){
-  $('sub').textContent='در حال بارگذاری…';
+  if(!lkOn)$('sub').textContent='در حال بارگذاری…';
   if(cache[v]){rows=cache[v];failed=null;render()}
   else{pinned=null;panel(null);$('cols').innerHTML='<div class="msg" style="grid-column:1/-1">در حال بارگذاری…</div>'}
  }
@@ -401,7 +449,7 @@ async function load(silent){
   if(id!==reqId)return; // در این فاصله تب عوض شده
   const next=raw.filter(x=>{const k=x.site+'|'+x.company_key;if(seen.has(k))return false;seen.add(k);return true});
   rows=next;cache[v]=rows;failed=null;
-  $('sub').textContent='روی هر شرکت بزن تا همتایش در سایت‌های دیگر و اختلاف نشان داده شود';
+  if(!lkOn)$('sub').textContent='روی هر شرکت بزن تا همتایش در سایت‌های دیگر و اختلاف نشان داده شود';
  }catch(e){if(id!==reqId)return;if(silent&&rows.length)return;failed=e.message;$('sub').textContent='ناموفق'}
  // در به‌روزرسانی خودکار، شرکت انتخاب‌شده و جستجو حفظ می‌شود
  const keep=silent?pinned:null;
@@ -548,7 +596,8 @@ const openLookup=(()=>{
  const LS=[{id:'site1',c:'s1'},{id:'site2',c:'s2'},{id:'site3',c:'s3'}].map(x=>({...x,name:(SITES.find(s=>s.k===x.id)||{}).n||x.id}));
  const store={get:k=>{try{return localStorage.getItem(k)||''}catch(e){return''}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
  let BASE=(store.get('pc_base')||N8N_BASE).replace(/\/+$/,''),KEY=store.get('pc_key')||LOOKUP_KEY;
- let CAT=null,loading=false,started=false,pollT=null,pollN=0,pollKey='';
+ let CAT=null,loading=false,started=false,pollT=null,pollN=0,pollKey='',waitSet=new Set();
+ const RIAL={site1:true,site3:true}; // ازکی و پلاس‌بیمه قیمت را به ریال ذخیره می‌کنند
  // استعلام زنده به n8n روی کامپیوتر سرپرست نیاز دارد؛ فقط با ‎?live=1‎ (یک بار) برای همان مرورگر فعال می‌شود
  if(/[?&]live=1\b/.test(location.search))store.set('pc_live','1');
  if(/[?&]live=0\b/.test(location.search))store.set('pc_live','');
@@ -577,8 +626,7 @@ const openLookup=(()=>{
    const j=await r.json();
    if(!j||!Object.keys(j).length){CAT=null;$('lkStatus').textContent='کاتالوگ خودروها هنوز ساخته نشده (ورک‌فلوی Coverage Matrix: «Build Catalog» و ورود فایل‌های شوراکا/پلاس‌بیمه).';return}
    CAT=j;
-   const counts=LS.map(s=>s.name+': '+(((CAT[s.id]||{}).types||[]).reduce((a,t)=>a+t.brands.reduce((b,x)=>b+x.models.length,0),0)).toLocaleString('fa-IR')+' مدل');
-   $('lkStatus').textContent='کاتالوگ آماده است · '+counts.join(' · ');
+   $('lkStatus').textContent='';
    buildTypes();$('lkGo').disabled=false;$('lkLive').disabled=!BASE||!LIVE;
   }catch(e){
    CAT=null;$('lkStatus').innerHTML='<span class="lk-err">کاتالوگ بارگذاری نشد: '+esc(e.message)+'</span>';
@@ -601,22 +649,45 @@ const openLookup=(()=>{
   if(us.includes('شخصی')&&!us.includes(prev))$('lkUsage').value='شخصی';
   buildSites();
  }
+ const OPTS={};
+ const CHEV='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
  function buildSites(){
   const t=$('lkType').value,u=$('lkUsage').value;
   $('lkSites').innerHTML=LS.map(s=>{
    const st=siteTypes(s.id)[t],usage=st&&st.usages.find(([n])=>uName(n)===u);
-   const opts=st?st.brands.flatMap(b=>b.models.map(([mn,mid])=>({v:b.id+'|'+mid,label:(mn===b.name||mn.startsWith(b.name)?mn:b.name+' — '+mn)}))):[];
+   let i=0;
+   OPTS[s.id]=st?st.brands.flatMap(b=>b.models.map(([mn,mid])=>{const own=mn===b.name||norm(mn).startsWith(norm(b.name));
+    return{i:i++,v:b.id+'|'+mid,brand:b.name,model:mn,own,label:own?mn:b.name+' — '+mn,key:norm(b.name+' '+mn)}})):[];
    return'<div class="lk-site '+s.c+(st?'':' off')+'" data-site="'+s.id+'">'+
     '<h3><label style="display:flex;align-items:center;gap:8px;margin:0;font-size:15px;color:inherit;cursor:pointer"><input type="checkbox" '+(st&&usage?'checked':'')+' '+(st?'':'disabled')+'> '+esc(s.name)+'</label></h3>'+
     (!st?'<div class="lk-na">این نوع وسیله در این سایت نیست</div>':!usage?'<div class="lk-na">این کاربری برای این نوع وسیله در این سایت نیست</div>':'')+
-    '<span class="lbl">مدل در '+esc(s.name)+'</span><select class="lk-model" '+(st?'':'disabled')+'>'+opts.map(o=>'<option value="'+esc(o.v)+'">'+esc(o.label)+'</option>').join('')+'</select></div>';
+    '<span class="lbl">مدل در '+esc(s.name)+'</span>'+
+    '<div class="lk-dd" data-site="'+s.id+'"><button type="button" class="lk-dd-btn" aria-haspopup="listbox" aria-expanded="false"'+(st?'':' disabled')+'><span class="v">—</span>'+CHEV+'</button>'+
+    '<div class="lk-dd-pop" hidden><input class="lk-dd-q" placeholder="جستجوی برند یا مدل" autocomplete="off" aria-label="جستجوی مدل"><div class="lk-dd-n"></div><ul class="lk-dd-list" role="listbox"></ul></div></div></div>';
   }).join('');
+  for(const s of LS)if(OPTS[s.id].length)setDD(s.id,OPTS[s.id][0]);
   autoMatch();
  }
+ const ddOf=site=>document.querySelector('#lkSites .lk-dd[data-site="'+site+'"]');
+ function setDD(site,o){const d=ddOf(site);if(!d||!o)return;d.dataset.v=o.v;d.dataset.label=o.label;d.querySelector('.lk-dd-btn .v').textContent=o.label}
+ const matches=(o,q)=>norm(q).split(' ').filter(Boolean).every(w=>o.key.includes(w));
+ function fillDD(d){
+  const all=OPTS[d.dataset.site]||[],q=d.querySelector('.lk-dd-q').value.trim(),list=q?all.filter(o=>matches(o,q)):all;
+  const ul=d.querySelector('.lk-dd-list');
+  d.querySelector('.lk-dd-n').textContent=q?list.length.toLocaleString('fa-IR')+' مدل':'همه‌ی مدل‌ها · '+all.length.toLocaleString('fa-IR');
+  if(!list.length){ul.innerHTML='<li class="lk-dd-empty" aria-disabled="true">مدلی با «'+esc(q)+'» پیدا نشد</li>';return}
+  ul.innerHTML=list.map(o=>'<li role="option" data-i="'+o.i+'" aria-selected="'+(o.v===d.dataset.v)+'"><span class="m">'+esc(o.own?o.model:o.model)+'</span>'+(o.own?'':'<span class="b">'+esc(o.brand)+'</span>')+'</li>').join('');
+  const sel=ul.querySelector('[aria-selected=true]');if(sel)ul.scrollTop=sel.offsetTop-ul.clientHeight/2+sel.offsetHeight/2;else ul.scrollTop=0;
+ }
+ function closeDD(){document.querySelectorAll('#lkSites .lk-dd.open').forEach(d=>{d.classList.remove('open');d.querySelector('.lk-dd-btn').setAttribute('aria-expanded','false');d.querySelector('.lk-dd-pop').hidden=true})}
+ function openDD(d){closeDD();d.classList.add('open');d.querySelector('.lk-dd-btn').setAttribute('aria-expanded','true');
+  d.querySelector('.lk-dd-pop').hidden=false;const qi=d.querySelector('.lk-dd-q');qi.value=$('lkQ').value;fillDD(d);qi.focus({preventScroll:true})}
+ function pickDD(d,li){const o=(OPTS[d.dataset.site]||[])[+li.dataset.i];if(o)setDD(d.dataset.site,o);closeDD();d.querySelector('.lk-dd-btn').focus()}
  function score(q,label){const a=norm(q).split(' ').filter(Boolean),b=norm(label);if(!a.length)return 0;let s=0;for(const w of a)if(b.includes(w))s+=w.length+2;return s-b.length/100}
  function autoMatch(){
   const q=$('lkQ').value;if(!q.trim())return;
-  for(const sel of document.querySelectorAll('#lkSites select.lk-model')){let best=-1,bi=0;[...sel.options].forEach((o,i)=>{const sc=score(q,o.textContent);if(sc>best){best=sc;bi=i}});if(sel.options.length)sel.selectedIndex=bi}
+  for(const s of LS){const all=OPTS[s.id]||[];let best=-1,bo=null;for(const o of all){const sc=score(q,o.brand+' '+o.model);if(sc>best){best=sc;bo=o}}if(bo)setDD(s.id,bo)}
+  const open=document.querySelector('#lkSites .lk-dd.open');if(open){open.querySelector('.lk-dd-q').value=q;fillDD(open)}
  }
  function picked(){
   const t=$('lkType').value,u=$('lkUsage').value,year=+$('lkYear').value,sites={};
@@ -624,9 +695,9 @@ const openLookup=(()=>{
    const s=box.dataset.site,st=siteTypes(s)[t];
    if(!st||!box.querySelector('input[type=checkbox]').checked)continue;
    const usage=st.usages.find(([n])=>uName(n)===u);if(!usage)continue;
-   const sel=box.querySelector('select.lk-model');if(!sel.value)continue;
-   const[brand_id,model_id]=sel.value.split('|');
-   sites[s]={vehicle_type:st.name,type_id:st.id,brand_id,model_id,usage_id:usage[1],label:sel.selectedOptions[0].textContent};
+   const d=box.querySelector('.lk-dd');if(!d||!d.dataset.v)continue;
+   const cut=d.dataset.v.indexOf('|'),brand_id=d.dataset.v.slice(0,cut),model_id=d.dataset.v.slice(cut+1);
+   sites[s]={vehicle_type:st.name,type_id:st.id,brand_id,model_id,usage_id:usage[1],label:d.dataset.label};
   }
   return{t,u,year,sites};
  }
@@ -639,7 +710,7 @@ const openLookup=(()=>{
   const{t,u,year,sites}=picked();
   if(!Object.keys(sites).length){$('lkStatus').textContent='هیچ سایتی انتخاب نشده.';return}
   const key=JSON.stringify([year,sites]);
-  if(!auto){stopPoll();pollN=0;pollKey=key}else if(key!==pollKey){stopPoll();return}
+  if(!auto){stopPoll();pollN=0;pollKey=key;waitSet=new Set()}else if(key!==pollKey){stopPoll();return}
   if(!auto){$('lkGo').disabled=true;$('lkStatus').textContent='در حال خواندن نتیجه‌ها…'}
   try{
    const items={};for(const[k,v]of Object.entries(sites))items[k]={type_id:String(v.type_id),brand_id:String(v.brand_id),model_id:String(v.model_id),usage_id:String(v.usage_id)};
@@ -653,8 +724,10 @@ const openLookup=(()=>{
     const x=sites[s.id]?res[s.id]:null;
     if(!x){out.sites[s.id]={skipped:true};continue}
     const busy=x.status==='pending'||x.status==='running';if(busy)waiting=true;
-    if(Array.isArray(x.companies)){out.sites[s.id]={ok:true,companies:x.companies,done_at:x.done_at,state:x.status,refreshing:busy,ahead:x.ahead,blocked_until:x.blocked_until};
-     for(const c of x.companies){const k=canon(c.name||c.key);(by[k]||(by[k]={company:dispName(k,c.name)}))[s.id]={premium:c.premium,locked:!!c.locked}}}
+    const justDone=!busy&&waitSet.has(s.id);if(busy)waitSet.add(s.id);else waitSet.delete(s.id);
+    if(Array.isArray(x.companies)){out.sites[s.id]={ok:true,companies:x.companies,done_at:x.done_at,state:x.status,refreshing:busy,justDone,ahead:x.ahead,blocked_until:x.blocked_until};
+     const div=RIAL[s.id]?10:1;
+     for(const c of x.companies){const k=canon(c.name||c.key);(by[k]||(by[k]={company:dispName(k,c.name)}))[s.id]={premium:c.premium==null?null:c.premium/div,locked:!!c.locked}}}
     else out.sites[s.id]={ok:false,state:x.status,error:x.error||'',ahead:x.ahead,blocked_until:x.blocked_until};
    }
    out.companies=Object.values(by);out.polling=waiting&&pollN<40;
@@ -681,44 +754,105 @@ const openLookup=(()=>{
   }catch(e){$('lkResult').hidden=false;$('lkResult').innerHTML='<div class="lk-err">استعلام زنده انجام نشد: '+esc(e.message)+(BASE.includes('localhost')?' — n8n روی همین کامپیوتر روشن و ورک‌فلو Active است؟':'')+'</div>';$('lkStatus').textContent=''}
   finally{$('lkLive').disabled=!BASE}
  }
+ const WAIT_TXT='نهایتا ۱۵ ثانیه دیگه تو جیبته.';
+ const money=n=>n==null?'—':Math.round(n).toLocaleString('fa-IR');
+ const diffTxt=d=>d>=1e6?(Math.round(d/1e5)/10).toLocaleString('fa-IR')+' میلیون':Math.round(d).toLocaleString('fa-IR');
+ const blockTxt=r=>'این سایت موقتاً شلوغه؛ حدود '+Math.max(1,Math.ceil((new Date(r.blocked_until)-Date.now())/60000)).toLocaleString('fa-IR')+' دقیقه دیگه';
+ let lkPin=null;
  function render2(j,t,u,year){
-  const ST={pending:'در صف بررسی',running:'در حال بررسی',none:'این مدل در کاتالوگ نیست',error:'خطا در بررسی'};
-  const waitTxt=r=>r.blocked_until?'سایت موقتاً محدود کرده؛ حدود '+Math.max(1,Math.ceil((new Date(r.blocked_until)-Date.now())/60000)).toLocaleString('fa-IR')+' دقیقه دیگر':
-   r.state==='running'?'در حال بررسی':r.ahead?'در صف فوری ('+Number(r.ahead).toLocaleString('fa-IR')+' مورد جلوتر)':'در صف فوری';
-  const chips=LS.map(s=>{const r=j.sites[s.id];
-   if(!r||r.skipped)return'<span class="lk-chip">'+esc(s.name)+': انتخاب نشده</span>';
-   if(!r.ok&&j.matrix&&(r.state==='pending'||r.state==='running'))return'<span class="lk-chip wait">'+esc(s.name)+': '+waitTxt(r)+'</span>';
-   if(!r.ok)return'<span class="lk-chip bad" title="'+esc(r.error||'')+'">'+esc(s.name)+': '+(ST[r.state]||'خطا')+'</span>';
-   return'<span class="lk-chip ok">'+esc(s.name)+': '+(r.companies||[]).length.toLocaleString('fa-IR')+' شرکت'+(r.done_at?'، '+ago(r.done_at):'')+'</span>'+(r.refreshing?'<span class="lk-chip wait">'+esc(s.name)+': به‌روزرسانی — '+waitTxt(r)+'</span>':'')}).join('');
-  const errs=LS.filter(s=>j.sites[s.id]&&j.sites[s.id].ok===false&&(!j.matrix||j.sites[s.id].state==='error')).map(s=>'<div class="lk-err"><b>'+esc(s.name)+':</b> '+esc(j.sites[s.id].error||'')+'</div>').join('');
-  const pend=j.matrix?LS.filter(s=>j.sites[s.id]&&j.sites[s.id].ok===false&&j.sites[s.id].state!=='error'):[];
-  const pendNote=(pend.length||j.polling)?'<p class="lk-legend" style="margin:0 0 10px">'+(j.polling?'<span class="lk-poll"></span>':'')+(pend.length?pend.map(s=>esc(s.name)).join('، ')+': این خودرو/سال الان در صف فوری بررسی است. ':'')+(j.polling?'نتیجه که برسد همین‌جا خودکار نمایش داده می‌شود (معمولاً کمتر از یک دقیقه؛ اگر سایتی محدودمان کرده باشد بیشتر).':'اگر هنوز نرسیده، کمی بعد دوباره «مقایسه» را بزن.')+'</p>':'';
-  const when=j.matrix?LS.filter(s=>j.sites[s.id]&&j.sites[s.id].done_at).map(s=>esc(s.name)+': '+new Date(j.sites[s.id].done_at).toLocaleString('fa-IR')+' ('+ago(j.sites[s.id].done_at)+')').join(' · '):'';
-  const active=LS.filter(s=>j.sites[s.id]&&j.sites[s.id].ok);
-  // مثل صفحه‌ی مقایسه: اول شرکت‌های مشترک در همه، بعد چندسایتی، بعد فقط یک سایت؛ ارزان‌ترین قیمت هر ردیف سبز
-  const cnt=c=>active.filter(s=>c[s.id]).length;
-  const minOf=c=>{const ps=active.map(s=>c[s.id]&&c[s.id].premium).filter(v=>v!=null).map(Number);return ps.length>1?Math.min(...ps):null};
-  const sorted=(j.companies||[]).slice().sort((a,b)=>cnt(b)-cnt(a)||a.company.localeCompare(b.company,'fa'));
-  const grpOf=c=>{const n=cnt(c);return active.length<2?'':n===active.length?'در همه‌ی سایت‌ها':n>1?'در چند سایت':'فقط در '+(active.find(s=>c[s.id])||{}).name};
-  let lastG=null;
-  const rows=sorted.map(c=>{
-   const n=cnt(c),key=COMP_FA[norm(c.company)]||canon(c.company),mn=minOf(c),g=grpOf(c);
-   const head=g&&g!==lastG?'<tr class="lk-grp"><td colspan="'+(active.length+1)+'">'+esc(g)+'</td></tr>':'';lastG=g;
-   return head+'<tr class="'+(n<active.length?'partial':'')+'"><td><span class="lk-co">'+(FA[key]?logoHtml(key):'')+esc(c.company)+'</span></td>'+active.map(s=>{const v=c[s.id];if(!v)return'<td class="miss">—</td>';
-    const cheap=mn!=null&&v.premium!=null&&Number(v.premium)===mn;
-    return'<td'+(cheap?' class="cheap"':'')+'><span class="p">'+toman(v.premium)+'</span>'+(v.commission!=null?'<span class="c">کارمزد '+Number(v.commission).toLocaleString('fa-IR')+'٪</span>':'')+(v.locked?'<span class="lock">قفل</span>':'')+'</td>'}).join('')+'</tr>'}).join('');
-  const both=active.length>1?sorted.filter(c=>cnt(c)===active.length).length:0;
-  const req=LS.filter(s=>j.request&&j.request[s.id]).map(s=>esc(s.name)+': '+esc(j.request[s.id].label)).join(' · ');
+  // ردیف‌های شرکت (قیمت به تومان) → نقشه‌ی شرکت ← سایت
+  const M={};
+  for(const c of j.companies||[]){const k=canon(c.company);const m=M[k]||(M[k]={k,name:FA[k]||dispName(k,c.company)});for(const s of LS)if(c[s.id])m[s.id]=c[s.id]}
+  const R=s=>j.sites[s.k]||{skipped:true};
+  const present=SITES.filter(s=>R(s).ok&&(R(s).companies||[]).length),multi=present.length>1;
+  const cnt=k=>present.filter(s=>M[k][s.k]).length;
+  const minP=k=>Math.min(...present.filter(s=>M[k][s.k]&&M[k][s.k].premium!=null).map(s=>+M[k][s.k].premium));
+  const byMin=(x,y)=>(minP(x)-minP(y))||x.localeCompare(y,'fa');
+  const keys=Object.keys(M);
+  const full=multi?keys.filter(k=>cnt(k)===present.length).sort(byMin):[];
+  const partAll=multi?keys.filter(k=>cnt(k)>1&&cnt(k)<present.length).sort(byMin):[];
+  const badge=(m,s)=>{
+   if(!multi)return'';
+   const me=m[s.k],others=present.filter(o=>o!==s&&m[o.k]);
+   if(!others.length)return'<span class="bd only">فقط اینجا</span>';
+   if(me.premium==null)return'';
+   const ps=others.map(o=>m[o.k].premium).filter(v=>v!=null).map(Number);if(!ps.length)return'';
+   const d=+me.premium-Math.min(...ps);
+   return Math.abs(d)<1?'<span class="bd eq">برابر</span>':d<0?'<span class="bd up">▼ '+diffTxt(-d)+' ارزان‌تر</span>':'<span class="bd down">▲ '+diffTxt(d)+' گران‌تر</span>';
+  };
+  const card=(m,s)=>{const r=m[s.k];
+   return'<button type="button" class="cc" data-k="'+esc(m.k)+'">'+(FA[m.k]?logoHtml(m.k):'<span class="logo" data-l="'+esc((m.name||'?')[0])+'"></span>')+
+    '<b class="nm">'+esc(m.name)+'</b><span class="pill'+(r.premium==null?' none':'')+'">'+money(r.premium)+'</span><span class="tm">تومان</span>'+
+    (r.commission!=null?'<span class="cm">کارمزد '+Number(r.commission).toLocaleString('fa-IR')+'٪</span>':'')+(r.locked?'<span class="lk">قفل</span>':'')+badge(m,s)+'</button>'};
+  const head=(s,r,list)=>{
+   const ps=list.map(k=>M[k][s.k].premium).filter(v=>v!=null).map(Number),low=ps.length?Math.min(...ps):null;
+   const lowK=low==null?null:list.find(k=>+M[k][s.k].premium===low);
+   const busy=r.state==='pending'||r.state==='running';
+   let fresh;
+   if(r.skipped)fresh='انتخاب نشده';
+   else if(r.blocked_until&&busy)fresh='<span class="wait"><span class="lk-poll"></span>'+esc(blockTxt(r))+'</span>';
+   else if(busy)fresh='<span class="wait"><span class="lk-poll"></span>'+WAIT_TXT+'</span>';
+   else if(r.justDone)fresh='<span class="now">حالا چک کن</span>';
+   else if(r.ok&&j.matrix&&r.done_at)fresh='آخرین بررسی: '+esc(ago(r.done_at));
+   else if(r.ok)fresh='همین لحظه (استعلام زنده)';
+   else if(r.state==='none')fresh='این مدل در این سایت نیست';
+   else fresh='خطا در بررسی';
+   return'<div class="site"><div class="sh"><div><h2>'+esc(s.n)+'</h2><div class="host">'+esc(s.h)+'</div></div><span class="slogo"><img src="'+esc(s.logo)+'" alt="'+esc(s.n)+'" onerror="this.style.display=\'none\'"></span></div><div class="glass"><div class="stats">'+
+    '<div class="st"><b>'+(r.ok?fa(list.length):'—')+'</b><span>شرکت برای این خودرو</span></div>'+
+    '<div class="st"><b>'+(low==null?'—':money(low))+'</b><span>ارزان‌ترین'+(lowK?': '+esc(M[lowK].name):'')+'</span></div></div><div class="fresh">'+fresh+'</div></div></div>'};
+  const cols=SITES.map(s=>{
+   const r=R(s),list=r.ok?keys.filter(k=>M[k][s.k]):[];
+   const part=partAll.filter(k=>M[k][s.k]);
+   const mine=list.filter(k=>!multi||cnt(k)===1).sort((x,y)=>((M[x][s.k].premium??1e15)-(M[y][s.k].premium??1e15)));
+   const mineFull=list.length?full:[];
+   const busy=r.state==='pending'||r.state==='running';
+   let body;
+   if(r.skipped)body='<div class="msg">این سایت انتخاب نشده</div>';
+   else if(!r.ok&&busy)body='<div class="msg wait"><span class="lk-poll"></span>'+(r.blocked_until?esc(blockTxt(r)):WAIT_TXT)+'</div>';
+   else if(!r.ok&&r.state==='none')body='<div class="msg">این مدل در کاتالوگ این سایت نیست</div>';
+   else if(!r.ok)body='<div class="msg er" title="'+esc(r.error||'')+'">خطا در بررسی'+(r.error?': '+esc(String(r.error).slice(0,160)):'')+'</div>';
+   else if(!list.length)body='<div class="msg">این سایت برای این خودرو شرکتی نشان نمی‌دهد</div>';
+   else body='<div class="cards">'+
+    (multi&&mineFull.length?'<div class="grp">'+(present.length===SITES.length?'در همه سایت‌ها':'در هر '+fa(present.length)+' سایت')+' ('+fa(mineFull.length)+')</div>':'')+mineFull.map(k=>card(M[k],s)).join('')+
+    (multi&&partAll.length?'<div class="grp">در چند سایت ('+fa(part.length)+')</div>':'')+(multi?partAll.map(k=>M[k][s.k]?card(M[k],s):'<div class="cc ph" aria-hidden="true"></div>').join(''):'')+
+    (mine.length?'<div class="grp">'+(multi?'فقط در '+esc(s.n)+' ('+fa(mine.length)+')':fa(mine.length)+' شرکت')+'</div>':'')+mine.map(k=>card(M[k],s)).join('')+'</div>';
+   return'<section class="col '+s.c+'">'+head(s,r,list)+body+'</section>';
+  }).join('');
+  const req=LS.filter(s=>j.request&&j.request[s.id]).map(s=>esc(s.name)+': '+esc(j.request[s.id].label)).join('، ');
   $('lkResult').hidden=false;
-  $('lkResult').innerHTML='<h2>'+esc(t)+' · '+esc(u)+' · مدل '+faYear(year)+'</h2><p class="lk-h" style="margin-bottom:12px">'+req+'</p><div class="lk-chips">'+chips+(active.length>1?'<span class="lk-chip">مشترک در همه: '+both.toLocaleString('fa-IR')+'</span>':'')+'</div>'+errs+pendNote+
-   (active.length?'<div class="lk-wrap"><table class="lk-table"><thead><tr><th>شرکت بیمه</th>'+active.map(s=>'<th class="'+s.c+'">'+esc(s.name)+'<br>حق بیمه (تومان)</th>').join('')+'</tr></thead><tbody>'+(rows||'<tr><td colspan="'+(active.length+1)+'">هیچ شرکتی برنگشت</td></tr>')+'</tbody></table></div>'+
-   '<p class="lk-legend">«—» یعنی آن سایت این شرکت را برای این خودرو نشان نمی‌دهد. قیمت سبز = ارزان‌ترین در همان ردیف. قیمت‌ها نقدی، یک‌ساله، پوشش مالی ۷۰ میلیون و بدون بیمه‌نامه‌ی قبلی است.'+(when?'<br>زمان آخرین بررسی — '+when:'')+(j.matrix?'':'<br>نتیجه‌ی استعلام زنده (همین لحظه).')+'</p>':'');
+  $('lkResult').innerHTML='<div class="lk-card lk-head"><h2>'+esc(t)+' · '+esc(u)+' · مدل '+faYear(year)+'</h2><p class="lk-h">'+req+'</p></div><div class="cols lk-cols" id="lkCols">'+cols+'</div>';
+  lkPin=null;lkAlign();
  }
+ function lkAlign(){
+  const box=$('lkCols');if(!box)return;
+  const eq=sel=>{const a=[...box.querySelectorAll(sel)];a.forEach(e=>e.style.minHeight='');const m=Math.max(0,...a.map(e=>e.getBoundingClientRect().height));a.forEach(e=>e.style.minHeight=m+'px')};
+  eq('.site');eq('.cc');
+ }
+ function lkFocus(k){const box=$('lkCols');if(!box)return;box.classList.toggle('focus',!!k);box.querySelectorAll('.cc').forEach(e=>e.classList.toggle('hl',!!k&&e.dataset.k===k))}
  function init(){
   $('lkBase').value=BASE;$('lkKey').value=KEY;
   if(!LIVE){$('lkLive').hidden=true;$('lkCfg').hidden=true}
   $('lkSave').onclick=()=>{BASE=$('lkBase').value.trim().replace(/\/+$/,'');KEY=$('lkKey').value.trim()||LOOKUP_KEY;store.set('pc_base',BASE);store.set('pc_key',KEY);$('lkCfgStatus').textContent='ذخیره شد';$('lkLive').disabled=!BASE||!CAT};
-  $('lkType').onchange=onType;$('lkUsage').onchange=buildSites;$('lkQ').oninput=autoMatch;$('lkGo').onclick=()=>compareMatrix();$('lkLive').onclick=()=>{stopPoll();lookup()};
+  $('lkType').onchange=onType;$('lkUsage').onchange=buildSites;$('lkQ').oninput=autoMatch;
+  const sitesEl=$('lkSites');
+  sitesEl.addEventListener('click',e=>{const b=e.target.closest('.lk-dd-btn');if(b&&!b.disabled){const d=b.closest('.lk-dd');d.classList.contains('open')?closeDD():openDD(d);return}
+   const li=e.target.closest('.lk-dd-list li[data-i]');if(li)pickDD(li.closest('.lk-dd'),li)});
+  sitesEl.addEventListener('input',e=>{if(e.target.classList.contains('lk-dd-q'))fillDD(e.target.closest('.lk-dd'))});
+  sitesEl.addEventListener('keydown',e=>{
+   const d=e.target.closest('.lk-dd');if(!d)return;
+   if(e.target.classList.contains('lk-dd-btn')&&(e.key==='ArrowDown'||e.key==='Enter'||e.key===' ')){e.preventDefault();openDD(d);return}
+   if(!e.target.classList.contains('lk-dd-q'))return;
+   const items=[...d.querySelectorAll('.lk-dd-list li[data-i]')];let i=items.findIndex(x=>x.classList.contains('act'));
+   if(e.key==='Escape'){e.preventDefault();closeDD();d.querySelector('.lk-dd-btn').focus()}
+   else if(e.key==='Enter'){e.preventDefault();const li=items[i>=0?i:0];if(li)pickDD(d,li)}
+   else if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(!items.length)return;if(i<0)i=Math.max(0,items.findIndex(x=>x.getAttribute('aria-selected')==='true'));else i=(i+(e.key==='ArrowDown'?1:-1)+items.length)%items.length;
+    items.forEach(x=>x.classList.remove('act'));items[i].classList.add('act');items[i].scrollIntoView({block:'nearest'})}});
+  document.addEventListener('click',e=>{if(!e.target.closest('#lkSites .lk-dd'))closeDD()});
+  const res=$('lkResult');
+  res.addEventListener('mouseover',e=>{if(lkPin)return;const c=e.target.closest('.cc:not(.ph)');if(c)lkFocus(c.dataset.k)});
+  res.addEventListener('mouseout',e=>{if(lkPin)return;const to=e.relatedTarget&&e.relatedTarget.closest?e.relatedTarget.closest('.cc:not(.ph)'):null;if(!to)lkFocus(null)});
+  res.addEventListener('click',e=>{const c=e.target.closest('.cc:not(.ph)');if(!c)return;lkPin=lkPin===c.dataset.k?null:c.dataset.k;lkFocus(lkPin)});
+  addEventListener('resize',()=>{if(lkOn)lkAlign()});$('lkGo').onclick=()=>compareMatrix();$('lkLive').onclick=()=>{stopPoll();lookup()};
   $('lkYear').innerHTML=Array.from({length:46},(_,i)=>1405-i).map(y=>'<option value="'+y+'">'+faYear(y)+'</option>').join('');
   $('lkYear').value='1397';
  }
