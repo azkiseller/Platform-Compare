@@ -593,7 +593,8 @@ function align(){
 function cardsOf(k){return[...document.querySelectorAll('.cc')].filter(e=>e.dataset.k===k)}
 function line(k){
  const svg=$('ln');if(!svg)return;svg.innerHTML='';
- if(!k||innerWidth<=1100)return;
+ // خط وصل‌کننده برداشته شد: با نگه داشتن موس فقط کارت‌های همان شرکت پررنگ می‌شوند
+ if(true||!k||innerWidth<=1100)return;
  const els=cardsOf(k);if(els.length<2)return;
  const rc=$('cols').getBoundingClientRect();
  const r=els.map(e=>({b:e.getBoundingClientRect(),c:SITE_COLOR[[...e.closest('.col').classList].find(x=>/^s\d$/.test(x))]||'#888'})).sort((p,q)=>p.b.left-q.b.left);
