@@ -520,8 +520,18 @@ async function load(silent){
  render();
  if(keep&&merged[keep]){pinned=keep;focus(keep);panel(keep);press()}
 }
+// زمان مشترک آخرین اجرا: workflow سایت‌ها را پشت سر هم ثبت می‌کند (پلاس‌بیمه، ازکی، بعد شوراکا)،
+// پس برای یکسان بودن کارت‌ها، کهنه‌ترینِ «آخرین ثبت» سایت‌هایی را نشان می‌دهیم که در همین چرخه به‌روز شده‌اند.
+// سایتی که بیش از STALE_MIN عقب مانده از این زمان مشترک کنار گذاشته می‌شود و زمان و هشدار خودش را نشان می‌دهد.
+function siteLast(k){const ts=rows.filter(r=>r.site===k).map(r=>Date.parse(r.captured_at)).filter(Number.isFinite);return ts.length?Math.max(...ts):null}
+function runTime(){
+ const ls=SITES.map(s=>siteLast(s.k)).filter(v=>v!=null);if(!ls.length)return null;
+ const top=Math.max(...ls),live=ls.filter(v=>top-v<=STALE_MIN*6e4);
+ return Math.min(...live);
+}
 function siteCard(s,list){
- const ts=list.map(r=>Date.parse(r.captured_at)).filter(Number.isFinite),last=ts.length?Math.max(...ts):null;
+ const own=siteLast(s.k),shared=runTime();
+ const last=own==null?null:(shared!=null&&shared<=own?shared:own);
  const rates=list.map(r=>r.rate).filter(v=>v!=null),top=rates.length?Math.max(...rates):null;
  const best=top==null?null:list.find(r=>r.rate===top);
  let fresh='<div class="fresh">هنوز داده‌ای ثبت نشده</div>';
